@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SkillSyncer</title>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div>
+          <h1>SkillSyncer</h1>
+          <p id="path-summary">Loading skill paths</p>
+        </div>
+        <button id="refresh-button" class="button secondary-button" type="button" aria-label="Refresh status">Refresh</button>
+      </header>
+
+      <section class="metrics" aria-label="Skill sync status">
+        <article>
+          <span>Repo only</span>
+          <strong id="repo-only-count">0</strong>
+        </article>
+        <article>
+          <span>Local only</span>
+          <strong id="local-only-count">0</strong>
+        </article>
+        <article>
+          <span>Changed</span>
+          <strong id="changed-count">0</strong>
+        </article>
+        <article>
+          <span>Invalid</span>
+          <strong id="invalid-count">0</strong>
+        </article>
+      </section>
+
+      <section class="actions" aria-label="Skill sync actions">
+        <div class="action-panel">
+          <div>
+            <h2>Export</h2>
+            <span id="export-summary">0 local-only skills</span>
+          </div>
+          <button id="export-button" class="button primary-button" type="button">Export local-only skills</button>
+        </div>
+
+        <div class="action-panel danger-panel">
+          <div>
+            <h2>Replace Local</h2>
+            <span id="replace-summary">0 repository skills</span>
+          </div>
+          <button id="replace-button" class="button danger-button" type="button">Back up and replace local</button>
+        </div>
+
+        <div class="action-panel">
+          <label for="commit-message">Commit message</label>
+          <div class="publish-row">
+            <input id="commit-message" type="text" value="Export local Codex skills" />
+            <button id="publish-button" class="button primary-button" type="button">Commit and push</button>
+          </div>
+          <span id="git-summary">Git status unavailable</span>
+        </div>
+      </section>
+
+      <div id="action-status" class="action-status" role="status" aria-live="polite"></div>
+
+      <section class="inventory" aria-label="Skill inventories">
+        <article>
+          <div class="section-heading compact-heading">
+            <h2>Repository Skills</h2>
+            <span id="repo-list-count">0 skills</span>
+          </div>
+          <div id="repo-skill-list" class="compact-list" aria-live="polite"></div>
+        </article>
+
+        <article>
+          <div class="section-heading compact-heading">
+            <h2>Local Skills</h2>
+            <span id="local-list-count">0 skills</span>
+          </div>
+          <div id="local-skill-list" class="compact-list" aria-live="polite"></div>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <div class="section-heading">
+          <h2>Differences</h2>
+          <span id="same-count">0 unchanged</span>
+        </div>
+        <div id="skill-list" class="skill-list" aria-live="polite"></div>
+      </section>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "name": "skillsyncer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Electron app and CLI for syncing Codex-style agent skills between git and a local skills directory.",
+  "license": "MIT",
+  "main": "out/main/index.js",
+  "bin": {
+    "skillsync": "out/cli/cli/index.js"
+  },
+  "scripts": {
+    "dev": "env -u ELECTRON_RUN_AS_NODE ELECTRON_CLI_ARGS='[\"--disable-gpu\",\"--disable-features=Vulkan\"]' electron-vite dev",
+    "preview": "env -u ELECTRON_RUN_AS_NODE ELECTRON_CLI_ARGS='[\"--disable-gpu\",\"--disable-features=Vulkan\"]' electron-vite preview",
+    "build": "npm run typecheck && electron-vite build && npm run cli:build",
+    "cli:build": "tsc -p tsconfig.cli.json",
+    "cli:dev": "tsx src/cli/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.1",
+    "electron": "^42.3.0",
+    "electron-vite": "^5.0.0",
+    "tsx": "^4.22.3",
+    "typescript": "^6.0.3",
+    "vite": "^7.3.3",
+    "vitest": "^4.1.7"
+  }
+}

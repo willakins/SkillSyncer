@@ -1,0 +1,45 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Logs and local environment
+*.log
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.swp
+
+# JavaScript / TypeScript / Electron
+node_modules/
+dist/
+build/
+out/
+release/
+coverage/
+.turbo/
+.vite/
+
+# Package manager caches
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Test and tooling caches
+.nyc_output/
+.eslintcache
+.vitest/
+playwright-report/
+test-results/

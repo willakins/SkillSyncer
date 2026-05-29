@@ -1,0 +1,17 @@
+id: negative-trigger-existing-pr
+name: Negative Trigger Existing PR
+description: Existing PR monitoring should not route to the feature-to-PR coordinator.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Watch this existing pull request until GitHub Actions and Codex review are green. Do not plan branches, create worktrees, or implement a new feature."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-coordinator-output
+    config:
+      not_contains:
+        - "feature-to-PR flow"
+        - "setup-feature-worktrees"
+        - "branch plan"

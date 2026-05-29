@@ -1,0 +1,17 @@
+id: negative-trigger-commit-only
+name: Negative Trigger Commit Only
+description: A request for one already-staged commit should not route to this implementation skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "The implementation is already done and staged. Create one commit for the staged changes, but do not edit files, split work into batches, or push."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-implementation-slicing
+    config:
+      not_contains:
+        - "implement the slice"
+        - "commit as you go"
+        - "multiple commits"

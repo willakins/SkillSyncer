@@ -1,0 +1,4 @@
+interface:
+  display_name: "Feature To PR Stack"
+  short_description: "Plan, set up, parallelize, and publish"
+  default_prompt: "Use $turn-feature-into-pr-stack to take this feature request from app analysis through isolated local worktrees and draft PRs until green."

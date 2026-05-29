@@ -1,0 +1,18 @@
+id: negative-trigger-review-only
+name: Negative Trigger Review Only
+description: Review-only approval checks belong to review-branch-for-merge.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Review PR #88 and tell me whether it should be approved. Do not fix or commit anything."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-repair-loop
+    config:
+      not_contains:
+        - "review-branch-until-clean"
+        - "fix valid findings"
+        - "repair batch"
+        - "commit"

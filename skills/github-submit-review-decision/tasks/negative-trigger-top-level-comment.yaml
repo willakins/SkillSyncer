@@ -1,0 +1,18 @@
+id: negative-trigger-top-level-comment
+name: Negative Trigger Top Level Comment
+description: A top-level PR conversation comment should route to github-publish-pr-comment instead.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Post this top-level PR conversation comment to repo acme/app PR #42: `I retested the deploy path and this looks ready.` Do not attach it to a file line or submit a formal review."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-review-decision
+    config:
+      not_contains:
+        - "APPROVE"
+        - "REQUEST_CHANGES"
+        - "comment-only review"
+        - "review body"

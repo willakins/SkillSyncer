@@ -1,0 +1,17 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural scaffolding wording should trigger setup-project-files.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "This repo is just a README and package.json. Scaffold the initial app structure, source boundaries, starter tests, and runnable scripts that fit the documented purpose. Eval only: explain the steps."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-structure-scope
+    config:
+      contains:
+        - "README"
+        - "tests"
+        - "scripts"

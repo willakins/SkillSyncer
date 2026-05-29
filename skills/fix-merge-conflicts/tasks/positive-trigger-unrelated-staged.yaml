@@ -1,0 +1,17 @@
+id: positive-trigger-unrelated-staged
+name: Positive Trigger Unrelated Staged
+description: The skill must stop before continuing if unrelated staged paths would enter the merge commit.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $fix-merge-conflicts. Conflicts are resolved, but git status also shows a pre-existing staged change to docs/release-notes.md that is unrelated to the merge. This is an eval: do not run commands; describe the required stop condition."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: stops-for-unrelated-staged
+    config:
+      contains:
+        - "unrelated staged"
+        - "stop"
+        - "merge commit"

@@ -1,0 +1,19 @@
+id: positive-trigger-explicit
+name: Positive Trigger Explicit
+description: Explicit skill invocation should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $review-branch-until-clean on this branch. Eval only: summarize the review base default, focused review skills, repair batching, safe push rule, and final output."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-explicit-contract
+    config:
+      contains:
+        - "main"
+        - "review-branch-logic"
+        - "review-branch-style"
+        - "safe"
+        - "checks run"

@@ -1,0 +1,17 @@
+id: positive-trigger-fix-all-specs
+name: Positive Trigger Fix All Specs
+description: A direct request to fix all specs should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $fix-all-specs to make the specs pass for the current branch. This is an eval: do not run commands; return the ordered workflow, affected spec selection policy, RSpec command policy, commit helper, and stop conditions."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-spec-repair-contract
+    config:
+      contains:
+        - "affected spec"
+        - "bundle exec rspec"
+        - "write-commit-name"

@@ -1,0 +1,19 @@
+id: positive-trigger-pr-checks
+name: Positive Trigger PR Checks
+description: Existing PR CI watch requests should route to monitor-ci.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $monitor-ci to watch GitHub Actions checks on PR 123. This is a routing eval only: do not run gh or mutate anything. Return the skill-specific workflow, status names, and stop conditions."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-monitor-contract
+    config:
+      contains:
+        - "GitHub Actions"
+        - "passing"
+        - "pending"
+        - "not_ready"
+        - "blocked"

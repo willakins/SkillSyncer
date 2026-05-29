@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implement In Logical Commits"
+  short_description: "Implement work in intentional reviewable commits"
+  default_prompt: "Use $implement-in-logical-commits to implement the requested changes in the smallest useful set of reviewable commits, validating and committing each slice intentionally."

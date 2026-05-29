@@ -1,0 +1,18 @@
+id: positive-trigger-squash
+name: Positive Trigger Squash
+description: Direct requests to squash noisy branch history should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $simplify-branch-history to squash this noisy PR branch into logical commits before review. This is an eval: do not run commands; describe the safe checks and rewrite flow."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-safe-rewrite-contract
+    config:
+      contains:
+        - "backup"
+        - "snapshot"
+        - "verify"
+        - "force-with-lease"

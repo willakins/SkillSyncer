@@ -1,0 +1,26 @@
+name: turn-feature-into-pr-stack-eval
+description: Trigger and anti-trigger coverage for turn-feature-into-pr-stack.
+skill: turn-feature-into-pr-stack
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  parallel: false
+  executor: copilot-sdk
+  model: gpt-5-mini
+metrics:
+  - name: task_completion
+    weight: 0.7
+    threshold: 0.8
+    description: Did the response route full feature-to-PR-stack requests correctly?
+  - name: efficiency
+    weight: 0.3
+    threshold: 0.7
+    description: Did the response stay within coordinator boundaries?
+graders:
+  - type: behavior
+    name: feature-stack-routing
+    config:
+      max_tokens: 120000
+tasks:
+  - "tasks/*.yaml"

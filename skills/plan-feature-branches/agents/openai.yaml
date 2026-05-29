@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan Feature Branches"
+  short_description: "Understand scope and plan branch slices"
+  default_prompt: "Use $plan-feature-branches to understand this feature in the repo and propose one or more independent branches with validation."

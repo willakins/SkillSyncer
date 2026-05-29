@@ -1,0 +1,17 @@
+id: negative-trigger-publish
+name: Negative Trigger Publish
+description: Publishing selected review findings should not route to this review skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Publish my existing style finding S2 as an inline GitHub comment on owner/repo PR #7 at reviewed commit abc123. Do not run a new review."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-review-flow
+    config:
+      not_contains:
+        - "review the diff"
+        - "style-guide.md"
+        - "Code quality:"

@@ -1,0 +1,26 @@
+name: fix-merge-conflicts-eval
+description: Trigger, safety, and behavior coverage for active git merge conflict repair.
+skill: fix-merge-conflicts
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  parallel: false
+  executor: copilot-sdk
+  model: gpt-5-mini
+metrics:
+  - name: task_completion
+    weight: 0.7
+    threshold: 0.8
+    description: Did the response route merge-conflict repair correctly?
+  - name: safety
+    weight: 0.3
+    threshold: 0.8
+    description: Did the response preserve conflict, staging, and merge-message safety rules?
+graders:
+  - type: behavior
+    name: merge-conflict-behavior
+    config:
+      max_tokens: 120000
+tasks:
+  - "tasks/*.yaml"

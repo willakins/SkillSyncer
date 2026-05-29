@@ -1,0 +1,17 @@
+id: negative-trigger-logic-only
+name: Negative Trigger Logic Only
+description: Correctness-only review requests should use the focused logic skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Review PR #42 only for correctness and missing edge cases. Do not run UI checks or style review."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-full-review-coordinator
+    config:
+      not_contains:
+        - "review-branch-for-merge"
+        - "UI status"
+        - "Style / code quality issues"

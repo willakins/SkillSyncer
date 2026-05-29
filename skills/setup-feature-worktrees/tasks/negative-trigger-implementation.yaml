@@ -1,0 +1,17 @@
+id: negative-trigger-implementation
+name: Negative Trigger Implementation
+description: Implementation work should not route to worktree setup.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Implement the safe mutating import/export copy flow now and commit the changes in logical commits. The branch already exists."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-worktree-setup
+    config:
+      not_contains:
+        - "setup_worktrees.py"
+        - "create extra worktrees"
+        - "branch-to-path mapping"

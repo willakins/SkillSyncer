@@ -1,0 +1,16 @@
+id: negative-trigger-pr-description
+name: Negative Trigger PR Description
+description: PR body or description requests should not route to write-pr-title.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user asks you to draft a full pull request description with test plan and summary. Identify the right workflow and avoid title-only output."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-title-only-output
+    config:
+      not_contains:
+        - "write-pr-title"
+        - "only the proposed PR title"

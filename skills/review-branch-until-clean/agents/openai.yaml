@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Branch Until Clean"
+  short_description: "Review and repair a branch until no Codex findings remain"
+  default_prompt: "Use $review-branch-until-clean to review the current branch, fix valid findings, and repeat until clean."

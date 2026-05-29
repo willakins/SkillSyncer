@@ -1,0 +1,17 @@
+id: negative-trigger-run-only
+name: Negative Trigger Run Only
+description: A request to only run a test command should not route to this skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Run bundle exec rspec spec/models/user_spec.rb and show me the output. Do not edit files, commit, or push anything."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-repair-flow
+    config:
+      not_contains:
+        - "repair batch"
+        - "write-commit-name"
+        - "push"

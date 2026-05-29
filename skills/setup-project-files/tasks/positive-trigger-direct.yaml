@@ -1,0 +1,17 @@
+id: positive-trigger-direct
+name: Positive Trigger Direct
+description: Direct skill invocation should trigger setup-project-files.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $setup-project-files to setup the project files for a new TypeScript CLI utility. Eval only: do not run commands or edit files; return the workflow sections you would follow."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-setup-contract
+    config:
+      contains:
+        - "inventory"
+        - "structure"
+        - "validation"

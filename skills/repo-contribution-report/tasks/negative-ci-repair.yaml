@@ -1,0 +1,17 @@
+id: negative-ci-repair
+name: Negative CI Repair
+description: CI repair should route away from contribution reporting.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The existing pull request has failed GitHub Actions and the user wants fixes committed, pushed, and monitored until green. Identify the right workflow and avoid contribution reporting."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-contribution-report
+    config:
+      not_contains:
+        - "repo-contribution-report"
+        - "repo_contribution_report.rb"
+        - "line totals"

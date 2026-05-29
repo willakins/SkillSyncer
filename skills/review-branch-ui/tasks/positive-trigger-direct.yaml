@@ -1,0 +1,18 @@
+id: positive-trigger-direct
+name: Positive Trigger Direct
+description: Direct skill invocation for a UI review should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $review-branch-ui to validate the changed checkout flow on PR #42 at head def456. Eval only: do not run commands; describe the required checkout, agent-browser, account, and UI-only output contract."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-ui-review-contract
+    config:
+      contains:
+        - "agent-browser"
+        - "checkout"
+        - "UI"
+        - "account"

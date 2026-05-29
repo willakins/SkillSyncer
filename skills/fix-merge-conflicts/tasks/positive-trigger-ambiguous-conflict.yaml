@@ -1,0 +1,17 @@
+id: positive-trigger-ambiguous-conflict
+name: Positive Trigger Ambiguous Conflict
+description: Ambiguous product logic conflicts should trigger the skill but require user input before continuing.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $fix-merge-conflicts. The only conflict changes the same billing rule in incompatible ways and either side could be valid. This is an eval: do not run commands; state how the skill should proceed."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: asks-before-continuing
+    config:
+      contains:
+        - "ask"
+        - "ambiguous"
+        - "do not continue"

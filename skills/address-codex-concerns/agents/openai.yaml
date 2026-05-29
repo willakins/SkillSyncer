@@ -1,0 +1,4 @@
+interface:
+  display_name: "Address Codex Concerns"
+  short_description: "Triage and fix valid Codex review concerns"
+  default_prompt: "Use $address-codex-concerns to validate and address these Codex review concerns."

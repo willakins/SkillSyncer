@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sync Recent PRs To Airtable"
+  short_description: "End-to-end sync of recent GitHub PRs into Croft Airtable tasks"
+  default_prompt: "Use $sync-recent-prs-to-airtable to find my recent GitHub pull requests, compare them with Croft Airtable tasks, create missing tasks, and sync task status."

@@ -1,0 +1,17 @@
+id: positive-trigger-direct
+name: Positive Trigger Direct
+description: Direct skill invocation for planning feature branches should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $plan-feature-branches to understand a request to add safe mutating import/export sync to this repo and decide whether it should be one PR or several. This is an eval: do not run commands or edit files; return the skill-specific output sections and validation criteria you would use."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-planning-contract
+    config:
+      contains:
+        - "feature summary"
+        - "branch strategy"
+        - "validation"

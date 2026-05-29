@@ -1,0 +1,18 @@
+id: negative-trigger-ci-only
+name: Negative Trigger CI Only
+description: CI-only repair should use a CI repair workflow.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Fix the failing GitHub Actions checks on the current PR and push the repair. Do not perform a full branch review."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-ci-routing
+    config:
+      not_contains:
+        - "review-branch-until-clean"
+        - "fresh full-branch review"
+        - "address-codex-concerns"
+        - "iteration"

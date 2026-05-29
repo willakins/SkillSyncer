@@ -1,0 +1,17 @@
+id: negative-trigger-existing-pr-ci
+name: Negative Trigger Existing PR CI
+description: Existing PR CI repair should route to fix-pr-until-green, not PR publication.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The pull request already exists. Inspect its failing GitHub Actions checks, repair actionable failures, and keep going until checks pass or a blocker remains. Do not create or refresh a draft PR."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-publication
+    config:
+      not_contains:
+        - "draft-pr-for-branch"
+        - "create or refresh the draft PR"
+        - "open a draft PR"

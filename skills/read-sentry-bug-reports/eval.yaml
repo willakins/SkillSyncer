@@ -1,0 +1,26 @@
+name: read-sentry-bug-reports-eval
+description: Trigger and anti-trigger coverage for read-sentry-bug-reports.
+skill: read-sentry-bug-reports
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  parallel: false
+  executor: copilot-sdk
+  model: gpt-5-mini
+metrics:
+  - name: task_completion
+    weight: 0.7
+    threshold: 0.8
+    description: Did the response route Sentry bug-report reading requests correctly?
+  - name: efficiency
+    weight: 0.3
+    threshold: 0.7
+    description: Did the response stay read-only and inside Sentry-reporting boundaries?
+graders:
+  - type: behavior
+    name: trigger-behavior
+    config:
+      max_tokens: 50000
+tasks:
+  - "tasks/*.yaml"

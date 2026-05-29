@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Commit Name"
+  short_description: "Draft a short commit subject from the intended diff"
+  default_prompt: "Use $write-commit-name to inspect the staged diff when present, otherwise the exact in-scope local diff, and return only one short commit subject line with #CI unless I explicitly ask to keep CI off."

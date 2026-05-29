@@ -1,0 +1,17 @@
+id: negative-trigger-new-pr
+name: Negative Trigger New PR
+description: Creating a PR is outside this skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Commit my current changes, push the branch, and open a new draft PR."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-pr-creation
+    config:
+      not_contains:
+        - "repair-pr-ci-trigger"
+        - "append #CI"
+        - "force-with-lease"

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Review Branch For Merge"
+  short_description: "Coordinate full PR or branch merge-readiness review"

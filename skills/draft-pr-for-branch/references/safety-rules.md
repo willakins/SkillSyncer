@@ -1,0 +1,22 @@
+# Safety Rules
+
+- Do not silently stage unrelated changes.
+- Do not publish a branch that is not coherent and mergeable relative to its review base.
+- Do not publish a later stack slice against a base that does not contain earlier required slice content unless the user explicitly requested a stacked review target.
+- Do not add redundant confirmation when the user already asked for the PR operation; ask only when scope, remote target, or post-auth resume is ambiguous.
+- Do not use local filesystem links in the PR title or body.
+- Use labeled Markdown PR links such as `[PR #123](PR_URL)`, never bare URLs.
+- Do not push or create/update a PR before targeted verification covers the exact branch state being published.
+- Do not let unrelated local WIP influence metadata or verification for a remote-only PR rerun.
+- Do not run verification from a dirty worktree when the workflow is publishing a clean committed tip or an empty `#CI` follow-up.
+- For `mark_ready`, do not silently fold local changes into the PR. Include local changes only when the user explicitly requests it.
+- Prefer a new empty `#CI` follow-up commit over amending, unless the user explicitly asks to amend.
+- Do not repair `#CI` from stale local state; compare refreshed pushed tip SHA with local `HEAD` first.
+- Do not create a second PR for a branch that already has an open PR unless the user explicitly asks for a different branch or base.
+- Do not report success for a draft request while leaving a reused PR ready, or for a ready request while leaving a reused PR in draft.
+- Do not mark ready from a pushed tip that will not trigger CI. Repair the tip first when it is safe.
+- Do not create a PR from `source_branch` if the branch was actually pushed to a different explicit remote head ref; preserve the published head ref.
+- Do not silently reuse or preserve an existing PR whose base is wrong or only a temporary parent slice branch without explicit stacked-PR intent.
+- Do not claim title/body metadata was refreshed unless a verified PR metadata edit path was used.
+- If shell push fails for auth, do not retry the same unauthenticated command. Use `enable-remote-publication`.
+- Prefer stable shell command shapes: `gh pr edit PR_NUMBER --base BASE --repo OWNER/REPO`, `gh pr edit PR_NUMBER --title TITLE --body-file BODY_FILE --repo OWNER/REPO`, `gh pr ready PR_NUMBER --repo OWNER/REPO`, and `gh pr ready PR_NUMBER --undo --repo OWNER/REPO`.

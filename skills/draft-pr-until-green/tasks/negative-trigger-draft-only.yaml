@@ -1,0 +1,17 @@
+id: negative-trigger-draft-only
+name: Negative Trigger Draft Only
+description: Draft-only publication should route to draft-pr-for-branch, not this end-to-end CI loop.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user only wants to commit the intended changes and open a draft PR for the current branch. They do not want CI monitoring or repair. Identify the right workflow and avoid the CI repair loop."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-ci-loop
+    config:
+      not_contains:
+        - "fix-pr-until-green"
+        - "keep repairing CI"
+        - "until green"

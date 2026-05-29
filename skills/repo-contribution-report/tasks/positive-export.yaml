@@ -1,0 +1,18 @@
+id: positive-export
+name: Positive Export
+description: Exportable per-user contribution stats should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $repo-contribution-report to export all-time contribution stats for this repo as JSON, with aliases shown first so split identities can be corrected. This is a routing eval only; do not run git or gh."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-export-options
+    config:
+      contains:
+        - "--format json"
+        - "--show-aliases"
+        - "--identity-map"
+        - "read-only"

@@ -1,0 +1,18 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural end-to-end PR plus CI language should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user wants to publish this current branch as a draft pull request, then keep fixing the failing GitHub Actions checks until the draft PR is green or there is a real blocker. Identify the right workflow and summarize its boundaries."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-boundaries
+    config:
+      contains:
+        - "draft"
+        - "GitHub Actions"
+        - "blocked"
+        - "fix-pr-until-green"

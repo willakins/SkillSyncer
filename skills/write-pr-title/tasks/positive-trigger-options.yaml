@@ -1,0 +1,18 @@
+id: positive-trigger-options
+name: Positive Trigger Options
+description: Requests for PR title options should route to write-pr-title.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $write-pr-title to suggest three title options for this branch intended for a pull request. Routing eval only: do not inspect git; return the skill boundaries and title rules."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-title-rules
+    config:
+      contains:
+        - "title case"
+        - "short"
+        - "behavior change"
+        - "implementation detail"

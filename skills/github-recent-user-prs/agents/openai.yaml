@@ -1,0 +1,4 @@
+interface:
+  display_name: "GitHub Recent User PRs"
+  short_description: "Get recent open and recently closed PRs for a user"
+  default_prompt: "Use $github-recent-user-prs to gather my recent open and recently closed GitHub pull requests before reconciling Airtable tasks."

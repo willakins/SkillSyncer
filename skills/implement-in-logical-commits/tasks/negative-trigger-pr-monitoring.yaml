@@ -1,0 +1,17 @@
+id: negative-trigger-pr-monitoring
+name: Negative Trigger PR Monitoring
+description: PR monitoring after publication should not route to this skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Monitor the existing pull request until CI and Codex review are green, fixing CI-only failures if needed. Do not implement new feature work or make logical commits."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-logical-commit-flow
+    config:
+      not_contains:
+        - "write-commit-name"
+        - "reviewable batches"
+        - "slice loop"

@@ -1,0 +1,17 @@
+id: negative-trigger-single-concern
+name: Negative Trigger Single Concern
+description: One provided concern set should route to address-codex-concerns.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Address this Codex concern only: src/app.ts:42 may dereference undefined. Validate it and fix it if real."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-loop-for-single-concern
+    config:
+      not_contains:
+        - "review-branch-until-clean"
+        - "full-branch review"
+        - "repeat until"

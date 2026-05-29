@@ -1,0 +1,17 @@
+id: negative-trigger-run-review
+name: Negative Trigger Run Review
+description: A request to perform a review is not selected-item publication.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Review this pull request for correctness and write findings. Do not publish anything to GitHub yet."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-publication-router
+    config:
+      not_contains:
+        - "github-publish-review-items"
+        - "publish selected"
+        - "reviewed head"

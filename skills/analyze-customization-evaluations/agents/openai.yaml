@@ -1,0 +1,4 @@
+interface:
+  display_name: "Analyze Evaluations"
+  short_description: "Analyze Waza skill evaluation health"
+  default_prompt: "Use $analyze-customization-evaluations to analyze my skill evaluation health."

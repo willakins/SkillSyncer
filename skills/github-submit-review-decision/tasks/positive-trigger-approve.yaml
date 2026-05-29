@@ -1,0 +1,18 @@
+id: positive-trigger-approve
+name: Positive Trigger Approve
+description: A direct request to approve a PR at a reviewed commit should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $github-submit-review-decision to approve repo acme/app PR #42 at reviewed commit abc123 with body `Looks good to me.` Eval only: do not call GitHub; return the ordered checks, required fields, and success contract."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-approve-contract
+    config:
+      contains:
+        - "APPROVE"
+        - "abc123"
+        - "PR #42"
+        - "head"

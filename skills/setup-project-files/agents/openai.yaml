@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Project Files"
+  short_description: "Initialize purpose-aware project structure"
+  default_prompt: "Use $setup-project-files to setup the project files for this app."

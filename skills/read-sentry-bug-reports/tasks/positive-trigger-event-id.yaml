@@ -1,0 +1,20 @@
+id: positive-trigger-event-id
+name: Positive Trigger Event ID
+description: A Sentry event ID summary request should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $read-sentry-bug-reports to inspect Sentry event 9f6e0ad705d54c68b2b5fb2b8f7f1d14 and summarize the bug, impact, evidence, likely cause, and next debugging steps. Routing eval only: do not fetch live data."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-event-report-contract
+    config:
+      contains:
+        - "event"
+        - "Summary"
+        - "Impact"
+        - "Evidence"
+        - "Likely cause"
+        - "Next steps"

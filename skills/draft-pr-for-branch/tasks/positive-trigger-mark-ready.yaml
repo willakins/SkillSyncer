@@ -1,0 +1,17 @@
+id: positive-trigger-mark-ready
+name: Positive Trigger Mark Ready
+description: Marking an existing draft PR ready should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $draft-pr-for-branch to mark this branch's existing draft PR ready for review. This is an eval: do not run git, gh, or remote mutations; return the skill-specific readiness checks, CI-marker policy, repair skill, final gh command, and blockers."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-ready-contract
+    config:
+      contains:
+        - "CI-marker policy"
+        - "gh pr ready"
+        - "Blockers"

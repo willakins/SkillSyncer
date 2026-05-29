@@ -1,0 +1,17 @@
+id: negative-trigger-publish-only
+name: Negative Trigger Publish Only
+description: Publishing selected review items should use the publication skill, not the review coordinator.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Publish selected review items A1 and L1 to owner/repo PR #77 at reviewed commit abc123. Do not run a fresh review."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-review-coordinator
+    config:
+      not_contains:
+        - "review-branch-for-merge"
+        - "Decision: Approve"
+        - "Decision: Not ready"

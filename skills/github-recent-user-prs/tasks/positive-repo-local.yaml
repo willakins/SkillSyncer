@@ -1,0 +1,18 @@
+id: positive-repo-local
+name: Positive Repo Local
+description: A direct request for recent PRs in the current repo should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $github-recent-user-prs to gather my recent open and recently closed PRs in this repo before Airtable reconciliation. This is an eval: do not call GitHub, gh, or mutate anything; return the skill-specific scope resolution, read-only tooling, normalized states, and output fields."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-readonly-pr-contract
+    config:
+      contains:
+        - "read-only"
+        - "open_draft"
+        - "closed_unmerged"
+        - "repository_full_name"

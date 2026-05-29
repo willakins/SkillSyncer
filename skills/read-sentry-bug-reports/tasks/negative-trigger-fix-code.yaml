@@ -1,0 +1,17 @@
+id: negative-trigger-fix-code
+name: Negative Trigger Fix Code
+description: Code repair and PR work should route away from read-only Sentry reporting.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user wants you to fix the bug, edit code, commit, push, and open a PR. They did not ask to inspect a Sentry issue. Identify the right workflow and avoid read-only Sentry reporting."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-read-only-sentry
+    config:
+      not_contains:
+        - "read-sentry-bug-reports"
+        - "read-only Sentry"
+        - "incident notes"

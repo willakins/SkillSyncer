@@ -1,0 +1,17 @@
+id: negative-trigger-planning
+name: Negative Trigger Planning
+description: Requests to create a branch plan should not route to worktree setup.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Plan how to split backup support and git sync into one PR, independent branches, or a stack. No branch names or worktree paths exist yet."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-setup-output
+    config:
+      not_contains:
+        - "scripts/setup_worktrees.py"
+        - "created_worktree"
+        - "worktree paths"

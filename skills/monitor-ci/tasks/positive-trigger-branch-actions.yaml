@@ -1,0 +1,18 @@
+id: positive-trigger-branch-actions
+name: Positive Trigger Branch Actions
+description: Pushed branch Actions monitoring should route to monitor-ci.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The branch is already pushed but has no PR. Watch its Actions runs until required CI passes, remains pending, or monitoring is blocked. Identify the right workflow and boundaries."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-branch-monitoring
+    config:
+      contains:
+        - "branch"
+        - "Actions"
+        - "head SHA"
+        - "bounded"

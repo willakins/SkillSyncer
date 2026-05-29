@@ -1,0 +1,17 @@
+id: negative-trigger-ci-log
+name: Negative Trigger CI Log
+description: CI failure investigation without Sentry data should not route to this skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user pasted a GitHub Actions test failure log and asks what broke. There is no Sentry issue URL, event ID, short ID, or request for Sentry errors. Identify the right boundary and avoid Sentry bug-report reading."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-sentry-report
+    config:
+      not_contains:
+        - "read-sentry-bug-reports"
+        - "Sentry issue"
+        - "recent Sentry"

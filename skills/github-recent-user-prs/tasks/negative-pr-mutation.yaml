@@ -1,0 +1,17 @@
+id: negative-pr-mutation
+name: Negative PR Mutation
+description: Creating or updating PRs should route away from read-only recent PR discovery.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user wants to commit staged changes, push the branch, open a draft pull request, and add reviewers. Identify the right workflow and avoid recent-PR discovery."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-recent-pr-discovery
+    config:
+      not_contains:
+        - "github-recent-user-prs"
+        - "recent PR discovery"
+        - "read-only PR list"

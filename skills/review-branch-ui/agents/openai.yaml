@@ -1,0 +1,3 @@
+interface:
+  display_name: "Review Branch UI"
+  short_description: "Test the main changed UI flow with agent-browser"

@@ -1,0 +1,17 @@
+id: negative-trigger-pr-monitoring
+name: Negative Trigger PR Monitoring
+description: Monitoring a PR for merge conflicts should route to the monitoring workflow instead.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Watch the open pull request for merge conflicts and CI status. If conflicts appear later, report them, but do not resolve a local active merge now."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-local-merge-resolution
+    config:
+      not_contains:
+        - "git merge --continue"
+        - "resolved files"
+        - "MERGE_MSG"

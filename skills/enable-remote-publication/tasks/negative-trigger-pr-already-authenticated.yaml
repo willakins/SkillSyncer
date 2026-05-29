@@ -1,0 +1,17 @@
+id: negative-trigger-pr-already-authenticated
+name: Negative Trigger PR Already Authenticated
+description: Normal PR publication after auth works should route to PR skills, not auth setup.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Open a draft PR for the current branch. GitHub auth and push access are already working; just commit the intended changes, push, and create the PR."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-auth-setup
+    config:
+      not_contains:
+        - "gh auth login"
+        - "gh auth setup-git"
+        - "Remote publication is working"

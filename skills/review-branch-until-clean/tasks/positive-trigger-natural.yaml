@@ -1,0 +1,19 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural review-and-repair loop wording should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Review the current branch against main, fix every valid Codex finding in commits, and repeat until the branch is clean. This is an eval: do not run commands; describe the loop, validation step, commit rule, and stop condition."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-loop-contract
+    config:
+      contains:
+        - "git status"
+        - "address-codex-concerns"
+        - "write-commit-name"
+        - "repeat"
+        - "no findings"

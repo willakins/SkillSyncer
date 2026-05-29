@@ -1,0 +1,4 @@
+interface:
+  display_name: "Monitor Codex"
+  short_description: "Request and watch Codex review"
+  default_prompt: "Use $monitor-codex to request Codex review for the current PR head and monitor until Codex produces a clean outcome, returns actionable concerns, or is blocked."

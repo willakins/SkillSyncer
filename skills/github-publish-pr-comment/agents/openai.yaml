@@ -1,0 +1,3 @@
+interface:
+  display_name: "GitHub Publish PR Comment"
+  short_description: "Post one top-level PR conversation comment"

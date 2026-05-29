@@ -1,0 +1,17 @@
+id: negative-trigger-non-rspec
+name: Negative Trigger Non RSpec
+description: Non-RSpec product tests should not route to this skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Run npm test for this TypeScript project, fix any failures, and report the result. There are no RSpec specs in this repo."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-rspec-specific-flow
+    config:
+      not_contains:
+        - "bundle exec rspec"
+        - "RSpec"
+        - "affected spec set"

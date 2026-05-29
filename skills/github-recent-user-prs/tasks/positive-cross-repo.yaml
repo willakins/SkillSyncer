@@ -1,0 +1,18 @@
+id: positive-cross-repo
+name: Positive Cross Repo
+description: A cross-repo recent PR activity request should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user asks for their last 20 open or merged PRs across a small set of installed Croft repositories for a weekly shipped-work review. Identify the right workflow and summarize the normalized output contract."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-cross-repo-contract
+    config:
+      contains:
+        - "small installed-repo"
+        - "merged"
+        - "updated"
+        - "URL"

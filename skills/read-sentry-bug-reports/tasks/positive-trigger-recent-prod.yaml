@@ -1,0 +1,19 @@
+id: positive-trigger-recent-prod
+name: Positive Trigger Recent Prod
+description: Recent unresolved production Sentry bugs should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user asks: review the latest unresolved Sentry bugs in the checkout project for production and rank them by recency or volume with brief incident notes."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-recent-bugs-contract
+    config:
+      contains:
+        - "unresolved"
+        - "production"
+        - "recency"
+        - "volume"
+        - "incident"

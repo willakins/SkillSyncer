@@ -1,0 +1,3 @@
+interface:
+  display_name: "Review Branch Logic"
+  short_description: "Inspect a branch diff for actionable correctness issues"

@@ -1,0 +1,17 @@
+id: negative-trigger-implementation
+name: Negative Trigger Implementation
+description: Implementation in logical commits should not route to planning.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Implement the configured-path persistence feature now and commit the changes in logical commits. Do not produce a branch plan."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-planning-output
+    config:
+      not_contains:
+        - "recommended branch strategy"
+        - "feature summary"
+        - "multiple independent branches"

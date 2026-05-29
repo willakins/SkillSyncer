@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write PR Title"
+  short_description: "Draft concise pull request titles"
+  default_prompt: "Use $write-pr-title to draft a concise title for this pull request from the exact PR or branch diff."

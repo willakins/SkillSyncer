@@ -1,0 +1,4 @@
+interface:
+  display_name: "Repo Contribution Report"
+  short_description: "Report repo lines, merges, and approvals"
+  default_prompt: "Use $repo-contribution-report to report lines added/deleted plus merged and approved PR counts for this repo."

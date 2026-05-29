@@ -1,0 +1,4 @@
+interface:
+  display_name: "Commit"
+  short_description: "Create one commit, push, and hand off monitoring"
+  default_prompt: "Use $commit to create one intentional commit, push it only if the branch target is already safe, and delegate to $monitor with current-head Codex concern repair authorized when I explicitly ask you to monitor."

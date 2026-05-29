@@ -1,0 +1,19 @@
+id: negative-trigger-local-dev-db
+name: Negative Trigger Local Dev DB
+description: Local dev/test database work should not route to the Croft prod replica skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user asks you to reset their local Rails development database, run migrations, and inspect seed data. Identify the right boundary without using Croft production replica access."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-prod-replica
+    config:
+      contains:
+        - "local"
+        - "out of scope"
+      not_contains:
+        - "db-ro-postgresql-nyc3-18224"
+        - "Croft production"

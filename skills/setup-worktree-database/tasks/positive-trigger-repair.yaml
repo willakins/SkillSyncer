@@ -1,0 +1,17 @@
+id: positive-trigger-repair
+name: Positive Trigger Repair
+description: Repairing a Rails worktree that shares databases should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "This Rails worktree still points at the same development and test databases as my main Croft checkout. Set up isolated local databases and the shared VS Code tasks link. Eval only: do not mutate files; describe the ordered workflow."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-isolated-local-db-flow
+    config:
+      contains:
+        - "local"
+        - ".env.development"
+        - ".env.test"

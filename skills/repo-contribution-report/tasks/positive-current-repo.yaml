@@ -1,0 +1,18 @@
+id: positive-current-repo
+name: Positive Current Repo
+description: Current-repo contribution rankings should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user asks who added and deleted the most lines in the current GitHub repo over the last 6 months, including merged and approved PR counts. Identify the right workflow and output contract."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-report-workflow
+    config:
+      contains:
+        - "repo-contribution-report"
+        - "repo_contribution_report.rb"
+        - "gh auth status"
+        - "--months"

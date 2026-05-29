@@ -1,0 +1,17 @@
+id: negative-trigger-failing-ci
+name: Negative Trigger Failing CI
+description: Red CI after checks ran belongs to CI repair workflows, not commit-marker repair.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "CI is failing on PR #123 after tests ran. Inspect the failed GitHub Actions logs and fix the code."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-marker-repair
+    config:
+      not_contains:
+        - "append #CI"
+        - "force-with-lease"
+        - "amend"

@@ -1,0 +1,18 @@
+id: positive-trigger-existing-pr
+name: Positive Trigger Existing PR
+description: Existing PR CI repair should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $fix-pr-until-green to inspect failing GitHub Actions checks on this existing PR, repair actionable failures, commit with #CI, and repeat until checks pass or a blocker remains. This is an eval: do not run git, gh, tests, or remote mutations; return the skill-specific workflow, helper skills, verification policy, and stop conditions."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-ci-repair-contract
+    config:
+      contains:
+        - "repair-pr-ci-trigger"
+        - "GitHub Actions"
+        - "#CI"
+        - "Stop"

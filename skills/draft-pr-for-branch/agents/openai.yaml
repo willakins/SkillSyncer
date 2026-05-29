@@ -1,0 +1,4 @@
+interface:
+  display_name: "Draft PR For Branch"
+  short_description: "Create or update a draft PR from the current branch"
+  default_prompt: "Use $draft-pr-for-branch to verify the current branch, commit in-scope changes if needed, push with git, and create or update a draft pull request."

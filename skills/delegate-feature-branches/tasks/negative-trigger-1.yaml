@@ -1,0 +1,17 @@
+id: negative-trigger-001
+name: Negative Trigger 1
+description: Planning branches without existing worktrees should not route to delegation.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Plan feature branches for adding backups and git sync to this project. No branch plan or worktree paths exist yet."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-delegation-output
+    config:
+      not_contains:
+        - "branch-to-owner mapping"
+        - "worker prompt"
+        - "sub-agent"

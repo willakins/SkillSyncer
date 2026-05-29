@@ -1,0 +1,17 @@
+id: positive-trigger-failing-specs
+name: Positive Trigger Failing Specs
+description: A branch-scoped failing specs request should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Fix the failing RSpec tests caused by this branch and commit each major repair batch. Eval only: summarize the skill workflow without editing files or running git."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-branch-scoped-flow
+    config:
+      contains:
+        - "git status"
+        - "branch"
+        - "commit"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Initialize Electron App"
+  short_description: "Scaffold a practical Electron repo"
+  default_prompt: "Use $initialize-electron-app to initialize this Electron repo."

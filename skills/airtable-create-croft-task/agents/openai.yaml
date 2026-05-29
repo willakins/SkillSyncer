@@ -1,0 +1,4 @@
+interface:
+  display_name: "Croft Airtable Task Creation"
+  short_description: "Create Croft Airtable tasks with Eng Backlog defaults"
+  default_prompt: "Use $airtable-create-croft-task to create a Croft Airtable task. The task name is required; default to Eng Backlog Current Sprint by Assignee (2 weeks), assigned to Will Akins with Low priority."

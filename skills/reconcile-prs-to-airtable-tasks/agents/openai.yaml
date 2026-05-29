@@ -1,0 +1,4 @@
+interface:
+  display_name: "Reconcile PRs To Airtable Tasks"
+  short_description: "Match recent PRs to Croft Airtable tasks and plan writes"
+  default_prompt: "Use $reconcile-prs-to-airtable-tasks to compare recent GitHub pull requests against my Croft Airtable tasks and tell me what to create or update."

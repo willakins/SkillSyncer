@@ -1,0 +1,18 @@
+id: positive-trigger-request-changes
+name: Positive Trigger Request Changes
+description: A direct request to request changes on a PR at a reviewed commit should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $github-submit-review-decision to submit REQUEST_CHANGES on repo acme/app PR #42 at reviewed commit abc123 with body `Please restore the authorization guard before merge.` Eval only: do not call GitHub; return the required inputs, head-check rule, and failure condition."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-request-changes-contract
+    config:
+      contains:
+        - "REQUEST_CHANGES"
+        - "abc123"
+        - "fresh local review"
+        - "missing"

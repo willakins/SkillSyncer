@@ -1,0 +1,17 @@
+id: negative-trigger-full-review
+name: Negative Trigger Full Review
+description: Full merge-readiness review should use the coordinator rather than this focused slice directly.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Fully review PR #88 for merge readiness, including browser UI checks, correctness bugs, style, CI, and final approval decision. Do not limit the review to code-quality findings."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-coordinator-work
+    config:
+      not_contains:
+        - "S1"
+        - "Code quality:"
+        - "review-branch-style"

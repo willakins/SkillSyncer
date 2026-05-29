@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create PDF"
+  short_description: "Build styled PDFs from source artifacts"
+  default_prompt: "Use $create-pdf to build or revise a styled PDF deliverable."

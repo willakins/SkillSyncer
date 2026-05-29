@@ -1,0 +1,4 @@
+interface:
+  display_name: "Sync Airtable Task Status From PRs"
+  short_description: "Update Croft Airtable task statuses from GitHub PR state"
+  default_prompt: "Use $sync-airtable-task-status-from-prs to update matched Croft Airtable tasks so their status reflects current GitHub pull request state."

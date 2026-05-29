@@ -1,0 +1,17 @@
+id: positive-trigger-existing-thread
+name: Positive Trigger Existing Thread
+description: A request to reply to a known inline thread should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $github-publish-inline-review-comment to reply to the existing inline review thread T123 on repo acme/app PR #42 at reviewed commit abc123 with exactly: `Good catch, I updated this path.` Eval only: do not call GitHub; return the ordered checks and the duplicate-thread rule."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-thread-contract
+    config:
+      contains:
+        - "existing thread"
+        - "abc123"
+        - "duplicate"

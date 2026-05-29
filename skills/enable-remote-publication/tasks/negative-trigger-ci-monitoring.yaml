@@ -1,0 +1,17 @@
+id: negative-trigger-ci-monitoring
+name: Negative Trigger CI Monitoring
+description: CI monitoring is outside remote-publication auth setup.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Monitor the existing PR until CI and Codex review are green. Remote publication already succeeded and no push auth setup is needed."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-publication-auth
+    config:
+      not_contains:
+        - "git push --dry-run"
+        - "gh auth setup-git"
+        - "remote publication"

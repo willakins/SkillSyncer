@@ -1,0 +1,17 @@
+id: negative-trigger-ordinary-commit
+name: Negative Trigger Ordinary Commit
+description: Normal commit creation belongs to the commit workflow, not history rewriting.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Commit my current staged changes with a clear message and push the branch."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-history-rewrite
+    config:
+      not_contains:
+        - "simplify-branch-history"
+        - "reset --soft"
+        - "force-with-lease"

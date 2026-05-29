@@ -1,0 +1,17 @@
+id: negative-trigger-open-pr
+name: Negative Trigger Open PR
+description: PR creation should route away from monitor-ci.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user wants to commit the current changes and open a new draft PR. They did not ask to watch checks. Identify the right workflow and avoid CI monitoring."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-ci-monitoring
+    config:
+      not_contains:
+        - "monitor-ci"
+        - "watch GitHub Actions"
+        - "bounded polling"

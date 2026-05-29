@@ -1,0 +1,18 @@
+id: negative-trigger-inline-comment
+name: Negative Trigger Inline Comment
+description: A single inline file comment should route to github-publish-inline-review-comment instead.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Use $github-publish-inline-review-comment to publish one inline PR review comment on repo acme/app PR #42 at reviewed commit abc123, file src/app.ts line 17, side RIGHT. Body: `This drops the null guard; please restore it.` Eval only: do not call GitHub."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-final-review-submission
+    config:
+      not_contains:
+        - "APPROVE"
+        - "REQUEST_CHANGES"
+        - "comment-only final review"
+        - "final review decision"

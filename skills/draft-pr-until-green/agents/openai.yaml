@@ -1,0 +1,4 @@
+interface:
+  display_name: "Green Draft PR"
+  short_description: "Open a draft PR and keep CI green"
+  default_prompt: "Use $draft-pr-until-green to publish this branch as a draft PR, then continue with $fix-pr-until-green until actionable CI checks pass or a blocker remains."

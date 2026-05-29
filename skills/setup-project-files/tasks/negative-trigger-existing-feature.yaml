@@ -1,0 +1,17 @@
+id: negative-trigger-existing-feature
+name: Negative Trigger Existing Feature
+description: Feature implementation in an existing app should not route to setup-project-files.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Implement the configured-path persistence feature in this existing Electron app and commit the changes. The project structure already exists."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-scaffold-workflow
+    config:
+      not_contains:
+        - "scaffold"
+        - "initial structure"
+        - "setup-project-files"

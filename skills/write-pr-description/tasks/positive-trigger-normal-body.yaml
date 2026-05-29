@@ -1,0 +1,19 @@
+id: positive-trigger-normal-body
+name: Positive Trigger Normal Body
+description: Direct PR description/body requests should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $write-pr-description to write a PR description for this branch. This is an eval: do not inspect files or run commands; return the normal PR body structure, source-of-truth checks, merge-safety handling, and testing coverage rule."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-normal-contract
+    config:
+      contains:
+        - "## Context"
+        - "## Summary"
+        - "## Behavior Change"
+        - "## Independent Merge Safety"
+        - "## Testing"

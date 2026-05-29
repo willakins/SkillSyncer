@@ -1,0 +1,18 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural requests to name a PR should route to write-pr-title.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user says: 'What should I call this PR?' Identify the right skill and the source-of-truth checks before drafting."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-title-source-checks
+    config:
+      contains:
+        - "write-pr-title"
+        - "existing PR"
+        - "branch"
+        - "diff"

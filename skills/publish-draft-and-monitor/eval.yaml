@@ -1,0 +1,26 @@
+name: publish-draft-and-monitor-eval
+description: Trigger and anti-trigger coverage for publish-draft-and-monitor.
+skill: publish-draft-and-monitor
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  parallel: false
+  executor: copilot-sdk
+  model: gpt-5-mini
+metrics:
+  - name: task_completion
+    weight: 0.7
+    threshold: 0.8
+    description: Did the response route end-to-end publish, review, ready, CI, and Codex monitoring requests correctly?
+  - name: efficiency
+    weight: 0.3
+    threshold: 0.7
+    description: Did the response avoid narrower PR, CI, or Codex-only workflows?
+graders:
+  - type: behavior
+    name: trigger-behavior
+    config:
+      max_tokens: 50000
+tasks:
+  - "tasks/*.yaml"

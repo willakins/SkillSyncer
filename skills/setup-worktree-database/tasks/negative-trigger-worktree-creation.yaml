@@ -1,0 +1,17 @@
+id: negative-trigger-worktree-creation
+name: Negative Trigger Worktree Creation
+description: Requests to create git worktrees should not route directly to database setup.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Create git worktrees for three planned branches, update main first, and open each branch in VS Code. Do not set up databases yet."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-database-script
+    config:
+      not_contains:
+        - "setup_worktree_database.py"
+        - ".env.development"
+        - "created_and_restored"

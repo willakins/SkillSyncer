@@ -1,0 +1,4 @@
+interface:
+  display_name: "DigitalOcean App Insights"
+  short_description: "Inspect DO app metrics safely"
+  default_prompt: "Use $digitalocean-app-insights to investigate DigitalOcean App Platform memory and CPU pressure."

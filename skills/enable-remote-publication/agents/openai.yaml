@@ -1,0 +1,4 @@
+interface:
+  display_name: "Enable Remote Publication"
+  short_description: "Verify GitHub push or PR mutation auth for a blocked workflow"
+  default_prompt: "Use $enable-remote-publication to inspect the current git remote setup, verify the exact non-mutating push or GitHub mutation path needed by the blocked task, and tell me the next setup step if auth is not ready."

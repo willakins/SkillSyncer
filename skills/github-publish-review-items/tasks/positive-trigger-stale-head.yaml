@@ -1,0 +1,18 @@
+id: positive-trigger-stale-head
+name: Positive Trigger Stale Head
+description: Publishing selected items must stop when the PR head changed.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $github-publish-review-items to publish L2 to owner/repo PR #7, but the current PR head is def456 and the reviewed commit_id is abc123. This is an eval: do not run commands; explain the required stop behavior."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: stops-on-head-move
+    config:
+      contains:
+        - "fresh local review"
+        - "head changed"
+      not_contains:
+        - "Published L2"

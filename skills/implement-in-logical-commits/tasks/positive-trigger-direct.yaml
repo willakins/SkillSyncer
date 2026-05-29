@@ -1,0 +1,17 @@
+id: positive-trigger-direct
+name: Positive Trigger Direct
+description: A direct request to implement in logical commits should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $implement-in-logical-commits to implement this plan in logical commits. Eval only: do not edit files, run git, or mutate anything; return the ordered workflow, commit slicing policy, named helper skills, validation policy, push policy, and final report fields."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-logical-commit-contract
+    config:
+      contains:
+        - "write-commit-name"
+        - "validation"
+        - "push"

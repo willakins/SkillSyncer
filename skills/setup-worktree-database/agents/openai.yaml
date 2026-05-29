@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Worktree Database"
+  short_description: "Create isolated DBs and local VS Code task links"
+  default_prompt: "Use $setup-worktree-database to give this new Rails worktree its own copied local database and shared VS Code task link."

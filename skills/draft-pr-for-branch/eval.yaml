@@ -1,0 +1,26 @@
+name: draft-pr-for-branch-eval
+description: Trigger and anti-trigger coverage for draft-pr-for-branch.
+skill: draft-pr-for-branch
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  parallel: false
+  executor: copilot-sdk
+  model: gpt-5-mini
+metrics:
+  - name: task_completion
+    weight: 0.7
+    threshold: 0.8
+    description: Did the response route PR publication requests correctly?
+  - name: efficiency
+    weight: 0.3
+    threshold: 0.7
+    description: Did the response stay within the skill boundaries?
+graders:
+  - type: behavior
+    name: trigger-behavior
+    config:
+      max_tokens: 120000
+tasks:
+  - "tasks/*.yaml"

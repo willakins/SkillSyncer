@@ -1,0 +1,17 @@
+id: negative-trigger-unselected-comment
+name: Negative Trigger Unselected Comment
+description: An unselected PR comment write should use a narrow publish skill or ask for missing details.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Post a top-level PR comment saying 'Thanks, this looks good' on PR #12. No local review item IDs were selected."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-selected-item-router
+    config:
+      not_contains:
+        - "selected review items"
+        - "github-publish-review-items"
+        - "A1"

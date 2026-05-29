@@ -1,0 +1,17 @@
+id: negative-trigger-repair-only
+name: Negative Trigger Repair Only
+description: Existing PR CI repair should route to fix-pr-until-green, not monitor-ci alone.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The existing PR has failed CI and the user wants you to fix actionable failures, commit with #CI, push, and keep going until green. Identify the right workflow and avoid a monitor-only answer."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: routes-to-repair
+    config:
+      contains:
+        - "fix-pr-until-green"
+      not_contains:
+        - "monitor-only"

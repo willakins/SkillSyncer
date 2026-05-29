@@ -1,0 +1,19 @@
+id: positive-trigger-approval
+name: Positive Trigger Approval
+description: Explicit approval readiness requests should use the coordinator.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $review-branch-for-merge to decide whether PR #123 should be approved. This is an eval: do not run commands; list the required pinned target, focused review skills, decision rule, and publish-confirmation rule."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-merge-review-contract
+    config:
+      contains:
+        - "head SHA"
+        - "review-branch-ui"
+        - "review-branch-logic"
+        - "review-branch-style"
+        - "explicit confirmation"

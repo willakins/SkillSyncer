@@ -1,0 +1,18 @@
+id: positive-trigger-stale-shard
+name: Positive Trigger Stale Shard
+description: Stale CI shard monitoring should use monitor-ci policy.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. A test shard in GitHub Actions has been running for over 30 minutes with no result while watching this PR. Explain the monitor-ci state handling and when cancellation or repair is allowed."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-stale-shard-policy
+    config:
+      contains:
+        - "30 minutes"
+        - "stale"
+        - "cancel"
+        - "authorization"

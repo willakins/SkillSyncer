@@ -1,0 +1,18 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural language to get an existing PR green should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The pull request already exists and its CI is failing. The user wants you to get this PR green by fixing actionable checks and pushing follow-up commits until the checks pass or there is a real blocker. Identify the right workflow and summarize its boundaries."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-existing-pr-boundaries
+    config:
+      contains:
+        - "existing PR"
+        - "CI"
+        - "blocked"
+        - "draft-pr-until-green"

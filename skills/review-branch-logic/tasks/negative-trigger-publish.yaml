@@ -1,0 +1,17 @@
+id: negative-trigger-publish
+name: Negative Trigger Publish
+description: Publishing existing review findings should not route to this review skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Publish my existing review finding L2 as an inline GitHub comment on owner/repo PR #7. Do not run a new correctness review."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-new-review-flow
+    config:
+      not_contains:
+        - "review the diff"
+        - "Logic:"
+        - "correctness pass"

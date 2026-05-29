@@ -1,0 +1,18 @@
+id: positive-trigger-reword
+name: Positive Trigger Reword
+description: Rewording and reordering branch-only commits should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Clean up the current feature branch history by rewording vague commit subjects and reordering commits before merge. This is an eval: do not mutate anything; explain the required branch-scope checks."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-branch-scope-checks
+    config:
+      contains:
+        - "branch-only"
+        - "protected"
+        - "clean"
+        - "git log"

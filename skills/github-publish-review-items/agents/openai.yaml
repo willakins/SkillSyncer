@@ -1,0 +1,3 @@
+interface:
+  display_name: "GitHub Publish Review Items"
+  short_description: "Publish selected review items after verifying the PR head"

@@ -1,0 +1,17 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural correctness-review wording should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Do a focused correctness pass on this branch diff. I only want real logic bugs like missing authorization, broken read/write symmetry, misleading tests, races, or contract regressions. Eval only: describe how you would review it."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-correctness-scope
+    config:
+      contains:
+        - "authorization"
+        - "tests"
+        - "read/write"

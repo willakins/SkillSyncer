@@ -1,0 +1,17 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural language requesting planning, parallel execution, and PR publication should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "I want this backup-before-overwrite feature planned into the right number of branches, implemented in isolated worktrees, delegated where useful, and opened as draft PRs until green. Eval only: describe the routing and outputs instead of doing the work."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-branch-and-pr-outputs
+    config:
+      contains:
+        - "branch"
+        - "worktree"
+        - "PR"

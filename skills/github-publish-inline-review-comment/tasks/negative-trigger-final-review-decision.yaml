@@ -1,0 +1,17 @@
+id: negative-trigger-final-review-decision
+name: Negative Trigger Final Review Decision
+description: Submitting a final review decision should not route to this inline comment skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Submit a request-changes review on repo acme/app PR #42 with the body `Please fix the release blocker before merge.`"
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-inline-publication
+    config:
+      not_contains:
+        - "inline review comment"
+        - "file line"
+        - "review-level body empty"

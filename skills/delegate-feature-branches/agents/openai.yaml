@@ -1,0 +1,4 @@
+interface:
+  display_name: "Delegate Feature Branches"
+  short_description: "Assign planned branches to Codex workers"
+  default_prompt: "Use $delegate-feature-branches to assign each planned feature branch to a Codex worker with clear scope, validation, and publication instructions."

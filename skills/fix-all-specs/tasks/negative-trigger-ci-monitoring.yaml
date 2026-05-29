@@ -1,0 +1,17 @@
+id: negative-trigger-ci-monitoring
+name: Negative Trigger CI Monitoring
+description: Existing PR CI monitoring or GitHub Actions repair should not route to this skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Watch the existing pull request until GitHub Actions and Codex review are green, fixing CI-only failures if needed. Do not run local RSpec repair for a branch."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-rspec-repair
+    config:
+      not_contains:
+        - "affected spec set"
+        - "bundle exec rspec"
+        - "write-commit-name"

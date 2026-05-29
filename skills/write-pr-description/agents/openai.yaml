@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write PR Description"
+  short_description: "Draft a GitHub pull request body from an exact branch or PR diff"
+  default_prompt: "Use $write-pr-description to draft a PR description from the exact branch or PR diff. Preserve required template sections, merge-safety checklist text, bug-fix/Sentry rules, legal source links when relevant, and testing coverage notes."

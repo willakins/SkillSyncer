@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fix Sentry Bug To PR"
+  short_description: "Trace bug to clean draft PR"
+  default_prompt: "Use $croft-fix-sentry-bug-pr to investigate this Sentry issue, fix it in logical commits, and open a clean draft PR."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Croft Airtable Task Lookup"
+  short_description: "Query Croft Airtable tasks by assignee, status, table"
+  default_prompt: "Use $airtable-will-current-sprint-tasks to query Croft Airtable tasks with defaults for Will Akins in Eng Backlog Current Sprint."

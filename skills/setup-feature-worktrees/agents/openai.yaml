@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Feature Worktrees"
+  short_description: "Create branches, worktrees, DBs, and task links"
+  default_prompt: "Use $setup-feature-worktrees to update main, create the planned branches and worktrees, set up isolated local databases and shared VS Code task links, and open VS Code windows."

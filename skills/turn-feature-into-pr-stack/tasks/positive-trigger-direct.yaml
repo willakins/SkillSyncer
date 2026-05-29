@@ -1,0 +1,17 @@
+id: positive-trigger-direct
+name: Positive Trigger Direct
+description: Direct invocation for the complete feature-to-PR flow should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $turn-feature-into-pr-stack to take a feature request from repo analysis through branch planning, worktree setup, implementation, draft PRs, and CI follow-through. This is an eval: do not run commands or edit files; return the coordinator plan and handoff sequence."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-coordinator-flow
+    config:
+      contains:
+        - "plan-feature-branches"
+        - "setup-feature-worktrees"
+        - "draft-pr-until-green"

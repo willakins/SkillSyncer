@@ -1,0 +1,4 @@
+interface:
+  display_name: "Monitor Merge Conflicts"
+  short_description: "Watch and repair PR conflicts"
+  default_prompt: "Use $monitor-merge-conflicts to check the current PR for merge conflicts and delegate repair to the existing conflict-resolution workflow."

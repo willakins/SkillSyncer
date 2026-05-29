@@ -1,0 +1,17 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural branch-breakdown wording should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Figure out how this backup-before-overwrite feature should fit in the app and whether it should be one PR, independent branches, or a stack. Routing eval only: do not inspect files; summarize the repo context you would gather and the planning decision rules."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-decision-rules
+    config:
+      contains:
+        - "one branch"
+        - "multiple independent branches"
+        - "stacked"

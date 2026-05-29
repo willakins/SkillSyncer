@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scope-of-Work PDF"
+  short_description: "Create polished scope-of-work PDFs"
+  default_prompt: "Use $create-pdf-scope-of-work to build a styled scope-of-work PDF."

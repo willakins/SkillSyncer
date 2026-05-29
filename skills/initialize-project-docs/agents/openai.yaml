@@ -1,0 +1,4 @@
+interface:
+  display_name: "Initialize Project Docs"
+  short_description: "Create core project setup documents"
+  default_prompt: "Use $initialize-project-docs to create README, AGENTS.md, .gitignore, license, and docs for this project."

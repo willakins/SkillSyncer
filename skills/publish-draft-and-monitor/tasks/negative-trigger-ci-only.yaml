@@ -1,0 +1,19 @@
+id: negative-trigger-ci-only
+name: Negative Trigger CI Only
+description: Existing PR CI repair should route to CI repair, not PR publication.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The pull request already exists and is ready for review. Inspect its failing GitHub Actions checks, fix actionable failures, commit with #CI, push, and keep going until checks pass or a blocker remains. Do not create, refresh, or mark a PR ready."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: routes-to-ci-repair
+    config:
+      contains:
+        - "fix-pr-until-green"
+      not_contains:
+        - "draft-pr-for-branch"
+        - "mark it ready"
+        - "publish draft"

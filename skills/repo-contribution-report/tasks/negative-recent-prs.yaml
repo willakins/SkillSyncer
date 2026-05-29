@@ -1,0 +1,18 @@
+id: negative-recent-prs
+name: Negative Recent PRs
+description: Recent PR discovery without contribution metrics should not route to this skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user asks for their last 20 open and merged PRs across local repos for a weekly status update, with URLs and normalized PR states but no line counts."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: routes-away-from-report
+    config:
+      contains:
+        - "github-recent-user-prs"
+      not_contains:
+        - "repo-contribution-report"
+        - "repo_contribution_report.rb"

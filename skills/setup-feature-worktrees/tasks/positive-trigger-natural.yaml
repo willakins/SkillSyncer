@@ -1,0 +1,17 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural wording with an ordered branch list should trigger worktree setup.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Prepare my local repo for these already planned branches in order: feature/path-config, feature/backup-copy, feature/gui-sync. Pull main, create the branches from main, put the extra branches in sibling worktrees, set up their Rails databases, and launch VS Code if available. This is a routing eval; do not mutate files."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-safe-worktree-steps
+    config:
+      contains:
+        - "git pull --ff-only"
+        - "feature/backup-copy"
+        - "database"

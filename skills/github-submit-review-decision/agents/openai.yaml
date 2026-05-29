@@ -1,0 +1,3 @@
+interface:
+  display_name: "GitHub Submit Review Decision"
+  short_description: "Submit APPROVE, REQUEST_CHANGES, or COMMENT reviews"

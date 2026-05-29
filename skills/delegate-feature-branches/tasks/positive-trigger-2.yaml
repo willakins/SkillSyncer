@@ -1,0 +1,17 @@
+id: positive-trigger-002
+name: Positive Trigger 2
+description: Parallel Codex wording with existing worktree paths should trigger the skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Assign each extra worktree to a Codex sub-agent for parallel execution. The plan already exists: feature/git-orchestration in /tmp/skillsyncer-git owns src/sync/git.ts and runs npm run typecheck; feature/path-persistence in /tmp/skillsyncer-paths owns src/sync/config.ts and runs npm test. In this eval, summarize the worker instructions instead of launching agents."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: reports-ownership-and-validation
+    config:
+      contains:
+        - "feature/git-orchestration"
+        - "src/sync/git.ts"
+        - "npm run typecheck"

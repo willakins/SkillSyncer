@@ -1,0 +1,18 @@
+id: positive-trigger-exact-pr-head
+name: Positive Trigger Exact PR Head
+description: Caller-supplied PR-head push targets should trigger target-preservation behavior.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $enable-remote-publication after a draft PR workflow failed. The original task is creating a draft PR, and the caller already resolved push_target_repo=github.com/acme/app and push_target_ref=refs/heads/codex/fix-ci. This is an eval: do not run commands; explain how you preserve the exact target and verify it safely."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: preserves-exact-target
+    config:
+      contains:
+        - "push_target_repo"
+        - "push_target_ref"
+        - "remote alias"
+        - "git push --dry-run"

@@ -1,0 +1,18 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural UI-review wording should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Do the UI portion of the branch review for the main changed customer-facing flow. Routing eval only: list how you would verify the pinned code, local browser path, interactions, and final UI result."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-main-flow-validation
+    config:
+      contains:
+        - "pinned"
+        - "browser"
+        - "interactions"
+        - "UI"

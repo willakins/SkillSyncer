@@ -1,0 +1,4 @@
+interface:
+  display_name: "Monitor"
+  short_description: "Drive PRs to merge-ready or blocked"
+  default_prompt: "Use $monitor to drive the current PR to merge-ready unless I explicitly ask for observe-only monitoring. Check mergeability, request or confirm Codex review for the latest pushed head, monitor CI, repair actionable branch-caused CI failures and validated current-head Codex concerns by default, push repair commits, and restart monitoring until the PR is mergeable, required CI is green, Codex is clean, and no blocker remains."

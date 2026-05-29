@@ -1,0 +1,19 @@
+id: positive-trigger-url
+name: Positive Trigger URL
+description: A direct Sentry issue URL request should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $read-sentry-bug-reports to read this Sentry issue URL and explain what is breaking, who is affected, how often it happens, the likely cause, and next debugging steps: https://example-org.sentry.io/issues/1234567890/"
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-url-report-contract
+    config:
+      contains:
+        - "Sentry issue URL"
+        - "impact"
+        - "frequency"
+        - "Likely cause"
+        - "Next steps"

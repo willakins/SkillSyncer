@@ -1,0 +1,19 @@
+id: negative-trigger-draft-only
+name: Negative Trigger Draft Only
+description: Draft-only PR publication should route to draft-pr-for-branch, not the full monitor loop.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user only wants to commit the intended changes and open a draft PR for the current branch. They do not want local review cleanup, CI monitoring, Codex review, or repair loops. Identify the right workflow and avoid the end-to-end monitor path."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-monitor-loop
+    config:
+      contains:
+        - "draft-pr-for-branch"
+      not_contains:
+        - "review-branch-until-clean"
+        - "monitor-codex"
+        - "until merge-ready"

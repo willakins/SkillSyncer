@@ -1,0 +1,17 @@
+id: negative-trigger-known-implementation
+name: Negative Trigger Known Implementation
+description: A known single-branch implementation request should not use this coordinator.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Implement the configured-path persistence feature on the current branch and commit it in logical commits. Do not create branches, worktrees, or PRs."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-stack-planning
+    config:
+      not_contains:
+        - "multiple independent branches"
+        - "setup-feature-worktrees"
+        - "draft PRs"

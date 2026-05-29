@@ -1,0 +1,17 @@
+id: negative-trigger-docs-only
+name: Negative Trigger Docs Only
+description: Documentation-only initialization should not route to setup-project-files.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Create only README.md, AGENTS.md, .gitignore, LICENSE, and a docs index for this new repo. Do not create or modify source files."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-source-scaffold
+    config:
+      not_contains:
+        - "setup-project-files"
+        - "source structure"
+        - "composition root"

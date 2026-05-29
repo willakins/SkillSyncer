@@ -1,0 +1,18 @@
+id: positive-trigger-direct
+name: Positive Trigger Direct
+description: Direct skill invocation for style review should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $review-branch-style to review PR #42 at base abc123 and head def456. Eval only: do not run commands; return the required inputs, standards scope, and exact output format."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-style-contract
+    config:
+      contains:
+        - "style-guide.md"
+        - "AGENTS.md"
+        - "S1"
+        - "Code quality"

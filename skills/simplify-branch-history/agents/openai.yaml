@@ -1,0 +1,4 @@
+interface:
+  display_name: "Simplify Branch History"
+  short_description: "Simplify noisy branch commit history"
+  default_prompt: "Use $simplify-branch-history to clean up this branch's noisy commit history before pushing the PR."

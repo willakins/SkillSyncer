@@ -1,0 +1,4 @@
+interface:
+  display_name: "Merge Main Into Branch"
+  short_description: "Merge origin/main into the current branch and push it"
+  default_prompt: "Use $merge-main-into-branch to fetch origin/main, merge it into my current branch, resolve any conflicts, and push the synced branch."

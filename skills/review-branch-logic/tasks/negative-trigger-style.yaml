@@ -1,0 +1,17 @@
+id: negative-trigger-style
+name: Negative Trigger Style
+description: Style-only review should not route to the logic-review skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Review this PR only for naming, formatting, UI polish, and style-guide compliance. Do not look for correctness bugs."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-logic-review-output
+    config:
+      not_contains:
+        - "L1"
+        - "correctness gaps"
+        - "review-branch-logic"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Read Sentry Bug Reports"
+  short_description: "Summarize Sentry bugs into reports"
+  default_prompt: "Use $read-sentry-bug-reports to inspect this Sentry issue and summarize the bug, impact, and likely next steps."

@@ -1,0 +1,17 @@
+id: negative-trigger-merge-conflict
+name: Negative Trigger Merge Conflict
+description: Active merge conflict repair belongs to the merge-conflict skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Resolve the active git merge conflicts in this worktree and continue the merge."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-merge-conflict-flow
+    config:
+      not_contains:
+        - "simplify-branch-history"
+        - "snapshot_branch_diff"
+        - "force-with-lease"

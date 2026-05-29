@@ -1,0 +1,3 @@
+interface:
+  display_name: "GitHub Publish Inline Review Comment"
+  short_description: "Post one inline PR review comment on a file line"

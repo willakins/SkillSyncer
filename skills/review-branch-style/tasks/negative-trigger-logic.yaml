@@ -1,0 +1,17 @@
+id: negative-trigger-logic
+name: Negative Trigger Logic
+description: Correctness-only review should not route to the style-review skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Review this PR only for correctness bugs, missing authorization checks, broken read/write symmetry, data races, and misleading tests. Do not comment on style."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-style-output
+    config:
+      not_contains:
+        - "S1"
+        - "style-guide.md"
+        - "review-branch-style"

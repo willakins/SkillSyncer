@@ -1,0 +1,18 @@
+id: positive-trigger-direct
+name: Positive Trigger Direct
+description: Direct skill invocation for logic review should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $review-branch-logic to review PR #42 at base abc123 and head def456. Eval only: do not run commands; return the workflow and exact output format for actionable correctness findings."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-logic-review-contract
+    config:
+      contains:
+        - "base"
+        - "head"
+        - "L1"
+        - "correctness"

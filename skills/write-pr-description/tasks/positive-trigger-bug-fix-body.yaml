@@ -1,0 +1,18 @@
+id: positive-trigger-bug-fix-body
+name: Positive Trigger Bug Fix Body
+description: Bug-fix PR body requests with Sentry context should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $write-pr-description to draft a bug-fix PR body for the current branch. Sentry URL is https://sentry.example/issues/123456. This is an eval: do not inspect files or run commands; return the required bug-fix sections and the key formatting rules you would apply."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-bug-fix-contract
+    config:
+      contains:
+        - "Fixes this bug [Sentry]"
+        - "## Root Problem"
+        - "## Solution"
+        - "All new behavior covered by system specs"

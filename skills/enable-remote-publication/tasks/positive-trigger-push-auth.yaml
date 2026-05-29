@@ -1,0 +1,17 @@
+id: positive-trigger-push-auth
+name: Positive Trigger Push Auth
+description: A blocked push/auth setup request should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $enable-remote-publication to figure out why Codex cannot push this branch. This is an eval: do not run git, gh, or remote mutations; return the checks you would make, the non-destructive verification command shape, and the final resume prompt policy."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-push-auth-contract
+    config:
+      contains:
+        - "git remote -v"
+        - "git push --dry-run"
+        - "continue"

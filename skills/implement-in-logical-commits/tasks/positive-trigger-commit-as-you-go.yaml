@@ -1,0 +1,17 @@
+id: positive-trigger-commit-as-you-go
+name: Positive Trigger Commit As You Go
+description: A request to commit while implementing should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Work through the feature and commit as you go. Split it into reviewable batches if needed. Eval only: summarize how you would choose slices, validate each slice, create commit messages, and decide whether to push."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-slice-loop
+    config:
+      contains:
+        - "slice"
+        - "commit"
+        - "write-commit-name"

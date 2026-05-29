@@ -1,0 +1,18 @@
+id: positive-trigger-count-sample
+name: Positive Trigger Count Sample
+description: Narrow counts and samples from Croft prod should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user asks: check Croft production and count open job orders, then sample a few recent employer org rows from the read-only replica. Identify the right workflow and boundaries."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-small-query-policy
+    config:
+      contains:
+        - "SELECT"
+        - "LIMIT"
+        - "db-ro-postgresql-nyc3-18224"
+        - "summarize"

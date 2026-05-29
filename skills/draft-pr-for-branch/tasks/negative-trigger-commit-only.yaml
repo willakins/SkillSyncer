@@ -1,0 +1,17 @@
+id: negative-trigger-commit-only
+name: Negative Trigger Commit Only
+description: A commit-only request should route to the commit skill, not PR publication.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user wants to write and make a commit for staged changes, but does not want to push or create/update any pull request. Identify the right workflow and avoid PR publication."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-pr-flow
+    config:
+      not_contains:
+        - "open a draft PR"
+        - "write-pr-description"
+        - "PR link"

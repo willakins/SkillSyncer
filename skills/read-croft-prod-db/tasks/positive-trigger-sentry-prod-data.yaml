@@ -1,0 +1,19 @@
+id: positive-trigger-sentry-prod-data
+name: Positive Trigger Sentry Prod Data
+description: Sentry validation against Croft production rows should use the prod replica skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $read-croft-prod-db to validate a Croft Sentry issue against live production rows. Routing eval only: do not run commands or SQL. Return the skill-specific workflow, safety boundaries, and helper path."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-prod-replica-workflow
+    config:
+      contains:
+        - "read-only"
+        - "db/schema.rb"
+        - "app/models"
+        - "query_prod_replica.rb"
+        - "redact"

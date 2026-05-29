@@ -1,0 +1,17 @@
+id: positive-trigger-direct
+name: Positive Trigger Direct
+description: Direct skill invocation should route to the database setup workflow.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $setup-worktree-database for my new Rails worktree at ../backburner-5. Copy from the current local Croft worktree, keep it dry-run for this eval, and summarize the exact script workflow without running commands."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-setup-script
+    config:
+      contains:
+        - "setup_worktree_database.py"
+        - "--worktree"
+        - "--dry-run"

@@ -1,0 +1,19 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural merge-readiness wording should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Fully review branch feature/safe-sync and tell me whether it is ready to merge. Routing eval only: do not inspect files; summarize the review target, exact diff, review slices, and output decision format."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-full-review-routing
+    config:
+      contains:
+        - "review target"
+        - "exact diff"
+        - "UI"
+        - "Logic"
+        - "Decision"

@@ -1,0 +1,17 @@
+id: positive-trigger-001
+name: Positive Trigger 1
+description: A direct skill invocation with planned branches and worktrees should route to delegation.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $delegate-feature-branches to prepare delegation prompts for these already planned branches. Keep the main agent on feature/import-copy at /tmp/skillsyncer-import with validation npm test. Delegate feature/export-copy at /tmp/skillsyncer-export with validation npm run build. This is an eval, so do not spawn workers; return the branch-to-owner mapping and worker prompt content."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: reports-worker-contract
+    config:
+      contains:
+        - "feature/export-copy"
+        - "implement-in-logical-commits"
+        - "draft-pr-until-green"

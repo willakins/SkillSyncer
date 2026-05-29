@@ -1,0 +1,19 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural end-to-end branch readiness language should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user wants to take the current branch from local changes to a ready-for-review pull request, opening it as a draft first, fixing local review findings, then watching GitHub Actions and Codex review until the PR is merge-ready or blocked. Identify the right workflow and summarize its boundaries."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-natural-boundaries
+    config:
+      contains:
+        - "draft"
+        - "ready"
+        - "GitHub Actions"
+        - "Codex"
+        - "blocked"

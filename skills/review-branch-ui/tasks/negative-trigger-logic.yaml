@@ -1,0 +1,17 @@
+id: negative-trigger-logic
+name: Negative Trigger Logic
+description: Correctness-only review should not route to the UI review skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Review PR #42 only for correctness bugs, missing authorization, broken contracts, race conditions, and misleading tests. Do not do UI testing."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-ui-review-output
+    config:
+      not_contains:
+        - "review-branch-ui"
+        - "agent-browser"
+        - "UI1"

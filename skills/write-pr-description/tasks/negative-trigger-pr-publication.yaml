@@ -1,0 +1,17 @@
+id: negative-trigger-pr-publication
+name: Negative Trigger PR Publication
+description: Creating or publishing a PR should route to PR publication workflow unless only body drafting is requested.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user wants to commit the current changes, push the branch, and open a draft PR. They did not ask for only the PR body. Identify the right workflow and avoid drafting a standalone PR description."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-standalone-body
+    config:
+      not_contains:
+        - "## Context"
+        - "## Testing"
+        - "raw Markdown"

@@ -1,0 +1,17 @@
+id: negative-trigger-pr-title
+name: Negative Trigger PR Title
+description: PR title requests should not route to PR body drafting.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. Write a concise title for this pull request from the branch diff. Do not write the PR body or description."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-body-sections
+    config:
+      not_contains:
+        - "## Context"
+        - "## Summary"
+        - "## Testing"

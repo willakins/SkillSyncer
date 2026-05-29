@@ -1,0 +1,4 @@
+interface:
+  display_name: "Split Branch Into Stack"
+  short_description: "Split a large branch into reviewable slices"
+  default_prompt: "Use $split-branch-into-stack to inspect the current branch against main, plan correct mergeable slices, preserve the original work, create stack branches when requested, move changes safely, and verify each slice."

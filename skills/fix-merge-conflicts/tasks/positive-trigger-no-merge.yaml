@@ -1,0 +1,17 @@
+id: positive-trigger-no-merge
+name: Positive Trigger No Merge
+description: A merge-conflict request with no active merge should still route here and stop safely.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $fix-merge-conflicts. Assume git status shows no merge in progress and no unmerged paths. This is an eval: do not run commands; explain the stop condition and final output fields."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: reports-no-merge-stop
+    config:
+      contains:
+        - "nothing to continue"
+        - "Merge in progress"
+        - "No"

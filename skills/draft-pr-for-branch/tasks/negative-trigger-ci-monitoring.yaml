@@ -1,0 +1,17 @@
+id: negative-trigger-ci-monitoring
+name: Negative Trigger CI Monitoring
+description: Monitoring or fixing checks after PR publication should not use this skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Watch the existing pull request until CI and Codex review are green, then summarize any failures. Do not create, update, or mark a PR ready."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-pr-publication
+    config:
+      not_contains:
+        - "write-pr-title"
+        - "create a draft PR"
+        - "gh pr ready"

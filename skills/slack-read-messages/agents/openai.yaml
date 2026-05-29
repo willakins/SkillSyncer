@@ -1,0 +1,4 @@
+interface:
+  display_name: "Slack Read Messages"
+  short_description: "Read and filter Slack channel messages"
+  default_prompt: "Use $slack-read-messages to read recent Slack messages with channel, sender, and thread filters."

@@ -1,0 +1,19 @@
+id: positive-trigger-direct
+name: Positive Trigger Direct
+description: A direct request to publish, clean, mark ready, and monitor should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $publish-draft-and-monitor to publish this branch as a draft PR, clean it up, mark it ready, and monitor it until CI passes and Codex produces a clean outcome or a blocker remains. This is an eval: do not run git, gh, tests, or remote mutations; return the skill-specific ordered workflow, helper skills, ready-transition Codex policy, and stop conditions."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-end-to-end-contract
+    config:
+      contains:
+        - "draft-pr-for-branch"
+        - "review-branch-until-clean"
+        - "monitor"
+        - "ready-transition"
+        - "Stop conditions"

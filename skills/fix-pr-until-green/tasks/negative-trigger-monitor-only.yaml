@@ -1,0 +1,17 @@
+id: negative-trigger-monitor-only
+name: Negative Trigger Monitor Only
+description: Monitoring without code repair should not route to this skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. Watch this existing pull request until checks finish and summarize failures, but do not edit files, commit, push, or repair CI. Identify the right workflow and avoid code repair."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-repair-loop
+    config:
+      not_contains:
+        - "commit with #CI"
+        - "repair actionable failures"
+        - "push follow-up commits"

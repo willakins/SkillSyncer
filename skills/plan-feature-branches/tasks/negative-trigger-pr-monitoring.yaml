@@ -1,0 +1,17 @@
+id: negative-trigger-pr-monitoring
+name: Negative Trigger PR Monitoring
+description: Existing PR monitoring should not route to feature planning.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Watch the existing pull request until GitHub Actions and Codex review are green, then report blockers. Do not plan new feature branches."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-monitoring-plan
+    config:
+      not_contains:
+        - "branch strategy"
+        - "per-branch validation"
+        - "one PR or several"

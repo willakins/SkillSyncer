@@ -1,0 +1,17 @@
+id: negative-ci-monitoring
+name: Negative CI Monitoring
+description: CI monitoring or repair should not route to this read-only discovery skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. Watch this existing pull request until GitHub Actions finish, fix actionable failures, commit with #CI, and keep going until the PR is green or blocked."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-ci-repair
+    config:
+      not_contains:
+        - "github-recent-user-prs"
+        - "recent PR list"
+        - "normalized PR state"

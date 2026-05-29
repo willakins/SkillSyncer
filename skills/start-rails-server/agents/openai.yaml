@@ -1,0 +1,4 @@
+interface:
+  display_name: "Start Rails Server"
+  short_description: "Boot Rails, Tailwind, and Sidekiq"
+  default_prompt: "Use $start-rails-server to start this Rails worktree's local stack and give me the URL."

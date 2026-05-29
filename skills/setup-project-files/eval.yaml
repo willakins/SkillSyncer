@@ -1,0 +1,26 @@
+name: setup-project-files-eval
+description: Trigger and anti-trigger coverage for setup-project-files.
+skill: setup-project-files
+version: "1.0"
+config:
+  trials_per_task: 1
+  timeout_seconds: 300
+  parallel: false
+  executor: copilot-sdk
+  model: gpt-5-mini
+metrics:
+  - name: task_completion
+    weight: 0.7
+    threshold: 0.8
+    description: Did the response route project-structure setup requests correctly?
+  - name: focus
+    weight: 0.3
+    threshold: 0.7
+    description: Did the response avoid unrelated docs, PR, CI, or feature-work workflows?
+graders:
+  - type: behavior
+    name: setup-project-routing
+    config:
+      max_tokens: 50000
+tasks:
+  - "tasks/*.yaml"

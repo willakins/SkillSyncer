@@ -1,0 +1,16 @@
+id: negative-trigger-commit-subject
+name: Negative Trigger Commit Subject
+description: Commit subject requests should route away from write-pr-title.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The user asks for a git commit subject for staged changes and does not mention a pull request. Identify the right workflow and avoid PR title drafting."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-pr-title-skill
+    config:
+      not_contains:
+        - "write-pr-title"
+        - "pull request title"

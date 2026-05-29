@@ -1,0 +1,4 @@
+interface:
+  display_name: "Analyze and Fix All Skills"
+  short_description: "Batch analyze and repair Codex skills"
+  default_prompt: "Use $analyze-and-fix-all-skills to analyze and fix all of my Codex skills."

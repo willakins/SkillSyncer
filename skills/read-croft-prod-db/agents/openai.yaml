@@ -1,0 +1,4 @@
+interface:
+  display_name: "Read Croft Prod DB"
+  short_description: "Inspect Croft prod replica safely"
+  default_prompt: "Use $read-croft-prod-db for narrow read-only Croft production data inspection through the DigitalOcean replica."

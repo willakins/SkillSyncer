@@ -1,0 +1,18 @@
+id: positive-trigger-natural
+name: Positive Trigger Natural
+description: Natural style-review wording should trigger this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Do a focused style and maintainability pass on this branch diff. I only want code-quality findings about UI polish, shared patterns, naming, boundaries, and style-guide compliance. Eval only: describe how you would review it."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-standards-scope
+    config:
+      contains:
+        - "style"
+        - "maintainability"
+        - "changed file"
+        - "S1"

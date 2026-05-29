@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fix All Specs"
+  short_description: "Repair RSpec failures for the current branch"
+  default_prompt: "Use $fix-all-specs to inspect the current branch, run the affected RSpec set, repair branch-caused failures, commit each major repair round, and push only when the target is verified."

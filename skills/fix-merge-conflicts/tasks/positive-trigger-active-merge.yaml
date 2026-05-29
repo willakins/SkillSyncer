@@ -1,0 +1,17 @@
+id: positive-trigger-active-merge
+name: Positive Trigger Active Merge
+description: A direct request to resolve an active merge should use this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $fix-merge-conflicts to resolve the current in-progress git merge. This is an eval: do not run commands or edit files; return the skill-specific ordered checks, conflict resolution policy, staging rules, and non-interactive continue step."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-active-merge-contract
+    config:
+      contains:
+        - "unmerged"
+        - "stage"
+        - "GIT_EDITOR=true git merge --continue"

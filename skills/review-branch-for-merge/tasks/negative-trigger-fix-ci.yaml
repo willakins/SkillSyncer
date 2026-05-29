@@ -1,0 +1,17 @@
+id: negative-trigger-fix-ci
+name: Negative Trigger Fix CI
+description: CI repair is not a merge-readiness review request.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Fix the failing GitHub Actions checks on the current PR and push the repair. Do not produce a review."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-review-output
+    config:
+      not_contains:
+        - "Decision: Approve"
+        - "Logic issues:"
+        - "publish prompt"

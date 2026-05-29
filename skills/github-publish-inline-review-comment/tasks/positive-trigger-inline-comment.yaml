@@ -1,0 +1,18 @@
+id: positive-trigger-inline-comment
+name: Positive Trigger Inline Comment
+description: A direct request to publish one inline PR review comment should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $github-publish-inline-review-comment to publish this single inline review comment on repo acme/app PR #42 at reviewed commit abc123, file src/app.ts line 17, side RIGHT. Body: `This branch drops the null guard; please keep the old check.` Eval only: do not call GitHub; return the skill-specific checks and publication contract."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-inline-contract
+    config:
+      contains:
+        - "commit"
+        - "src/app.ts"
+        - "line 17"
+        - "review-level body empty"

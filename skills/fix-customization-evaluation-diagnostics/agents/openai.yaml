@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fix Evaluation Diagnostics"
+  short_description: "Diagnose and repair Waza skill evals"
+  default_prompt: "Use $fix-customization-evaluation-diagnostics to diagnose this Waza evaluation failure."

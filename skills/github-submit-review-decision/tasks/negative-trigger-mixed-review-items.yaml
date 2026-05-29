@@ -1,0 +1,17 @@
+id: negative-trigger-mixed-review-items
+name: Negative Trigger Mixed Review Items
+description: Publishing selected inline, top-level, and final decision items should route to the batch review publication skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Publish selected review items L1, L2, T1, and A1 to the current PR. Some are inline comments, one is a top-level PR comment, and one is the final review decision."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-single-decision-only-flow
+    config:
+      not_contains:
+        - "final PR review submission only"
+        - "GitHub PR review tool"
+        - "review decision itself"

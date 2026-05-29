@@ -1,0 +1,17 @@
+id: negative-trigger-draft-publication
+name: Negative Trigger Draft Publication
+description: Creating or publishing a draft PR should route away from this skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Routing eval only: do not run commands. The branch does not have a pull request yet. The user wants to commit the intended changes, open a draft PR, and then monitor checks. Identify the right workflow and avoid using the existing-PR CI repair loop."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-existing-pr-loop
+    config:
+      not_contains:
+        - "fix-pr-until-green"
+        - "existing PR CI repair"
+        - "same PR branch"

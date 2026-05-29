@@ -1,0 +1,4 @@
+interface:
+  display_name: "Fix Merge Conflicts"
+  short_description: "Resolve and complete an active git merge"
+  default_prompt: "Use $fix-merge-conflicts to inspect the active merge, resolve conflicted files safely, stage only intentional resolutions, update the merge message if CI requires it, and complete the merge non-interactively."

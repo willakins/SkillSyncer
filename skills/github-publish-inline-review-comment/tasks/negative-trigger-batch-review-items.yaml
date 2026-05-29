@@ -1,0 +1,17 @@
+id: negative-trigger-batch-review-items
+name: Negative Trigger Batch Review Items
+description: Publishing several selected review items should route to the batch review publication skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Publish selected review items L1, L2, UI1, and A1 to the current PR. Some are inline comments, one is top-level, and one is the final review decision."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: omits-single-inline-only-flow
+    config:
+      not_contains:
+        - "one inline PR review comment"
+        - "review-level body empty"
+        - "specific changed file line"

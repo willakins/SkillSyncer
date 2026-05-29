@@ -1,0 +1,17 @@
+id: negative-trigger-publish
+name: Negative Trigger Publish
+description: Publishing existing review comments should not route to this skill.
+tags:
+  - negative-trigger
+inputs:
+  prompt: "Publish my existing UI1 review finding as an inline GitHub comment on owner/repo PR #7. Do not run a new review."
+expected:
+  should_trigger: false
+graders:
+  - type: text
+    name: avoids-new-ui-review
+    config:
+      not_contains:
+        - "agent-browser"
+        - "main changed flow"
+        - "review-branch-ui"

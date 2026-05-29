@@ -1,0 +1,20 @@
+id: positive-trigger-short-id
+name: Positive Trigger Short ID
+description: A Sentry short ID request should route to this skill.
+tags:
+  - positive-trigger
+inputs:
+  prompt: "Use $read-sentry-bug-reports to summarize SENTRY-42 for engineering. This is a routing eval only: do not call Sentry. Return the read-only workflow, fields to capture, redaction policy, and output sections."
+expected:
+  should_trigger: true
+graders:
+  - type: text
+    name: includes-short-id-contract
+    config:
+      contains:
+        - "read-only"
+        - "short ID"
+        - "redact"
+        - "Summary"
+        - "Impact"
+        - "Evidence"

@@ -1,8 +1,9 @@
 import { cp, mkdir, readdir, rm, stat } from "node:fs/promises";
-import { dirname, join } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { copySkillDirectory, type CopySkillResult } from "./copy";
+import { readSkillTree } from "./compare";
 import { createSyncPlan } from "./plan";
-import type { ResolvedSkillPaths } from "./types";
+import type { ResolvedSkillPaths, SkillSnapshot } from "./types";
 
 export interface ReplaceLocalSkillsOptions extends ResolvedSkillPaths {
   backupRoot?: string;
@@ -24,6 +25,35 @@ export interface ReplaceLocalSkillsResult {
   imported: ReplacedLocalSkill[];
   removedLocalSkillNames: string[];
   skipped: SkippedReplaceSkill[];
+}
+
+export interface ListSkillBackupsOptions {
+  localRoot: string;
+  backupRoot?: string;
+}
+
+export interface SkillBackupSummary {
+  name: string;
+  path: string;
+  modifiedAt: string;
+  skillNames: string[];
+  skillCount: number;
+  invalidSkillCount: number;
+}
+
+export interface RestoreLocalSkillsFromBackupOptions {
+  localRoot: string;
+  backupPath: string;
+  backupRoot?: string;
+  dryRun?: boolean;
+}
+
+export interface RestoreLocalSkillsFromBackupResult {
+  dryRun: boolean;
+  backupPath: string;
+  safetyBackupPath?: string;
+  restoredSkillNames: string[];
+  removedLocalSkillNames: string[];
 }
 
 export async function replaceLocalSkillsFromRepo(
@@ -97,9 +127,112 @@ export async function replaceLocalSkillsFromRepo(
   };
 }
 
-async function plannedBackupPath(localRoot: string, backupRoot?: string): Promise<string> {
-  const root = backupRoot ?? join(dirname(localRoot), "skillsyncer-backups");
-  return join(root, `skills-${timestamp()}`);
+export async function listSkillBackups(options: ListSkillBackupsOptions): Promise<SkillBackupSummary[]> {
+  const root = defaultBackupRoot(options.localRoot, options.backupRoot);
+
+  if (!(await directoryExists(root))) {
+    return [];
+  }
+
+  const entries = await readdir(root, { withFileTypes: true });
+  const backups = await Promise.all(entries
+    .filter((entry) => entry.isDirectory())
+    .map(async (entry) => {
+      const path = join(root, entry.name);
+      const [stats, skills] = await Promise.all([
+        stat(path),
+        readSkillTree(path)
+      ]);
+      const skillSnapshots = [...skills.values()];
+      const skillNames = skillSnapshots
+        .filter((skill) => skill.valid)
+        .map((skill) => skill.name)
+        .sort();
+
+      return {
+        name: entry.name,
+        path,
+        modifiedAt: stats.mtime.toISOString(),
+        skillNames,
+        skillCount: skillNames.length,
+        invalidSkillCount: skillSnapshots.filter((skill) => !skill.valid).length
+      };
+    }));
+
+  return backups.sort((left, right) => right.modifiedAt.localeCompare(left.modifiedAt));
+}
+
+export async function restoreLocalSkillsFromBackup(
+  options: RestoreLocalSkillsFromBackupOptions
+): Promise<RestoreLocalSkillsFromBackupResult> {
+  const backupRoot = defaultBackupRoot(options.localRoot, options.backupRoot);
+  const backupPath = resolve(options.backupPath);
+
+  ensureBackupPathIsAllowed(backupRoot, backupPath);
+
+  if (!(await directoryHasEntries(backupPath))) {
+    throw new Error(`Backup directory is empty or missing: ${backupPath}`);
+  }
+
+  const backupSkills = await readSkillTree(backupPath);
+  const restoredSkillNames = skillNamesFromSnapshots(backupSkills);
+  const localSkills = await readSkillTree(options.localRoot);
+  const removedLocalSkillNames = skillNamesFromSnapshots(localSkills);
+  const safetyBackupPath = await plannedBackupPath(options.localRoot, options.backupRoot, "pre-restore");
+
+  if (options.dryRun) {
+    return {
+      dryRun: true,
+      backupPath,
+      safetyBackupPath,
+      restoredSkillNames,
+      removedLocalSkillNames
+    };
+  }
+
+  const backedUp = await directoryHasEntries(options.localRoot);
+
+  if (backedUp) {
+    await mkdir(dirname(safetyBackupPath), { recursive: true });
+    await cp(options.localRoot, safetyBackupPath, { recursive: true });
+  }
+
+  await rm(options.localRoot, { recursive: true, force: true });
+  await mkdir(dirname(options.localRoot), { recursive: true });
+  await cp(backupPath, options.localRoot, { recursive: true });
+
+  return {
+    dryRun: false,
+    backupPath,
+    safetyBackupPath: backedUp ? safetyBackupPath : undefined,
+    restoredSkillNames,
+    removedLocalSkillNames
+  };
+}
+
+function defaultBackupRoot(localRoot: string, backupRoot?: string): string {
+  return backupRoot ? resolve(backupRoot) : join(dirname(localRoot), "skillsyncer-backups");
+}
+
+async function plannedBackupPath(localRoot: string, backupRoot?: string, prefix = "skills"): Promise<string> {
+  const root = defaultBackupRoot(localRoot, backupRoot);
+  return join(root, `${prefix}-${timestamp()}`);
+}
+
+function skillNamesFromSnapshots(skills: Map<string, SkillSnapshot>): string[] {
+  return [...skills.values()]
+    .filter((skill) => skill.valid)
+    .map((skill) => skill.name)
+    .sort();
+}
+
+function ensureBackupPathIsAllowed(backupRoot: string, backupPath: string): void {
+  const resolvedRoot = resolve(backupRoot);
+  const relativePath = relative(resolvedRoot, backupPath);
+
+  if (relativePath === "" || relativePath.startsWith("..") || isAbsolute(relativePath)) {
+    throw new Error(`Backup path is outside the configured backup directory: ${backupPath}`);
+  }
 }
 
 async function directoryHasEntries(path: string): Promise<boolean> {
@@ -109,6 +242,18 @@ async function directoryHasEntries(path: string): Promise<boolean> {
     }
 
     return (await readdir(path)).length > 0;
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "ENOENT") {
+      return false;
+    }
+
+    throw error;
+  }
+}
+
+async function directoryExists(path: string): Promise<boolean> {
+  try {
+    return (await stat(path)).isDirectory();
   } catch (error) {
     if (error instanceof Error && "code" in error && error.code === "ENOENT") {
       return false;

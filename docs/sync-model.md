@@ -32,6 +32,7 @@ The local path must be configurable because users may keep Codex data somewhere 
 - Import or install: copy from repository `skills/` to the local skills directory.
 - Update: pull latest git changes, then install changed repository skills locally.
 - Replace local: back up the local skills directory, delete it, then copy every valid repository skill into the local skills directory.
+- Restore backup: back up the current local skills directory, delete it, then copy a selected backup directory back into the local skills directory.
 - Export: copy from the local skills directory to repository `skills/`.
 - Publish: commit and push exported repository changes.
 
@@ -68,6 +69,8 @@ Before replacing local skill files, the tool should create a timestamped backup 
 Backups should include enough path context to restore the previous skill version.
 
 The current replace-local flow backs up the entire local skills directory to `skillsyncer-backups/skills-<timestamp>` next to the local skills directory before deleting and recreating it.
+
+The current restore-backup flow lists directories from the same backup root and restores the selected backup after first creating a `skillsyncer-backups/pre-restore-<timestamp>` safety backup of the current local skills directory.
 
 ## Git Behavior
 

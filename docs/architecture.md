@@ -9,6 +9,7 @@ SkillSyncer is an Electron app scaffold with a CLI that share one sync engine. T
 - Sync operation: a planned set of file changes from one side to the other.
 - Dry run: a sync operation preview that lists additions, updates, removals, conflicts, and backups without changing files.
 - Replace local operation: a guarded import path that backs up the local skills directory, deletes it, and recreates it from valid repository skills.
+- Restore backup operation: a guarded recovery path that backs up the current local skills directory, deletes it, and recreates it from a selected backup.
 
 ## Current Source Layout
 

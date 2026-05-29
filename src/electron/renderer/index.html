@@ -5,88 +5,167 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SkillSyncer</title>
   </head>
-  <body>
-    <main class="app-shell">
-      <header class="topbar">
-        <div>
-          <h1>SkillSyncer</h1>
-          <p id="path-summary">Loading skill paths</p>
-        </div>
-        <button id="refresh-button" class="button secondary-button" type="button" aria-label="Refresh status">Refresh</button>
-      </header>
-
-      <section class="metrics" aria-label="Skill sync status">
-        <article>
-          <span>Repo only</span>
-          <strong id="repo-only-count">0</strong>
-        </article>
-        <article>
-          <span>Local only</span>
-          <strong id="local-only-count">0</strong>
-        </article>
-        <article>
-          <span>Changed</span>
-          <strong id="changed-count">0</strong>
-        </article>
-        <article>
-          <span>Invalid</span>
-          <strong id="invalid-count">0</strong>
-        </article>
-      </section>
-
-      <section class="actions" aria-label="Skill sync actions">
-        <div class="action-panel">
+  <body data-appearance="graphite">
+    <main class="app-frame">
+      <aside class="sidebar" aria-label="Primary navigation">
+        <div class="brand-block">
+          <span class="brand-mark" aria-hidden="true">S</span>
           <div>
-            <h2>Export</h2>
-            <span id="export-summary">0 local-only skills</span>
+            <h1>SkillSyncer</h1>
+            <p>Skill library sync</p>
           </div>
-          <button id="export-button" class="button primary-button" type="button">Export local-only skills</button>
         </div>
 
-        <div class="action-panel danger-panel">
+        <nav class="nav-stack">
+          <button id="dashboard-nav-button" class="nav-button" type="button" aria-current="page">Dashboard</button>
+          <button id="settings-nav-button" class="nav-button" type="button">Settings</button>
+          <button id="backups-nav-button" class="nav-button" type="button">Backups</button>
+        </nav>
+
+        <div class="sidebar-metrics" aria-label="Skill sync summary">
           <div>
-            <h2>Replace Local</h2>
-            <span id="replace-summary">0 repository skills</span>
+            <span>Shared</span>
+            <strong id="shared-list-count">0</strong>
           </div>
-          <button id="replace-button" class="button danger-button" type="button">Back up and replace local</button>
+          <div>
+            <span>Device</span>
+            <strong id="device-list-count">0</strong>
+          </div>
+          <div>
+            <span>Changed</span>
+            <strong id="changed-count">0</strong>
+          </div>
+          <div>
+            <span>Invalid</span>
+            <strong id="invalid-count">0</strong>
+          </div>
+        </div>
+      </aside>
+
+      <section id="dashboard-view" class="app-view">
+        <header class="view-header">
+          <div>
+            <span class="eyebrow">Sync workspace</span>
+            <h2>Shared and device skills</h2>
+            <p id="sync-summary">Loading skill summary</p>
+          </div>
+          <button id="refresh-button" class="button secondary-button" type="button">Refresh</button>
+        </header>
+
+        <div class="summary-strip" aria-label="Skill difference counts">
+          <article>
+            <span>Shared only</span>
+            <strong id="shared-only-count">0</strong>
+          </article>
+          <article>
+            <span>Device only</span>
+            <strong id="device-only-count">0</strong>
+          </article>
+          <article>
+            <span>Unchanged</span>
+            <strong id="same-count">0</strong>
+          </article>
         </div>
 
-        <div class="action-panel">
-          <label for="commit-message">Commit message</label>
-          <div class="publish-row">
-            <input id="commit-message" type="text" value="Export local Codex skills" />
-            <button id="publish-button" class="button primary-button" type="button">Commit and push</button>
+        <section class="command-grid" aria-label="Sync actions">
+          <article class="command-panel">
+            <div>
+              <h3>Share Device Skills</h3>
+              <p id="export-summary">0 device-only skills</p>
+            </div>
+            <button id="export-button" class="button primary-button" type="button">Share device-only skills</button>
+          </article>
+
+          <article class="command-panel danger-panel">
+            <div>
+              <h3>Reset Device</h3>
+              <p id="replace-summary">0 shared skills</p>
+            </div>
+            <button id="replace-button" class="button danger-button" type="button">Back up and reset device</button>
+          </article>
+        </section>
+
+        <div id="action-status" class="action-status" role="status" aria-live="polite"></div>
+
+        <section class="inventory-grid" aria-label="Skill inventories">
+          <article class="data-panel">
+            <div class="panel-heading">
+              <h3>Shared Skills</h3>
+              <span id="shared-heading-count">0 skills</span>
+            </div>
+            <div id="shared-skill-list" class="skill-table" aria-live="polite"></div>
+          </article>
+
+          <article class="data-panel">
+            <div class="panel-heading">
+              <h3>Device Skills</h3>
+              <span id="device-heading-count">0 skills</span>
+            </div>
+            <div id="device-skill-list" class="skill-table" aria-live="polite"></div>
+          </article>
+        </section>
+
+        <section class="data-panel">
+          <div class="panel-heading">
+            <h3>Differences</h3>
+            <span id="difference-count">0 differences</span>
           </div>
-          <span id="git-summary">Git status unavailable</span>
-        </div>
+          <div id="skill-list" class="difference-list" aria-live="polite"></div>
+        </section>
       </section>
 
-      <div id="action-status" class="action-status" role="status" aria-live="polite"></div>
-
-      <section class="inventory" aria-label="Skill inventories">
-        <article>
-          <div class="section-heading compact-heading">
-            <h2>Repository Skills</h2>
-            <span id="repo-list-count">0 skills</span>
+      <section id="settings-view" class="app-view settings-view" hidden>
+        <header class="view-header">
+          <div>
+            <span class="eyebrow">Preferences</span>
+            <h2>Settings</h2>
+            <p>Choose how SkillSyncer looks on this computer.</p>
           </div>
-          <div id="repo-skill-list" class="compact-list" aria-live="polite"></div>
-        </article>
+        </header>
 
-        <article>
-          <div class="section-heading compact-heading">
-            <h2>Local Skills</h2>
-            <span id="local-list-count">0 skills</span>
+        <section class="settings-panel">
+          <div class="panel-heading">
+            <h3>Appearance</h3>
+            <span id="appearance-summary">Graphite</span>
           </div>
-          <div id="local-skill-list" class="compact-list" aria-live="polite"></div>
-        </article>
+          <div class="appearance-grid" role="radiogroup" aria-label="App appearance">
+            <button class="appearance-option" type="button" data-appearance-option="graphite" role="radio" aria-checked="true">
+              <span class="theme-preview graphite-preview" aria-hidden="true"></span>
+              <strong>Graphite</strong>
+              <span>Dense desktop utility with high contrast panels.</span>
+            </button>
+            <button class="appearance-option" type="button" data-appearance-option="paper" role="radio" aria-checked="false">
+              <span class="theme-preview paper-preview" aria-hidden="true"></span>
+              <strong>Paper</strong>
+              <span>Light, quiet workspace for long review sessions.</span>
+            </button>
+            <button class="appearance-option" type="button" data-appearance-option="midnight" role="radio" aria-checked="false">
+              <span class="theme-preview midnight-preview" aria-hidden="true"></span>
+              <strong>Midnight</strong>
+              <span>Dark control room styling with saturated accents.</span>
+            </button>
+          </div>
+        </section>
+
       </section>
 
-      <section class="workspace">
-        <div class="section-heading">
-          <h2>Differences</h2>
-          <span id="same-count">0 unchanged</span>
-        </div>
-        <div id="skill-list" class="skill-list" aria-live="polite"></div>
+      <section id="backups-view" class="app-view backups-view" hidden>
+        <header class="view-header">
+          <div>
+            <span class="eyebrow">Recovery</span>
+            <h2>Backups</h2>
+            <p>Restore this device from a previous backup.</p>
+          </div>
+          <button id="refresh-backups-button" class="button secondary-button" type="button">Refresh</button>
+        </header>
+
+        <section class="settings-panel">
+          <div class="panel-heading">
+            <h3>Saved Backups</h3>
+            <span id="backup-summary">0 backups</span>
+          </div>
+          <div id="backup-list" class="backup-list" aria-live="polite"></div>
+        </section>
       </section>
     </main>
     <script type="module" src="/src/main.ts"></script>

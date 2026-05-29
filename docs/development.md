@@ -1,6 +1,6 @@
 # Development
 
-This project uses npm, TypeScript, Electron Vite, and Vitest. The current app is an initial scaffold with a shared sync planner, CLI status previews, local-only export support, replace-local support, and an Electron dashboard.
+This project uses npm, TypeScript, Electron Vite, and Vitest. The current app is an initial scaffold with a shared sync planner, CLI status previews, local-only export support, replace-local and backup-restore support, and an Electron dashboard.
 
 ## Stack
 
@@ -69,7 +69,7 @@ git diff --check
 3. Add git pull orchestration and broader git state handling.
 4. Add persistent settings for repository path, local skills path, backup path, remote, and branch.
 5. Add CLI integration tests for command behavior and exit codes.
-6. Add Electron UI checks for the core install/update/export/replace flow.
+6. Add Electron UI checks for the core install/update/export/replace/restore flow.
 7. Add packaging checks for macOS and Arch Linux.
 
 ## Development Rules

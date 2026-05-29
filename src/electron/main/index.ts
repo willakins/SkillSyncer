@@ -3,9 +3,9 @@ import { join } from "node:path";
 import {
   createSyncPlan,
   exportLocalOnlySkills,
-  getGitStatus,
-  publishSkillChanges,
+  listSkillBackups,
   replaceLocalSkillsFromRepo,
+  restoreLocalSkillsFromBackup,
   resolveSkillPaths
 } from "../../sync";
 
@@ -54,14 +54,14 @@ ipcMain.handle("sync:replace-local-from-repo", async () => {
   const repoCount = plan.skills.filter((skill) => skill.repo?.valid).length;
   const response = await dialog.showMessageBox({
     type: "warning",
-    buttons: ["Cancel", "Back up and replace"],
+    buttons: ["Cancel", "Back up and reset"],
     defaultId: 0,
     cancelId: 0,
-    title: "Replace Local Skills",
-    message: "Replace all local skills with repository skills?",
+    title: "Reset Device Skills",
+    message: "Reset this device from the shared library?",
     detail: [
-      `This will back up ${localCount} local ${localCount === 1 ? "skill" : "skills"}, delete the local skills directory, then import ${repoCount} repository ${repoCount === 1 ? "skill" : "skills"}.`,
-      "Changed or local-only skills will only be recoverable from the backup."
+      `This will back up ${localCount} device ${localCount === 1 ? "skill" : "skills"}, clear the current device skills, then load ${repoCount} shared ${repoCount === 1 ? "skill" : "skills"}.`,
+      "Device-only changes will only be recoverable from the backup."
     ].join("\n\n")
   });
 
@@ -72,37 +72,53 @@ ipcMain.handle("sync:replace-local-from-repo", async () => {
   return replaceLocalSkillsFromRepo(paths);
 });
 
-ipcMain.handle("git:status", async () => {
+ipcMain.handle("sync:list-backups", async () => {
   const paths = resolveSkillPaths();
-  return getGitStatus(paths.repoRoot, ["."]);
+  return listSkillBackups({ localRoot: paths.localRoot });
 });
 
-ipcMain.handle("git:publish-skills", async (_event, payload: unknown) => {
+ipcMain.handle("sync:restore-backup", async (_event, payload: unknown) => {
   const paths = resolveSkillPaths();
-  const { skillNames, message } = parsePublishPayload(payload);
+  const backupPath = parseRestorePayload(payload);
+  const backups = await listSkillBackups({ localRoot: paths.localRoot });
+  const backup = backups.find((candidate) => candidate.path === backupPath);
+  const plan = await createSyncPlan(paths);
+  const localCount = plan.skills.filter((skill) => skill.local).length;
+  const restoreCount = backup?.skillCount ?? 0;
+  const response = await dialog.showMessageBox({
+    type: "warning",
+    buttons: ["Cancel", "Back up and restore"],
+    defaultId: 0,
+    cancelId: 0,
+    title: "Restore Device Skills Backup",
+    message: "Restore this device from the selected backup?",
+    detail: [
+      `This will back up ${localCount} current device ${localCount === 1 ? "skill" : "skills"}, clear the current device skills, then restore ${restoreCount} ${restoreCount === 1 ? "skill" : "skills"} from the selected backup.`
+    ].join("\n\n")
+  });
 
-  return publishSkillChanges(paths.repoRoot, {
-    skillNames,
-    message
+  if (response.response !== 1) {
+    throw new Error("Restore canceled.");
+  }
+
+  return restoreLocalSkillsFromBackup({
+    localRoot: paths.localRoot,
+    backupPath
   });
 });
 
-function parsePublishPayload(payload: unknown): { skillNames: string[]; message: string } {
+function parseRestorePayload(payload: unknown): string {
   if (!payload || typeof payload !== "object") {
-    throw new Error("Publish request must include skill names and a commit message.");
+    throw new Error("Restore request must include a selected backup.");
   }
 
-  const { skillNames, message } = payload as { skillNames?: unknown; message?: unknown };
+  const { backupPath } = payload as { backupPath?: unknown };
 
-  if (!Array.isArray(skillNames) || !skillNames.every((skillName) => typeof skillName === "string")) {
-    throw new Error("Publish request skill names must be strings.");
+  if (typeof backupPath !== "string" || backupPath.trim() === "") {
+    throw new Error("Restore request must include a selected backup.");
   }
 
-  if (typeof message !== "string") {
-    throw new Error("Publish request commit message must be a string.");
-  }
-
-  return { skillNames, message };
+  return backupPath;
 }
 
 app.whenReady().then(() => {

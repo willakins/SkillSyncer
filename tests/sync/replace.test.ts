@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, readFile, readdir, rm, writeFile } from "node:fs/promis
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { replaceLocalSkillsFromRepo } from "../../src/sync";
+import { listSkillBackups, replaceLocalSkillsFromRepo, restoreLocalSkillsFromBackup } from "../../src/sync";
 
 const tempRoots: string[] = [];
 
@@ -58,6 +58,42 @@ describe("replaceLocalSkillsFromRepo", () => {
 
     await expect(replaceLocalSkillsFromRepo({ repoRoot, localRoot })).rejects.toThrow("no valid skills");
     await expect(readdir(localRoot)).resolves.toEqual(["local-only"]);
+  });
+
+  it("lists available local skill backups", async () => {
+    const root = await createTempRoot();
+    const localRoot = join(root, "local-skills");
+    const backupRoot = join(root, "backups");
+
+    await writeSkill(join(backupRoot, "skills-old"), "restored", "from backup");
+    await mkdir(join(backupRoot, "skills-invalid", "broken"), { recursive: true });
+
+    const backups = await listSkillBackups({ localRoot, backupRoot });
+
+    expect(backups.map((backup) => [backup.name, backup.skillCount, backup.invalidSkillCount]).sort()).toEqual([
+      ["skills-invalid", 0, 1],
+      ["skills-old", 1, 0]
+    ]);
+    expect(backups.find((backup) => backup.name === "skills-old")?.skillNames).toEqual(["restored"]);
+  });
+
+  it("restores local skills from a backup while backing up the current local state", async () => {
+    const root = await createTempRoot();
+    const localRoot = join(root, "local-skills");
+    const backupRoot = join(root, "backups");
+    const backupPath = join(backupRoot, "skills-old");
+
+    await writeSkill(localRoot, "current", "from current local");
+    await writeSkill(backupPath, "restored", "from backup");
+
+    const result = await restoreLocalSkillsFromBackup({ localRoot, backupRoot, backupPath });
+
+    expect(result.restoredSkillNames).toEqual(["restored"]);
+    expect(result.removedLocalSkillNames).toEqual(["current"]);
+    expect(result.safetyBackupPath).toBeDefined();
+    await expect(readFile(join(localRoot, "restored", "SKILL.md"), "utf8")).resolves.toContain("from backup");
+    await expect(readFile(join(localRoot, "current", "SKILL.md"), "utf8")).rejects.toThrow();
+    await expect(readFile(join(result.safetyBackupPath ?? "", "current", "SKILL.md"), "utf8")).resolves.toContain("from current local");
   });
 });
 

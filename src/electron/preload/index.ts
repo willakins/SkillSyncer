@@ -1,9 +1,9 @@
 import { contextBridge, ipcRenderer } from "electron";
 import type {
   ExportLocalOnlySkillsResult,
-  GitStatus,
-  PublishSkillChangesResult,
   ReplaceLocalSkillsResult,
+  RestoreLocalSkillsFromBackupResult,
+  SkillBackupSummary,
   SyncPlan
 } from "../../sync";
 
@@ -11,7 +11,7 @@ contextBridge.exposeInMainWorld("skillsync", {
   getStatus: (): Promise<SyncPlan> => ipcRenderer.invoke("sync:status"),
   exportLocalOnly: (): Promise<ExportLocalOnlySkillsResult> => ipcRenderer.invoke("sync:export-local-only"),
   replaceLocalFromRepo: (): Promise<ReplaceLocalSkillsResult> => ipcRenderer.invoke("sync:replace-local-from-repo"),
-  getGitStatus: (): Promise<GitStatus> => ipcRenderer.invoke("git:status"),
-  publishSkills: (skillNames: string[], message: string): Promise<PublishSkillChangesResult> =>
-    ipcRenderer.invoke("git:publish-skills", { skillNames, message })
+  listBackups: (): Promise<SkillBackupSummary[]> => ipcRenderer.invoke("sync:list-backups"),
+  restoreBackup: (backupPath: string): Promise<RestoreLocalSkillsFromBackupResult> =>
+    ipcRenderer.invoke("sync:restore-backup", { backupPath })
 });

@@ -1,8 +1,8 @@
 import type {
   ExportLocalOnlySkillsResult,
-  GitStatus,
-  PublishSkillChangesResult,
   ReplaceLocalSkillsResult,
+  RestoreLocalSkillsFromBackupResult,
+  SkillBackupSummary,
   SyncPlan
 } from "../../sync";
 
@@ -12,8 +12,8 @@ declare global {
       getStatus: () => Promise<SyncPlan>;
       exportLocalOnly: () => Promise<ExportLocalOnlySkillsResult>;
       replaceLocalFromRepo: () => Promise<ReplaceLocalSkillsResult>;
-      getGitStatus: () => Promise<GitStatus>;
-      publishSkills: (skillNames: string[], message: string) => Promise<PublishSkillChangesResult>;
+      listBackups: () => Promise<SkillBackupSummary[]>;
+      restoreBackup: (backupPath: string) => Promise<RestoreLocalSkillsFromBackupResult>;
     };
   }
 }

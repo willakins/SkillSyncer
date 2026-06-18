@@ -1,5 +1,5 @@
 import type {
-  ExportLocalOnlySkillsResult,
+  ExportLocalSkillsResult,
   ReplaceLocalSkillsResult,
   RestoreLocalSkillsFromBackupResult,
   SkillBackupSummary,
@@ -10,7 +10,7 @@ declare global {
   interface Window {
     skillsync: {
       getStatus: () => Promise<SyncPlan>;
-      exportLocalOnly: () => Promise<ExportLocalOnlySkillsResult>;
+      exportLocalChanges: () => Promise<ExportLocalSkillsResult>;
       replaceLocalFromRepo: () => Promise<ReplaceLocalSkillsResult>;
       listBackups: () => Promise<SkillBackupSummary[]>;
       restoreBackup: (backupPath: string) => Promise<RestoreLocalSkillsFromBackupResult>;

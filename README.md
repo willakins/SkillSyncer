@@ -7,8 +7,8 @@ SkillSyncer is an Electron desktop app and command-line tool scaffold for syncin
 This repository has an initial TypeScript project structure. It currently includes:
 
 - A shared sync planner that compares shared skills with device skills.
-- A CLI entrypoint with `status`, `import`, and `install` preview commands plus safe local-only `export`.
-- An Electron dashboard that displays shared/device skill lists, shows difference counts, and can share device-only skills.
+- A CLI entrypoint with `status`, `import`, and `install` preview commands plus export for new local skills and explicitly included changed skills.
+- An Electron dashboard that displays shared/device skill lists, shows difference counts, and can share new or changed device skills.
 - A settings view with Graphite, Paper, and Midnight appearance options.
 - A guarded reset-device flow that backs up device skills before loading all shared skills.
 - A backup restore flow that can load a previous local skills backup back into place.

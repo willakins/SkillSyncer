@@ -24,7 +24,7 @@ skillsync sync
 skillsync config
 ```
 
-The current scaffold implements `status`, `import`, and `install` as preview commands. `export --all` and `export <skill-name>` copy local-only skills into the repository skill tree without overwriting existing repository skills. The other commands are reserved and return a not-implemented response.
+The current scaffold implements `status`, `import`, and `install` as preview commands. `export --all` and `export <skill-name>` copy local-only skills into the repository skill tree by default. Add `--include-changed` to export changed same-name local skills over existing repository skills. The other commands are reserved and return a not-implemented response.
 
 ### `skillsync status`
 
@@ -50,15 +50,17 @@ skillsync install --backup
 
 ### `skillsync export <skill-name>`
 
-Copies a local-only skill into the repository skill tree so it can be reviewed and committed.
+Copies a local skill into the repository skill tree so it can be reviewed and committed.
 
 ```bash
 skillsync export --all
 skillsync export <skill-name>
 skillsync export --all --dry-run
+skillsync export --all --include-changed
+skillsync export <skill-name> --include-changed
 ```
 
-The command skips skills that already exist in the repository because those need an overwrite review and, eventually, conflict handling.
+Without `--include-changed`, the command only creates missing repository skill directories from local-only skills. With `--include-changed`, the command replaces changed existing repository skill directories with the local versions. Review `git diff -- skills/<skill-name>` before committing those updates.
 
 ### `skillsync pull`
 

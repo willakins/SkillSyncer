@@ -1,0 +1,352 @@
+{
+  "/SkillSyncerStack": [
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals, tsx..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/DesktopClient": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "DesktopClient"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:24:28)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals, tsx..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/AwsConfig": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "AwsConfig"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:106:5)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals, tsx..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/BootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "BootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SkillSyncerStack/CheckBootstrapVersion": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CheckBootstrapVersion"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SkillSyncerStack/UserPool/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "UserPool6BA7E5F2"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new UserPool2 in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:16:22)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals, tsx..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/MetadataTable/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MetadataTable30E05F1F"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new Table2 in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:43:27)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals, tsx..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/MetadataHandler/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MetadataHandlerBEE7179C"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:50:29)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals, tsx..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiF5A9A8A7"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new HttpApi2 in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:61:21)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals, tsx..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/CDKMetadata/Default": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "CDKMetadata"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib, node internals...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SkillSyncerStack/MetadataHandler/ServiceRole/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MetadataHandlerServiceRole24408145"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new NodejsFunction in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:50:29)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals, tsx..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/DefaultStage/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiDefaultStage3EEB07D6"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...new HttpApi2 in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:61:21)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals, tsx..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/GET--me/MetadataIntegration-Permission": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETmeMetadataIntegrationPermissionAA15A3EA"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../home/will/Downloads/Projects/SkillSyncer/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in aws-cdk-lib...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:81:13)"
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/GET--me/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETme466879BE"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../home/will/Downloads/Projects/SkillSyncer/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in aws-cdk-lib...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:81:13)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/UserPoolAuthorizer/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiUserPoolAuthorizer1A91476A"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../home/will/Downloads/Projects/SkillSyncer/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in aws-cdk-lib...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:81:13)"
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/GET--repos/MetadataIntegration-Permission": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETreposMetadataIntegrationPermissionBA83E2EC"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../home/will/Downloads/Projects/SkillSyncer/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in aws-cdk-lib...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:87:13)"
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/GET--repos/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETrepos55AEDBC9"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../home/will/Downloads/Projects/SkillSyncer/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in aws-cdk-lib...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:87:13)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/GET--orgs/MetadataIntegration-Permission": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETorgsMetadataIntegrationPermissionADC4D6F5"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../home/will/Downloads/Projects/SkillSyncer/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in aws-cdk-lib...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:93:13)"
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/GET--orgs/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETorgsE6448047"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../home/will/Downloads/Projects/SkillSyncer/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in aws-cdk-lib...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:93:13)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/GET--orgs--{orgId}--repos/MetadataIntegration-Permission": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETorgsorgIdreposMetadataIntegrationPermission7AB13A20"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../home/will/Downloads/Projects/SkillSyncer/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in aws-cdk-lib...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:99:13)"
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/GET--orgs--{orgId}--repos/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETorgsorgIdreposD85394B7"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../home/will/Downloads/Projects/SkillSyncer/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in aws-cdk-lib...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:99:13)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:7:1)",
+        "<anonymous> (/home/will/Downloads/Projects/SkillSyncer/infra/bin/skillsyncer.ts:12:2)",
+        "...node internals..."
+      ]
+    }
+  ],
+  "/SkillSyncerStack/MetadataHandler/ServiceRole/DefaultPolicy/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "MetadataHandlerServiceRoleDefaultPolicy03477988"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        "...aws-cdk-lib...",
+        "(no user code in 10 frames, use --stack-trace-limit to capture more)"
+      ]
+    }
+  ],
+  "/SkillSyncerStack/HttpApi/GET--me/MetadataIntegration/Resource": [
+    {
+      "type": "aws:cdk:logicalId",
+      "data": "HttpApiGETmeMetadataIntegration1C46FD49"
+    },
+    {
+      "type": "aws:cdk:creationStack",
+      "data": [
+        ".../home/will/Downloads/Projects/SkillSyncer/node_modules/aws-cdk-lib/aws-apigatewayv2/lib/http/api.js:1:96 in aws-cdk-lib...",
+        "Array.map (:)",
+        "...WrappedClass.<anonymous> in aws-cdk-lib...",
+        "new SkillSyncerStack (/home/will/Downloads/Projects/SkillSyncer/infra/lib/skillsyncer-stack.ts:81:13)"
+      ]
+    }
+  ]
+}

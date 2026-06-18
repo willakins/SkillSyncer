@@ -68,7 +68,7 @@ refreshButton.addEventListener("click", () => {
 });
 
 exportButton.addEventListener("click", () => {
-  void exportLocalOnlySkills();
+  void exportLocalChanges();
 });
 
 replaceButton.addEventListener("click", () => {
@@ -152,13 +152,15 @@ function renderInventory(sharedSkills: SkillPlan[], deviceSkills: SkillPlan[]): 
   deviceSkillList.replaceChildren(...renderSkillTable(deviceSkills, "No device skills found"));
 }
 
-async function exportLocalOnlySkills(): Promise<void> {
+async function exportLocalChanges(): Promise<void> {
   setBusy(true);
-  actionStatus.textContent = "Sharing device-only skills";
+  actionStatus.textContent = "Sharing device skill changes";
 
   try {
-    const result = await window.skillsync.exportLocalOnly();
-    actionStatus.textContent = `Shared ${result.exported.length} ${result.exported.length === 1 ? "skill" : "skills"} from this device.`;
+    const result = await window.skillsync.exportLocalChanges();
+    const created = result.exported.filter((skill) => skill.operation === "create").length;
+    const updated = result.exported.filter((skill) => skill.operation === "update").length;
+    actionStatus.textContent = `Shared ${result.exported.length} ${result.exported.length === 1 ? "skill" : "skills"} from this device (${created} new, ${updated} changed).`;
     await loadStatus();
   } catch (error) {
     actionStatus.textContent = error instanceof Error ? error.message : String(error);
@@ -204,10 +206,12 @@ async function restoreBackup(backupPath: string): Promise<void> {
 
 function renderControls(): void {
   const localOnlyCountValue = currentPlan?.totals["local-only"] ?? 0;
+  const changedCountValue = currentPlan?.totals["changed-both"] ?? 0;
+  const exportableCount = localOnlyCountValue + changedCountValue;
   const sharedSkillCount = currentPlan?.skills.filter((skill) => skill.repo?.valid).length ?? 0;
-  exportSummary.textContent = `${localOnlyCountValue} device-only ${localOnlyCountValue === 1 ? "skill" : "skills"}`;
-  exportButton.textContent = `Share ${localOnlyCountValue} device-only ${localOnlyCountValue === 1 ? "skill" : "skills"}`;
-  exportButton.disabled = busy || localOnlyCountValue === 0;
+  exportSummary.textContent = `${localOnlyCountValue} new, ${changedCountValue} changed`;
+  exportButton.textContent = `Share ${exportableCount} device ${exportableCount === 1 ? "change" : "changes"}`;
+  exportButton.disabled = busy || exportableCount === 0;
   replaceSummary.textContent = `${sharedSkillCount} shared ${sharedSkillCount === 1 ? "skill" : "skills"}`;
   replaceButton.disabled = busy || sharedSkillCount === 0;
   refreshBackupsButton.disabled = busy;

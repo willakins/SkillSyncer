@@ -4,7 +4,7 @@ The desktop app should make the same sync operations available to users who do n
 
 The current Electron app uses a sidebar layout with Dashboard, Settings, and Backups views. The dashboard uses user-facing shared-library and device language, showing shared-only, device-only, changed, invalid, and unchanged skill counts, plus separate shared and device skill lists. It calls shared sync logic through a narrow preload bridge.
 
-The dashboard can share device-only skills into the shared library without overwriting existing shared skills. Changed-on-both-sides skills are still review-only until conflict handling and backups are implemented.
+The dashboard can share new device-only skills into the shared library and can update changed existing shared skills from the device copy after confirmation. Users should review the repository git diff before committing and pushing those shared-library changes.
 
 The dashboard can also reset this device from the shared library. This action requires confirmation, backs up the existing device skills, clears the current device skills, and loads every valid shared skill.
 
@@ -95,4 +95,4 @@ Conflicts should stop the sync until the user chooses an action. The app should 
 
 ## Current State
 
-The Electron app can show status, list shared/device skills, switch between Dashboard, Settings, and Backups, persist one of three appearances, share device-only skills, reset this device from the shared library with a backup, and restore device skills from a backup. The next GUI work is to add configuration, preview details, selective update actions, broader state handling, and conflict resolution.
+The Electron app can show status, list shared/device skills, switch between Dashboard, Settings, and Backups, persist one of three appearances, share new and changed device skills into the shared library, reset this device from the shared library with a backup, and restore device skills from a backup. The next GUI work is to add configuration, preview details, selective update actions, broader state handling, and conflict resolution.

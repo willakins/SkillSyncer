@@ -18,10 +18,11 @@ describe("parseArgs", () => {
   });
 
   it("parses export selection flags", () => {
-    expect(parseArgs(["export", "--all", "--dry-run"])).toMatchObject({
+    expect(parseArgs(["export", "--all", "--dry-run", "--include-changed"])).toMatchObject({
       command: "export",
       all: true,
-      dryRun: true
+      dryRun: true,
+      includeChanged: true
     });
   });
 });

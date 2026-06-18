@@ -1,6 +1,6 @@
 # Development
 
-This project uses npm, TypeScript, Electron Vite, and Vitest. The current app is an initial scaffold with a shared sync planner, CLI status previews, local-only export support, replace-local and backup-restore support, and an Electron dashboard.
+This project uses npm, TypeScript, Electron Vite, and Vitest. The current app is an initial scaffold with a shared sync planner, CLI status previews, export support for new and explicitly included changed local skills, replace-local and backup-restore support, and an Electron dashboard.
 
 ## Stack
 

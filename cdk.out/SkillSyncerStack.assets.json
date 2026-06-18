@@ -1,0 +1,36 @@
+{
+  "version": "53.0.0",
+  "files": {
+    "d0f43a33d48e750ec601a031b8ebb807268d8a7335239cf2c1fe9a8f86931560": {
+      "displayName": "MetadataHandler/Code",
+      "source": {
+        "path": "asset.d0f43a33d48e750ec601a031b8ebb807268d8a7335239cf2c1fe9a8f86931560",
+        "packaging": "zip"
+      },
+      "destinations": {
+        "005858687290-us-east-2-f200941b": {
+          "bucketName": "cdk-hnb659fds-assets-005858687290-us-east-2",
+          "objectKey": "d0f43a33d48e750ec601a031b8ebb807268d8a7335239cf2c1fe9a8f86931560.zip",
+          "region": "us-east-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::005858687290:role/cdk-hnb659fds-file-publishing-role-005858687290-us-east-2"
+        }
+      }
+    },
+    "f6db7f214b89930f979273dac4de692570daf72657d47e4ab809f68677551030": {
+      "displayName": "SkillSyncerStack Template",
+      "source": {
+        "path": "SkillSyncerStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "005858687290-us-east-2-b01933fe": {
+          "bucketName": "cdk-hnb659fds-assets-005858687290-us-east-2",
+          "objectKey": "f6db7f214b89930f979273dac4de692570daf72657d47e4ab809f68677551030.json",
+          "region": "us-east-2",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::005858687290:role/cdk-hnb659fds-file-publishing-role-005858687290-us-east-2"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

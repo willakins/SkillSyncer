@@ -1,0 +1,4 @@
+interface:
+  display_name: "Read Croft Staging"
+  short_description: "Query Croft staging safely"
+  default_prompt: "Use $read-croft-staging to inspect the Croft staging database safely."

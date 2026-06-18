@@ -38,7 +38,7 @@ The local path must be configurable because users may keep Codex data somewhere 
 
 These names should be used consistently in the CLI, GUI, and documentation.
 
-Current export support is intentionally narrow: it copies local-only skills into missing repository skill directories. It does not overwrite repository skills.
+Current export support copies local-only skills into missing repository skill directories by default. It can also copy changed same-name local skills over repository skill directories when the caller explicitly opts into changed exports.
 
 ## Comparison Rules
 
@@ -60,7 +60,7 @@ The current scaffold can detect repo-only, local-only, same, changed-on-both-sid
 
 A conflict exists when both sides changed and the tool cannot safely choose a winner.
 
-Conflicts should not be resolved automatically in the first version. The user should choose whether to keep local, use repo, skip, or manually review.
+Because SkillSyncer does not yet persist last-sync metadata, a same-name difference is still classified as changed on both sides. Export treats that as a conflict by default and only replaces the repository copy when the user explicitly includes changed skills. The user should choose whether to keep local, use repo, skip, or manually review.
 
 ## Backups
 

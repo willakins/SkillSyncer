@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Coded Tests"
+  short_description: "Run tests and return JSON failures"
+  default_prompt: "Use $test-coded-tests to discover this repo's test command, run it, and return clean JSON summarizing failed test files."

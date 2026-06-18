@@ -2,7 +2,7 @@ import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { exportLocalOnlySkills } from "../../src/sync";
+import { exportLocalOnlySkills, exportLocalSkills } from "../../src/sync";
 
 const tempRoots: string[] = [];
 
@@ -45,6 +45,41 @@ describe("exportLocalOnlySkills", () => {
 
     expect(result.exported).toEqual([]);
     expect(result.skipped.map((skill) => skill.skillName)).toEqual(["shared", "missing"]);
+  });
+
+  it("copies changed local skills over repository skills when changed exports are included", async () => {
+    const root = await createTempRoot();
+    const repoRoot = join(root, "repo-skills");
+    const localRoot = join(root, "local-skills");
+
+    await writeSkill(repoRoot, "shared", "from repo");
+    await writeFile(join(repoRoot, "shared", "stale-reference.md"), "removed locally");
+    await writeSkill(localRoot, "shared", "from local");
+
+    const result = await exportLocalSkills({ repoRoot, localRoot, includeChanged: true });
+
+    expect(result.exported.map((skill) => [skill.skillName, skill.operation])).toEqual([["shared", "update"]]);
+    expect(result.skipped).toEqual([]);
+    await expect(readFile(join(repoRoot, "shared", "SKILL.md"), "utf8")).resolves.toContain("from local");
+    await expect(readFile(join(repoRoot, "shared", "stale-reference.md"), "utf8")).rejects.toThrow();
+  });
+
+  it("skips changed skills unless changed exports are included", async () => {
+    const root = await createTempRoot();
+    const repoRoot = join(root, "repo-skills");
+    const localRoot = join(root, "local-skills");
+
+    await writeSkill(repoRoot, "shared", "from repo");
+    await writeSkill(localRoot, "shared", "from local");
+
+    const result = await exportLocalSkills({ repoRoot, localRoot, skillNames: ["shared"] });
+
+    expect(result.exported).toEqual([]);
+    expect(result.skipped[0]).toMatchObject({
+      skillName: "shared",
+      classification: "changed-both"
+    });
+    await expect(readFile(join(repoRoot, "shared", "SKILL.md"), "utf8")).resolves.toContain("from repo");
   });
 
   it("supports dry runs without copying files", async () => {

@@ -5,6 +5,7 @@ export interface CliOptions {
   localRoot?: string;
   all: boolean;
   dryRun: boolean;
+  includeChanged: boolean;
   json: boolean;
   help: boolean;
 }
@@ -15,6 +16,7 @@ export function parseArgs(args: string[]): CliOptions {
     skillNames: [],
     all: false,
     dryRun: false,
+    includeChanged: false,
     json: false,
     help: false
   };
@@ -51,6 +53,11 @@ export function parseArgs(args: string[]): CliOptions {
 
     if (arg === "--dry-run") {
       options.dryRun = true;
+      continue;
+    }
+
+    if (arg === "--include-changed") {
+      options.includeChanged = true;
       continue;
     }
 

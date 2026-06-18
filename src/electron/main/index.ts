@@ -2,7 +2,7 @@ import { app, BrowserWindow, dialog, ipcMain } from "electron";
 import { join } from "node:path";
 import {
   createSyncPlan,
-  exportLocalOnlySkills,
+  exportLocalSkills,
   listSkillBackups,
   replaceLocalSkillsFromRepo,
   restoreLocalSkillsFromBackup,
@@ -42,9 +42,32 @@ ipcMain.handle("sync:status", async () => {
   return createSyncPlan(paths);
 });
 
-ipcMain.handle("sync:export-local-only", async () => {
+ipcMain.handle("sync:export-local-changes", async () => {
   const paths = resolveSkillPaths();
-  return exportLocalOnlySkills(paths);
+  const plan = await createSyncPlan(paths);
+  const newCount = plan.totals["local-only"];
+  const changedCount = plan.totals["changed-both"];
+
+  if (changedCount > 0) {
+    const response = await dialog.showMessageBox({
+      type: "warning",
+      buttons: ["Cancel", "Update shared skills"],
+      defaultId: 0,
+      cancelId: 0,
+      title: "Share Device Skill Changes",
+      message: "Update shared skills from this device?",
+      detail: [
+        `This will copy ${newCount} new device ${newCount === 1 ? "skill" : "skills"} and replace ${changedCount} existing shared ${changedCount === 1 ? "skill" : "skills"} with the versions on this device.`,
+        "Review the repository git diff before committing and pushing these changes."
+      ].join("\n\n")
+    });
+
+    if (response.response !== 1) {
+      throw new Error("Export canceled.");
+    }
+  }
+
+  return exportLocalSkills({ ...paths, includeChanged: true });
 });
 
 ipcMain.handle("sync:replace-local-from-repo", async () => {

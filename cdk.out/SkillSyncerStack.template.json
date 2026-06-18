@@ -1,0 +1,616 @@
+{
+ "Resources": {
+  "UserPool6BA7E5F2": {
+   "Type": "AWS::Cognito::UserPool",
+   "Properties": {
+    "AccountRecoverySetting": {
+     "RecoveryMechanisms": [
+      {
+       "Name": "verified_email",
+       "Priority": 1
+      }
+     ]
+    },
+    "AdminCreateUserConfig": {
+     "AllowAdminCreateUserOnly": false
+    },
+    "AutoVerifiedAttributes": [
+     "email"
+    ],
+    "EmailVerificationMessage": "The verification code to your new account is {####}",
+    "EmailVerificationSubject": "Verify your new account",
+    "SmsVerificationMessage": "The verification code to your new account is {####}",
+    "UsernameAttributes": [
+     "email"
+    ],
+    "VerificationMessageTemplate": {
+     "DefaultEmailOption": "CONFIRM_WITH_CODE",
+     "EmailMessage": "The verification code to your new account is {####}",
+     "EmailSubject": "Verify your new account",
+     "SmsMessage": "The verification code to your new account is {####}"
+    }
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/UserPool/Resource"
+   }
+  },
+  "DesktopClient": {
+   "Type": "AWS::Cognito::UserPoolClient",
+   "Properties": {
+    "AccessTokenValidity": 60,
+    "ExplicitAuthFlows": [
+     "ALLOW_USER_PASSWORD_AUTH",
+     "ALLOW_USER_SRP_AUTH",
+     "ALLOW_REFRESH_TOKEN_AUTH"
+    ],
+    "IdTokenValidity": 60,
+    "PreventUserExistenceErrors": "ENABLED",
+    "RefreshTokenValidity": 30,
+    "SupportedIdentityProviders": [
+     "COGNITO"
+    ],
+    "TokenValidityUnits": {
+     "AccessToken": "minutes",
+     "IdToken": "minutes",
+     "RefreshToken": "days"
+    },
+    "UserPoolId": {
+     "Ref": "UserPool6BA7E5F2"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/DesktopClient"
+   }
+  },
+  "MetadataTable30E05F1F": {
+   "Type": "AWS::DynamoDB::Table",
+   "Properties": {
+    "AttributeDefinitions": [
+     {
+      "AttributeName": "pk",
+      "AttributeType": "S"
+     },
+     {
+      "AttributeName": "sk",
+      "AttributeType": "S"
+     }
+    ],
+    "BillingMode": "PAY_PER_REQUEST",
+    "KeySchema": [
+     {
+      "AttributeName": "pk",
+      "KeyType": "HASH"
+     },
+     {
+      "AttributeName": "sk",
+      "KeyType": "RANGE"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/MetadataTable/Resource"
+   }
+  },
+  "MetadataHandlerServiceRole24408145": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "lambda.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+       ]
+      ]
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/MetadataHandler/ServiceRole/Resource"
+   }
+  },
+  "MetadataHandlerServiceRoleDefaultPolicy03477988": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "dynamodb:BatchGetItem",
+        "dynamodb:Query",
+        "dynamodb:GetItem",
+        "dynamodb:Scan",
+        "dynamodb:ConditionCheckItem",
+        "dynamodb:DescribeTable"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MetadataTable30E05F1F",
+          "Arn"
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "dynamodb:GetRecords",
+        "dynamodb:GetShardIterator"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::GetAtt": [
+          "MetadataTable30E05F1F",
+          "Arn"
+         ]
+        }
+       ]
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "MetadataHandlerServiceRoleDefaultPolicy03477988",
+    "Roles": [
+     {
+      "Ref": "MetadataHandlerServiceRole24408145"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/MetadataHandler/ServiceRole/DefaultPolicy/Resource"
+   }
+  },
+  "MetadataHandlerBEE7179C": {
+   "Type": "AWS::Lambda::Function",
+   "Properties": {
+    "Code": {
+     "S3Bucket": "cdk-hnb659fds-assets-005858687290-us-east-2",
+     "S3Key": "d0f43a33d48e750ec601a031b8ebb807268d8a7335239cf2c1fe9a8f86931560.zip"
+    },
+    "Environment": {
+     "Variables": {
+      "TABLE_NAME": {
+       "Ref": "MetadataTable30E05F1F"
+      }
+     }
+    },
+    "Handler": "index.handler",
+    "Role": {
+     "Fn::GetAtt": [
+      "MetadataHandlerServiceRole24408145",
+      "Arn"
+     ]
+    },
+    "Runtime": "nodejs20.x",
+    "Timeout": 10
+   },
+   "DependsOn": [
+    "MetadataHandlerServiceRoleDefaultPolicy03477988",
+    "MetadataHandlerServiceRole24408145"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/MetadataHandler/Resource",
+    "aws:asset:path": "asset.d0f43a33d48e750ec601a031b8ebb807268d8a7335239cf2c1fe9a8f86931560",
+    "aws:asset:is-bundled": true,
+    "aws:asset:property": "Code"
+   }
+  },
+  "HttpApiF5A9A8A7": {
+   "Type": "AWS::ApiGatewayV2::Api",
+   "Properties": {
+    "CorsConfiguration": {
+     "AllowHeaders": [
+      "authorization",
+      "content-type"
+     ],
+     "AllowMethods": [
+      "GET",
+      "OPTIONS"
+     ],
+     "AllowOrigins": [
+      "*"
+     ]
+    },
+    "Name": "HttpApi",
+    "ProtocolType": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/Resource"
+   }
+  },
+  "HttpApiDefaultStage3EEB07D6": {
+   "Type": "AWS::ApiGatewayV2::Stage",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AutoDeploy": true,
+    "StageName": "$default"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/DefaultStage/Resource"
+   }
+  },
+  "HttpApiGETmeMetadataIntegration1C46FD49": {
+   "Type": "AWS::ApiGatewayV2::Integration",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "IntegrationType": "AWS_PROXY",
+    "IntegrationUri": {
+     "Fn::GetAtt": [
+      "MetadataHandlerBEE7179C",
+      "Arn"
+     ]
+    },
+    "PayloadFormatVersion": "2.0"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/GET--me/MetadataIntegration/Resource"
+   }
+  },
+  "HttpApiGETmeMetadataIntegrationPermissionAA15A3EA": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "MetadataHandlerBEE7179C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-2:005858687290:",
+       {
+        "Ref": "HttpApiF5A9A8A7"
+       },
+       "/*/*/me"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/GET--me/MetadataIntegration-Permission"
+   }
+  },
+  "HttpApiGETme466879BE": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizationType": "JWT",
+    "AuthorizerId": {
+     "Ref": "HttpApiUserPoolAuthorizer1A91476A"
+    },
+    "RouteKey": "GET /me",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "HttpApiGETmeMetadataIntegration1C46FD49"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/GET--me/Resource"
+   }
+  },
+  "HttpApiUserPoolAuthorizer1A91476A": {
+   "Type": "AWS::ApiGatewayV2::Authorizer",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizerType": "JWT",
+    "IdentitySource": [
+     "$request.header.Authorization"
+    ],
+    "JwtConfiguration": {
+     "Audience": [
+      {
+       "Ref": "DesktopClient"
+      }
+     ],
+     "Issuer": {
+      "Fn::Join": [
+       "",
+       [
+        "https://cognito-idp.us-east-2.amazonaws.com/",
+        {
+         "Ref": "UserPool6BA7E5F2"
+        }
+       ]
+      ]
+     }
+    },
+    "Name": "UserPoolAuthorizer"
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/UserPoolAuthorizer/Resource"
+   }
+  },
+  "HttpApiGETreposMetadataIntegrationPermissionBA83E2EC": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "MetadataHandlerBEE7179C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-2:005858687290:",
+       {
+        "Ref": "HttpApiF5A9A8A7"
+       },
+       "/*/*/repos"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/GET--repos/MetadataIntegration-Permission"
+   }
+  },
+  "HttpApiGETrepos55AEDBC9": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizationType": "JWT",
+    "AuthorizerId": {
+     "Ref": "HttpApiUserPoolAuthorizer1A91476A"
+    },
+    "RouteKey": "GET /repos",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "HttpApiGETmeMetadataIntegration1C46FD49"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/GET--repos/Resource"
+   }
+  },
+  "HttpApiGETorgsMetadataIntegrationPermissionADC4D6F5": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "MetadataHandlerBEE7179C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-2:005858687290:",
+       {
+        "Ref": "HttpApiF5A9A8A7"
+       },
+       "/*/*/orgs"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/GET--orgs/MetadataIntegration-Permission"
+   }
+  },
+  "HttpApiGETorgsE6448047": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizationType": "JWT",
+    "AuthorizerId": {
+     "Ref": "HttpApiUserPoolAuthorizer1A91476A"
+    },
+    "RouteKey": "GET /orgs",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "HttpApiGETmeMetadataIntegration1C46FD49"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/GET--orgs/Resource"
+   }
+  },
+  "HttpApiGETorgsorgIdreposMetadataIntegrationPermission7AB13A20": {
+   "Type": "AWS::Lambda::Permission",
+   "Properties": {
+    "Action": "lambda:InvokeFunction",
+    "FunctionName": {
+     "Fn::GetAtt": [
+      "MetadataHandlerBEE7179C",
+      "Arn"
+     ]
+    },
+    "Principal": "apigateway.amazonaws.com",
+    "SourceArn": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":execute-api:us-east-2:005858687290:",
+       {
+        "Ref": "HttpApiF5A9A8A7"
+       },
+       "/*/*/orgs/{orgId}/repos"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/GET--orgs--{orgId}--repos/MetadataIntegration-Permission"
+   }
+  },
+  "HttpApiGETorgsorgIdreposD85394B7": {
+   "Type": "AWS::ApiGatewayV2::Route",
+   "Properties": {
+    "ApiId": {
+     "Ref": "HttpApiF5A9A8A7"
+    },
+    "AuthorizationType": "JWT",
+    "AuthorizerId": {
+     "Ref": "HttpApiUserPoolAuthorizer1A91476A"
+    },
+    "RouteKey": "GET /orgs/{orgId}/repos",
+    "Target": {
+     "Fn::Join": [
+      "",
+      [
+       "integrations/",
+       {
+        "Ref": "HttpApiGETmeMetadataIntegration1C46FD49"
+       }
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/HttpApi/GET--orgs--{orgId}--repos/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/21RwU7DMAz9Fu6ZQUXAeZuE4AJTgfPkpaa4a5MqdjaNqv9O0sKQEKf3nvX8HDsFFDd3cHWBR1nYar9oeQfDi6Ldm1TaDtbXjtXD8CYUNt63Zv3u/uPrlsnpaKqTw85XKeUVdy1ly0RG02K3q3DrfEWNwNME99FZZe8MYwdD6eeGCTe+ZXvKcmajkestipAKLDMkDato96QrFPqOhyE1nFNzM4WORZIaDfZco9IRT4cChgfVftlzNmXIMi1eTy+YSS6VPurMHp1SHfAn+I/89S2jfvjAnxSm6LMaR1OS+BgsmWmBPIRdnV3PUfuYrpePA41cHopbKNK3NMK8CNEpdwTljF9VZsmLswEAAA=="
+   },
+   "Metadata": {
+    "aws:cdk:path": "SkillSyncerStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "AwsConfig": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "{\"region\":\"us-east-2\",\"userPoolId\":\"",
+      {
+       "Ref": "UserPool6BA7E5F2"
+      },
+      "\",\"userPoolClientId\":\"",
+      {
+       "Ref": "DesktopClient"
+      },
+      "\",\"apiBaseUrl\":\"",
+      {
+       "Fn::GetAtt": [
+        "HttpApiF5A9A8A7",
+        "ApiEndpoint"
+       ]
+      },
+      "\"}"
+     ]
+    ]
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { createSyncPlan, exportLocalOnlySkills, resolveSkillPaths, type ExportLocalOnlySkillsResult } from "../sync";
+import { createSyncPlan, exportLocalSkills, resolveSkillPaths, type ExportLocalSkillsResult } from "../sync";
 import { parseArgs } from "./args";
 import { formatPlanSummary } from "./format";
 
@@ -24,10 +24,11 @@ export async function runCli(rawArgs = process.argv.slice(2)): Promise<number> {
   });
 
   if (options.command === "export" && (options.all || options.skillNames.length > 0)) {
-    const result = await exportLocalOnlySkills({
+    const result = await exportLocalSkills({
       ...paths,
       skillNames: options.all ? undefined : options.skillNames,
-      dryRun: options.dryRun
+      dryRun: options.dryRun,
+      includeChanged: options.includeChanged
     });
 
     if (options.json) {
@@ -50,7 +51,7 @@ export async function runCli(rawArgs = process.argv.slice(2)): Promise<number> {
     process.stdout.write(`${formatPlanSummary(plan)}\n`);
 
     if (options.command !== "status") {
-      process.stdout.write("\nUse `skillsync export --all` or `skillsync export <skill-name>` to copy local-only skills into the repository.\n");
+      process.stdout.write("\nUse `skillsync export --all` to copy new local skills, or add `--include-changed` to update existing repository skills from local files.\n");
     }
 
     return 0;
@@ -60,14 +61,16 @@ export async function runCli(rawArgs = process.argv.slice(2)): Promise<number> {
   return 2;
 }
 
-function formatExportResult(result: ExportLocalOnlySkillsResult): string {
+function formatExportResult(result: ExportLocalSkillsResult): string {
   const verb = result.dryRun ? "Would export" : "Exported";
+  const created = result.exported.filter((skill) => skill.operation === "create").length;
+  const updated = result.exported.filter((skill) => skill.operation === "update").length;
   const lines = [
-    `${verb} ${result.exported.length} local-only ${result.exported.length === 1 ? "skill" : "skills"}.`
+    `${verb} ${result.exported.length} ${result.exported.length === 1 ? "skill" : "skills"} (${created} new, ${updated} changed).`
   ];
 
   for (const skill of result.exported) {
-    lines.push(`  - ${skill.skillName}: ${skill.sourcePath} -> ${skill.targetPath}`);
+    lines.push(`  - ${skill.skillName}: ${skill.operation} ${skill.sourcePath} -> ${skill.targetPath}`);
   }
 
   if (result.skipped.length > 0) {
@@ -95,6 +98,7 @@ function helpText(): string {
     "  --repo-skills-dir <path>   Repository skills directory, defaults to ./skills",
     "  --local-skills-dir <path>  Local Codex skills directory, defaults to ~/.codex/skills",
     "  --all                      Select all eligible skills for export",
+    "  --include-changed          Include changed same-name skills when exporting",
     "  --json                     Print machine-readable output",
     "  --dry-run                  Preview supported mutating commands",
     "  -h, --help                 Show this help"

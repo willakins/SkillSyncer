@@ -4,10 +4,11 @@ This folder contains enduring project context for SkillSyncer. It should explain
 
 ## Docs Map
 
-- [Architecture](architecture.md): planned process boundaries, source layout, and platform responsibilities.
-- [CLI](cli.md): proposed terminal command surface for importing, updating, exporting, and publishing skills.
+- [Architecture](architecture.md): process boundaries, source layout, and platform responsibilities.
+- [AWS Backend](aws.md): Cognito, API Gateway, DynamoDB, and CDK setup for authenticated cloud metadata.
+- [CLI](cli.md): terminal command surface for importing, updating, exporting, resolving, connecting, and publishing skills.
 - [Development](development.md): local development expectations and what still needs to be added once implementation starts.
-- [GUI](gui.md): planned Electron desktop workflows and user-facing states.
+- [GUI](gui.md): Electron desktop workflows and user-facing states.
 - [Sync Model](sync-model.md): source-of-truth rules, file layout, conflict handling, backups, and git behavior.
 
 ## Update Rules

@@ -11,11 +11,12 @@ const CLASSIFICATION_LABELS: Record<SkillClassification, string> = {
 export function formatPlanSummary(plan: SyncPlan): string {
   const lines = [
     "SkillSyncer status",
-    `Repo skills:  ${plan.repoRoot}`,
-    `Local skills: ${plan.localRoot}`,
+    `Library:       ${plan.library?.manifest?.name ?? "Plain skill folder"}`,
+    `Shared skills: ${plan.repoRoot}`,
+    `Local skills:  ${plan.localRoot}`,
     "",
     "Summary:",
-    `  Repo only: ${plan.totals["repo-only"]}`,
+    `  Shared only: ${plan.totals["repo-only"]}`,
     `  Local only: ${plan.totals["local-only"]}`,
     `  Changed: ${plan.totals["changed-both"]}`,
     `  Same: ${plan.totals.same}`,
@@ -23,6 +24,10 @@ export function formatPlanSummary(plan: SyncPlan): string {
   ];
 
   const notableSkills = plan.skills.filter((skill) => skill.classification !== "same");
+
+  if (plan.library && !plan.library.valid) {
+    lines.push("", "Library manifest errors:", ...plan.library.errors.map((error) => `  - ${error}`));
+  }
 
   if (notableSkills.length === 0) {
     lines.push("", "No skill differences found.");
@@ -34,7 +39,9 @@ export function formatPlanSummary(plan: SyncPlan): string {
   for (const skill of notableSkills) {
     const changeCount = skill.fileChanges.length;
     const suffix = changeCount === 1 ? "change" : "changes";
-    lines.push(`  - ${skill.name}: ${CLASSIFICATION_LABELS[skill.classification]} (${changeCount} ${suffix})`);
+    const visibility = skill.metadata ? `, ${skill.metadata.visibility}` : "";
+    const tags = skill.metadata?.tags.length ? `, tags: ${skill.metadata.tags.join(", ")}` : "";
+    lines.push(`  - ${skill.name}: ${CLASSIFICATION_LABELS[skill.classification]} (${changeCount} ${suffix}${visibility}${tags})`);
   }
 
   return lines.join("\n");

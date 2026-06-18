@@ -19,6 +19,9 @@ temp/
 *.tmp
 *.swp
 
+# Project documentation
+plan.md
+
 # JavaScript / TypeScript / Electron
 node_modules/
 dist/
@@ -28,6 +31,7 @@ release/
 coverage/
 .turbo/
 .vite/
+cdk.out/
 
 # Package manager caches
 .npm/

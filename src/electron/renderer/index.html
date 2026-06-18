@@ -6,7 +6,95 @@
     <title>SkillSyncer</title>
   </head>
   <body data-appearance="graphite">
-    <main class="app-frame">
+    <section id="auth-view" class="auth-shell">
+      <div class="auth-panel">
+        <div class="brand-block auth-brand">
+          <span class="brand-mark" aria-hidden="true">S</span>
+          <div>
+            <h1>SkillSyncer</h1>
+            <p>AWS library sync</p>
+          </div>
+        </div>
+
+        <div id="auth-sign-in-panel" data-auth-panel>
+          <h2>Sign in</h2>
+          <form id="sign-in-form" class="auth-form">
+            <label>
+              <span>Email</span>
+              <input id="sign-in-email" type="email" autocomplete="email" required />
+            </label>
+            <label>
+              <span>Password</span>
+              <input id="sign-in-password" type="password" autocomplete="current-password" required />
+            </label>
+            <button class="button primary-button" type="submit">Sign in</button>
+          </form>
+          <div class="auth-link-row">
+            <button id="show-sign-up-button" type="button">Create account</button>
+            <button id="show-forgot-button" type="button">Reset password</button>
+          </div>
+        </div>
+
+        <div id="auth-sign-up-panel" data-auth-panel hidden>
+          <h2>Create account</h2>
+          <form id="sign-up-form" class="auth-form">
+            <label>
+              <span>Email</span>
+              <input id="sign-up-email" type="email" autocomplete="email" required />
+            </label>
+            <label>
+              <span>Password</span>
+              <input id="sign-up-password" type="password" autocomplete="new-password" required />
+            </label>
+            <button class="button primary-button" type="submit">Create account</button>
+          </form>
+          <button class="auth-text-button" data-auth-target="sign-in" type="button">Back to sign in</button>
+        </div>
+
+        <div id="auth-confirm-panel" data-auth-panel hidden>
+          <h2>Confirm email</h2>
+          <form id="confirm-sign-up-form" class="auth-form">
+            <label>
+              <span>Email</span>
+              <input id="confirm-sign-up-email" type="email" autocomplete="email" required />
+            </label>
+            <label>
+              <span>Confirmation code</span>
+              <input id="confirm-sign-up-code" type="text" autocomplete="one-time-code" required />
+            </label>
+            <button class="button primary-button" type="submit">Confirm account</button>
+          </form>
+          <button class="auth-text-button" data-auth-target="sign-in" type="button">Back to sign in</button>
+        </div>
+
+        <div id="auth-forgot-panel" data-auth-panel hidden>
+          <h2>Reset password</h2>
+          <form id="forgot-password-form" class="auth-form">
+            <label>
+              <span>Email</span>
+              <input id="forgot-password-email" type="email" autocomplete="email" required />
+            </label>
+            <button class="button primary-button" type="submit">Send code</button>
+          </form>
+          <form id="confirm-forgot-password-form" class="auth-form">
+            <label>
+              <span>Confirmation code</span>
+              <input id="forgot-password-code" type="text" autocomplete="one-time-code" required />
+            </label>
+            <label>
+              <span>New password</span>
+              <input id="forgot-password-new-password" type="password" autocomplete="new-password" required />
+            </label>
+            <button class="button secondary-button" type="submit">Set password</button>
+          </form>
+          <button class="auth-text-button" data-auth-target="sign-in" type="button">Back to sign in</button>
+        </div>
+
+        <p id="auth-status" class="auth-status" role="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <main id="app-frame" class="app-frame" hidden>
       <aside class="sidebar" aria-label="Primary navigation">
         <div class="brand-block">
           <span class="brand-mark" aria-hidden="true">S</span>
@@ -17,7 +105,8 @@
         </div>
 
         <nav class="nav-stack">
-          <button id="dashboard-nav-button" class="nav-button" type="button" aria-current="page">Dashboard</button>
+          <button id="repos-nav-button" class="nav-button" type="button" aria-current="page">Repos</button>
+          <button id="dashboard-nav-button" class="nav-button" type="button">Dashboard</button>
           <button id="settings-nav-button" class="nav-button" type="button">Settings</button>
           <button id="backups-nav-button" class="nav-button" type="button">Backups</button>
         </nav>
@@ -40,9 +129,41 @@
             <strong id="invalid-count">0</strong>
           </div>
         </div>
+        <button id="sign-out-button" class="nav-button sign-out-button" type="button">Sign out</button>
       </aside>
 
-      <section id="dashboard-view" class="app-view">
+      <section id="repos-view" class="app-view">
+        <header class="view-header">
+          <div>
+            <span class="eyebrow">Cloud workspace</span>
+            <h2>Repos and organizations</h2>
+            <p id="cloud-summary">Loading connected libraries</p>
+          </div>
+          <button id="refresh-cloud-button" class="button secondary-button" type="button">Refresh</button>
+        </header>
+
+        <div id="cloud-status" class="action-status" role="status" aria-live="polite"></div>
+
+        <section class="inventory-grid">
+          <article class="data-panel">
+            <div class="panel-heading">
+              <h3>Connected Repos</h3>
+              <span id="repo-count">0 repos</span>
+            </div>
+            <div id="repo-list" class="cloud-list" aria-live="polite"></div>
+          </article>
+
+          <article class="data-panel">
+            <div class="panel-heading">
+              <h3>Organizations</h3>
+              <span id="organization-count">0 organizations</span>
+            </div>
+            <div id="organization-list" class="cloud-list" aria-live="polite"></div>
+          </article>
+        </section>
+      </section>
+
+      <section id="dashboard-view" class="app-view" hidden>
         <header class="view-header">
           <div>
             <span class="eyebrow">Sync workspace</span>
@@ -70,10 +191,29 @@
         <section class="command-grid" aria-label="Sync actions">
           <article class="command-panel">
             <div>
+              <h3>Install Shared Skills</h3>
+              <p id="install-summary">0 shared-only skills</p>
+            </div>
+            <button id="install-button" class="button primary-button" type="button">Install shared-only skills</button>
+          </article>
+
+          <article class="command-panel">
+            <div>
               <h3>Share Device Skills</h3>
               <p id="export-summary">0 device-only skills</p>
             </div>
             <button id="export-button" class="button primary-button" type="button">Share device-only skills</button>
+          </article>
+
+          <article class="command-panel">
+            <div>
+              <h3>Resolve Conflicts</h3>
+              <p id="conflict-summary">0 changed skills</p>
+            </div>
+            <div class="split-button-row">
+              <button id="use-shared-button" class="button secondary-button" type="button">Use shared</button>
+              <button id="keep-device-button" class="button secondary-button" type="button">Keep device</button>
+            </div>
           </article>
 
           <article class="command-panel danger-panel">
@@ -86,6 +226,17 @@
         </section>
 
         <div id="action-status" class="action-status" role="status" aria-live="polite"></div>
+
+        <section class="data-panel library-panel">
+          <div class="panel-heading">
+            <h3 id="library-name">Skill Library</h3>
+            <span id="library-state">Plain folder</span>
+          </div>
+          <div class="library-metadata">
+            <p id="library-description">No library manifest loaded.</p>
+            <p id="library-skill-metadata">0 recommended skills, 0 optional skills</p>
+          </div>
+        </section>
 
         <section class="inventory-grid" aria-label="Skill inventories">
           <article class="data-panel">
@@ -119,7 +270,7 @@
           <div>
             <span class="eyebrow">Preferences</span>
             <h2>Settings</h2>
-            <p>Choose how SkillSyncer looks on this computer.</p>
+            <p>Choose how SkillSyncer runs on this computer.</p>
           </div>
         </header>
 
@@ -145,6 +296,39 @@
               <span>Dark control room styling with saturated accents.</span>
             </button>
           </div>
+        </section>
+
+        <section class="settings-panel">
+          <div class="panel-heading">
+            <h3>Paths and Git</h3>
+            <span id="settings-file-summary">Loading settings</span>
+          </div>
+          <form id="settings-form" class="settings-form">
+            <label>
+              <span>Shared library skills</span>
+              <input id="library-path-input" type="text" autocomplete="off" />
+            </label>
+            <label>
+              <span>Device skills</span>
+              <input id="local-path-input" type="text" autocomplete="off" />
+            </label>
+            <label>
+              <span>Backup directory</span>
+              <input id="backup-path-input" type="text" autocomplete="off" />
+            </label>
+            <label>
+              <span>Git remote</span>
+              <input id="git-remote-input" type="text" autocomplete="off" />
+            </label>
+            <label>
+              <span>Git branch</span>
+              <input id="git-branch-input" type="text" autocomplete="off" />
+            </label>
+            <div class="settings-form-footer">
+              <span id="settings-status" role="status" aria-live="polite"></span>
+              <button id="settings-save-button" class="button primary-button" type="submit">Save settings</button>
+            </div>
+          </form>
         </section>
 
       </section>

@@ -1,6 +1,6 @@
 # Development
 
-This project uses npm, TypeScript, Electron Vite, and Vitest. The current app is an initial scaffold with a shared sync planner, CLI status previews, local-only export support, replace-local and backup-restore support, and an Electron dashboard.
+This project uses npm, TypeScript, Electron Vite, and Vitest. The current app is an initial scaffold with a shared sync planner, provider boundary, optional library manifest support, local organization metadata, persisted settings, selective install support with backups, conflict resolution, local-only export support, git clone/pull/publish wrappers, conservative sync orchestration, replace-local and backup-restore support, and an Electron dashboard.
 
 ## Stack
 
@@ -33,6 +33,12 @@ Run the CLI from source:
 npm run cli:dev -- status
 ```
 
+Synthesize the AWS backend:
+
+```bash
+npm run cdk:synth
+```
+
 Typecheck:
 
 ```bash
@@ -58,18 +64,19 @@ Current validation commands:
 ```bash
 npm run typecheck
 npm test
+npm run cdk:synth
 npm run build
 git diff --check
 ```
 
 ## Next Implementation Tasks
 
-1. Add safe mutating import/update flows around `src/sync/copy.ts`.
-2. Add selective overwrite backups before updating individual local skills.
-3. Add git pull orchestration and broader git state handling.
-4. Add persistent settings for repository path, local skills path, backup path, remote, and branch.
-5. Add CLI integration tests for command behavior and exit codes.
-6. Add Electron UI checks for the core install/update/export/replace/restore flow.
+1. Add selective GUI update/export preview dialogs.
+2. Add manual side-by-side conflict review.
+3. Add CLI integration tests for command behavior and exit codes.
+4. Add Electron UI checks for the core install/update/export/replace/restore flow.
+5. Add GitHub-specific pull request publication behind the provider boundary.
+6. Add hosted backend/invite flows only when product demand requires them.
 7. Add packaging checks for macOS and Arch Linux.
 
 ## Development Rules

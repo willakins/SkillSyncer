@@ -21,20 +21,24 @@ skillsync export <skill-name>
 skillsync pull
 skillsync publish
 skillsync sync
+skillsync resolve
+skillsync clone
+skillsync open
+skillsync org
 skillsync config
 ```
 
-The current scaffold implements `status`, `import`, and `install` as preview commands. `export --all` and `export <skill-name>` copy local-only skills into the repository skill tree without overwriting existing repository skills. The other commands are reserved and return a not-implemented response.
+The current scaffold implements `status`, mutating `import`/`install` for selected shared skills, safe local-only `export`, `pull`, `publish`, conservative `sync`, conflict `resolve`, git-backed `clone`, local `open`, local organization metadata through `org`, and `config`.
 
 ### `skillsync status`
 
-Shows configured paths, local-only skills, repo-only skills, changed skills, and invalid skill directories.
+Shows configured paths, local-only skills, repo-only skills, changed skills, invalid skill directories, and git status for the shared library checkout. If a `skillsyncer.json` manifest is present, status includes the library name and skill metadata. Invalid manifest errors are shown without blocking plain folder discovery.
 
 ### `skillsync import` / `skillsync install`
 
-Previews copying selected skills from the repository skill tree into the local skills directory.
+Copies selected skills from the shared library into the local skills directory. Calling the command without `--all` or skill names still shows the status preview.
 
-Useful planned flags:
+Supported flags:
 
 ```bash
 skillsync import --all
@@ -44,9 +48,13 @@ skillsync install --all
 skillsync install <skill-name>
 skillsync install --dry-run
 skillsync install --backup
+skillsync install <skill-name> --overwrite
+skillsync install --all --overwrite --dry-run
 ```
 
 `import` should be the user-facing verb for bringing shared skills onto the current computer. `install` can remain as an alias if it reads better in scripts.
+
+Shared-only skills are installed directly. Skills that already exist locally are skipped unless `--overwrite` is passed. Overwrite creates a backup by default; `--no-backup` disables that safety guard only for the current command.
 
 ### `skillsync export <skill-name>`
 
@@ -62,26 +70,78 @@ The command skips skills that already exist in the repository because those need
 
 ### `skillsync pull`
 
-Planned command that will run `git pull` for the repository and then preview which repository skills can be installed or updated locally.
+Runs a fast-forward git pull for the shared library and then shows the resulting sync status. It uses the current upstream unless `--remote` and `--branch` are configured or passed.
 
 ### `skillsync publish`
 
-Planned command that will commit and push exported skill changes. This command should refuse to commit unrelated changes unless the user explicitly selects them.
+Commits and pushes selected shared-library skill directories.
+
+```bash
+skillsync publish <skill-name> --message "Publish my skill"
+skillsync publish --all -m "Publish skill updates"
+```
+
+This command stages selected skill directories only. It does not intentionally include unrelated files outside the selected skill pathspecs.
 
 ### `skillsync sync`
 
-Planned command for the common happy path:
+Command for the common happy path:
 
 1. Pull latest repository changes.
 2. Install selected repository updates locally.
 3. Export selected local skill changes into the repository.
 4. Commit and push selected repository changes.
 
-This command should remain conservative. It should stop when conflicts require user choice.
+This command remains conservative. It stops when conflicts require user choice. By default it pulls, installs shared-only skills, exports local-only skills, and publishes exported skills. Use `--no-pull` or `--no-publish` to skip those steps.
+
+### `skillsync resolve`
+
+Resolves changed-on-both-sides skills only when an explicit action is selected.
+
+```bash
+skillsync resolve --all --use-library
+skillsync resolve sentry-triage --keep-device
+skillsync resolve --all --skip
+```
+
+`--use-library` installs the shared version locally after backing up the device version. `--keep-device` exports the device version into the shared library after backing up the shared version.
+
+### `skillsync clone` / `skillsync open`
+
+Connects SkillSyncer to a git-backed or existing local library.
+
+```bash
+skillsync clone git@github.com:acme/engineering-skills.git ./engineering-skills
+skillsync clone git@github.com:acme/engineering-skills.git --target-dir ./engineering-skills --branch main
+skillsync open ./engineering-skills
+skillsync open ./engineering-skills/skills
+```
+
+`clone` uses local git credentials. `open` stores an existing library root or skills directory. If the selected folder contains `skillsyncer.json`, SkillSyncer resolves `skillsPath` from that manifest.
+
+### `skillsync org`
+
+Stores local organization and library metadata without storing skill contents.
+
+```bash
+skillsync org list
+skillsync org register-library --organization acme --library-id engineering --name "Engineering"
+```
+
+The local organization model supports owners, admins, maintainers, members, viewers, groups, libraries, recommended skills, optional skills, and installed skill tracking in settings.
 
 ### `skillsync config`
 
-Planned command to show or update local configuration such as the Codex skills directory, repository skills directory, remote, branch, and backup directory.
+Shows or updates local configuration such as the Codex skills directory, shared library skills directory, remote, branch, and backup directory.
+
+```bash
+skillsync config
+skillsync config --library-skills-dir ./skills --local-skills-dir ~/.codex/skills
+skillsync config --backup-dir ~/.codex/skillsyncer-backups
+skillsync config --remote origin --branch main
+```
+
+Settings are stored as JSON in `~/.config/skillsyncer/settings.json` by default. `--settings-file <path>` can be used for tests or alternate profiles.
 
 ## Exit Codes
 

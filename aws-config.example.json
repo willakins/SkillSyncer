@@ -1,0 +1,6 @@
+{
+  "region": "us-east-1",
+  "userPoolId": "us-east-1_example",
+  "userPoolClientId": "exampleclientid",
+  "apiBaseUrl": "https://example.execute-api.us-east-1.amazonaws.com"
+}

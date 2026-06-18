@@ -1,5 +1,6 @@
 import { cp, mkdir, readdir, rm, stat } from "node:fs/promises";
 import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { directoryExists, directoryHasEntries, plannedBackupPath, resolveBackupRoot } from "./backup";
 import { copySkillDirectory, type CopySkillResult } from "./copy";
 import { readSkillTree } from "./compare";
 import { createSyncPlan } from "./plan";
@@ -74,7 +75,7 @@ export async function replaceLocalSkillsFromRepo(
       skillName: skill.name,
       reason: "Repository skill is invalid and was not imported."
     }));
-  const backupPath = await plannedBackupPath(options.localRoot, options.backupRoot);
+  const backupPath = plannedBackupPath(options.localRoot, options.backupRoot);
 
   if (repoSkills.length === 0) {
     throw new Error("Repository skills directory has no valid skills. Local skills were not replaced.");
@@ -128,7 +129,7 @@ export async function replaceLocalSkillsFromRepo(
 }
 
 export async function listSkillBackups(options: ListSkillBackupsOptions): Promise<SkillBackupSummary[]> {
-  const root = defaultBackupRoot(options.localRoot, options.backupRoot);
+  const root = resolveBackupRoot(options.localRoot, options.backupRoot);
 
   if (!(await directoryExists(root))) {
     return [];
@@ -165,7 +166,7 @@ export async function listSkillBackups(options: ListSkillBackupsOptions): Promis
 export async function restoreLocalSkillsFromBackup(
   options: RestoreLocalSkillsFromBackupOptions
 ): Promise<RestoreLocalSkillsFromBackupResult> {
-  const backupRoot = defaultBackupRoot(options.localRoot, options.backupRoot);
+  const backupRoot = resolveBackupRoot(options.localRoot, options.backupRoot);
   const backupPath = resolve(options.backupPath);
 
   ensureBackupPathIsAllowed(backupRoot, backupPath);
@@ -178,7 +179,7 @@ export async function restoreLocalSkillsFromBackup(
   const restoredSkillNames = skillNamesFromSnapshots(backupSkills);
   const localSkills = await readSkillTree(options.localRoot);
   const removedLocalSkillNames = skillNamesFromSnapshots(localSkills);
-  const safetyBackupPath = await plannedBackupPath(options.localRoot, options.backupRoot, "pre-restore");
+  const safetyBackupPath = plannedBackupPath(options.localRoot, options.backupRoot, "pre-restore");
 
   if (options.dryRun) {
     return {
@@ -210,15 +211,6 @@ export async function restoreLocalSkillsFromBackup(
   };
 }
 
-function defaultBackupRoot(localRoot: string, backupRoot?: string): string {
-  return backupRoot ? resolve(backupRoot) : join(dirname(localRoot), "skillsyncer-backups");
-}
-
-async function plannedBackupPath(localRoot: string, backupRoot?: string, prefix = "skills"): Promise<string> {
-  const root = defaultBackupRoot(localRoot, backupRoot);
-  return join(root, `${prefix}-${timestamp()}`);
-}
-
 function skillNamesFromSnapshots(skills: Map<string, SkillSnapshot>): string[] {
   return [...skills.values()]
     .filter((skill) => skill.valid)
@@ -233,36 +225,4 @@ function ensureBackupPathIsAllowed(backupRoot: string, backupPath: string): void
   if (relativePath === "" || relativePath.startsWith("..") || isAbsolute(relativePath)) {
     throw new Error(`Backup path is outside the configured backup directory: ${backupPath}`);
   }
-}
-
-async function directoryHasEntries(path: string): Promise<boolean> {
-  try {
-    if (!(await stat(path)).isDirectory()) {
-      return false;
-    }
-
-    return (await readdir(path)).length > 0;
-  } catch (error) {
-    if (error instanceof Error && "code" in error && error.code === "ENOENT") {
-      return false;
-    }
-
-    throw error;
-  }
-}
-
-async function directoryExists(path: string): Promise<boolean> {
-  try {
-    return (await stat(path)).isDirectory();
-  } catch (error) {
-    if (error instanceof Error && "code" in error && error.code === "ENOENT") {
-      return false;
-    }
-
-    throw error;
-  }
-}
-
-function timestamp(): string {
-  return new Date().toISOString().replaceAll(":", "").replace(/\.\d{3}Z$/, "Z");
 }

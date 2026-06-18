@@ -7,15 +7,20 @@ SkillSyncer is an Electron desktop app and command-line tool scaffold for syncin
 This repository has an initial TypeScript project structure. It currently includes:
 
 - A shared sync planner that compares shared skills with device skills.
-- A CLI entrypoint with `status`, `import`, and `install` preview commands plus safe local-only `export`.
-- An Electron dashboard that displays shared/device skill lists, shows difference counts, and can share device-only skills.
-- A settings view with Graphite, Paper, and Midnight appearance options.
+- A provider boundary for local-directory and git-backed skill libraries.
+- Optional `skillsyncer.json` manifest discovery and validation.
+- Embedded Cognito login and AWS metadata API client architecture.
+- CDK infrastructure for Cognito, API Gateway, DynamoDB metadata, and Lambda routes.
+- Local organization/library metadata in settings.
+- A CLI entrypoint with `status`, mutating `import`/`install`, safe local-only `export`, `pull`, `publish`, `sync`, `resolve`, `clone`, `open`, `org`, and `config`.
+- An Electron dashboard that displays shared/device skill lists, shows difference counts, installs shared-only skills, resolves conflicts, and can share device-only skills.
+- A settings view with Graphite, Paper, and Midnight appearance options plus persisted sync paths and git defaults.
 - A guarded reset-device flow that backs up device skills before loading all shared skills.
 - A backup restore flow that can load a previous local skills backup back into place.
-- Vitest coverage for the initial sync planner.
+- Vitest coverage for the sync planner, provider planning, settings, manifest loading, conflict resolution, workflow sync, install backups, export, replace/restore, and CLI parsing.
 - A tracked `skills/` directory for repository-owned skill files.
 
-Selective import/update commands, git pull orchestration, conflict resolution, and packaged desktop releases are still future work.
+Richer selective GUI update flows, side-by-side conflict review, hosted organization services, GitHub pull request publication, and packaged desktop releases are still future work.
 
 ## Problem
 
@@ -95,6 +100,12 @@ Run the CLI in development:
 
 ```bash
 npm run cli:dev -- status
+```
+
+Synthesize the AWS backend:
+
+```bash
+npm run cdk:synth
 ```
 
 Validate the project:

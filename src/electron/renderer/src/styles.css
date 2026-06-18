@@ -106,6 +106,77 @@ body {
   min-width: 760px;
 }
 
+.auth-shell {
+  align-items: center;
+  display: flex;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.auth-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  display: grid;
+  gap: 18px;
+  margin: 0 auto;
+  max-width: 460px;
+  min-width: 0;
+  padding: 22px;
+  width: min(100%, 460px);
+}
+
+.auth-brand {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+
+.auth-panel h2 {
+  font-size: 22px;
+  margin: 0 0 12px;
+}
+
+.auth-form {
+  display: grid;
+  gap: 12px;
+}
+
+.auth-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.auth-form label span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 780;
+  text-transform: uppercase;
+}
+
+.auth-link-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.auth-link-row button,
+.auth-text-button {
+  background: transparent;
+  border: 0;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 760;
+  padding: 0;
+}
+
+.auth-status {
+  color: var(--muted);
+  margin: 0;
+  min-height: 22px;
+  overflow-wrap: anywhere;
+}
+
 button,
 input,
 select {
@@ -217,6 +288,10 @@ select {
   display: block;
   font-size: 24px;
   line-height: 1;
+  margin-top: 8px;
+}
+
+.sign-out-button {
   margin-top: 8px;
 }
 
@@ -367,7 +442,7 @@ button:focus-visible {
 .command-grid {
   display: grid;
   gap: 12px;
-  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  grid-template-columns: repeat(3, minmax(190px, 1fr));
 }
 
 .command-panel {
@@ -395,12 +470,34 @@ button:focus-visible {
   border-color: color-mix(in srgb, var(--danger) 35%, var(--border));
 }
 
+.split-button-row {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .action-status {
   border-radius: 8px;
   color: var(--muted);
   min-height: 42px;
   overflow-wrap: anywhere;
   padding: 10px 12px;
+}
+
+.library-panel {
+  display: grid;
+}
+
+.library-metadata {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+}
+
+.library-metadata p {
+  color: var(--muted);
+  margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .inventory-grid {
@@ -621,6 +718,33 @@ button:focus-visible {
   overflow-wrap: anywhere;
 }
 
+.settings-form {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+}
+
+.settings-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.settings-form label span,
+.settings-form-footer span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 780;
+  overflow-wrap: anywhere;
+  text-transform: uppercase;
+}
+
+.settings-form-footer {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  justify-content: space-between;
+}
+
 .backup-list {
   display: grid;
   gap: 12px;
@@ -635,6 +759,54 @@ button:focus-visible {
   gap: 10px;
   min-width: 0;
   padding: 14px;
+}
+
+.cloud-list {
+  display: grid;
+  gap: 10px;
+  max-height: 520px;
+  overflow: auto;
+  padding: 14px;
+}
+
+.cloud-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px;
+}
+
+.cloud-card h3 {
+  font-size: 16px;
+  margin: 0 0 5px;
+}
+
+.cloud-card p {
+  color: var(--muted);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.capability-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.capability-list li {
+  background: var(--neutral-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
 }
 
 .backup-card-header {

@@ -1,14 +1,39 @@
 import { compareSkillFiles, readSkillTree } from "./compare";
-import type { ResolvedSkillPaths, SkillClassification, SkillPlan, SkillSnapshot, SyncPlan } from "./types";
+import { readLibraryManifestForSkillsRoot } from "./manifest";
+import type { LibraryProvider } from "./providers";
+import type { LibraryManifestSummary, ResolvedSkillPaths, SkillClassification, SkillPlan, SkillSnapshot, SyncPlan } from "./types";
 
 export async function createSyncPlan(paths: ResolvedSkillPaths): Promise<SyncPlan> {
-  const [repoSkills, localSkills] = await Promise.all([
+  const [repoSkills, localSkills, library] = await Promise.all([
     readSkillTree(paths.repoRoot),
-    readSkillTree(paths.localRoot)
+    readSkillTree(paths.localRoot),
+    readLibraryManifestForSkillsRoot(paths.repoRoot)
   ]);
 
+  return createSyncPlanFromSkillTrees(paths, repoSkills, localSkills, library);
+}
+
+export async function createSyncPlanFromProvider(provider: LibraryProvider, localRoot: string): Promise<SyncPlan> {
+  const [repoSkills, localSkills, library] = await Promise.all([
+    provider.readSkillTree(),
+    readSkillTree(localRoot),
+    readLibraryManifestForSkillsRoot(provider.skillsRoot)
+  ]);
+
+  return createSyncPlanFromSkillTrees({
+    repoRoot: provider.skillsRoot,
+    localRoot
+  }, repoSkills, localSkills, library);
+}
+
+export function createSyncPlanFromSkillTrees(
+  paths: ResolvedSkillPaths,
+  repoSkills: Map<string, SkillSnapshot>,
+  localSkills: Map<string, SkillSnapshot>,
+  library?: LibraryManifestSummary
+): SyncPlan {
   const skillNames = [...new Set([...repoSkills.keys(), ...localSkills.keys()])].sort();
-  const skills = skillNames.map((name) => createSkillPlan(name, repoSkills.get(name), localSkills.get(name)));
+  const skills = skillNames.map((name) => createSkillPlan(name, repoSkills.get(name), localSkills.get(name), library));
   const totals = createEmptyTotals();
 
   for (const skill of skills) {
@@ -18,18 +43,27 @@ export async function createSyncPlan(paths: ResolvedSkillPaths): Promise<SyncPla
   return {
     repoRoot: paths.repoRoot,
     localRoot: paths.localRoot,
+    library,
     skills,
     totals
   };
 }
 
-function createSkillPlan(name: string, repo?: SkillSnapshot, local?: SkillSnapshot): SkillPlan {
+function createSkillPlan(
+  name: string,
+  repo?: SkillSnapshot,
+  local?: SkillSnapshot,
+  library?: LibraryManifestSummary
+): SkillPlan {
+  const metadata = library?.manifest?.skills[name];
+
   if ((repo && !repo.valid) || (local && !local.valid)) {
     return {
       name,
       classification: "invalid-skill-directory",
       repo,
       local,
+      metadata,
       fileChanges: repo && local ? compareSkillFiles(repo, local) : []
     };
   }
@@ -39,6 +73,7 @@ function createSkillPlan(name: string, repo?: SkillSnapshot, local?: SkillSnapsh
       name,
       classification: "repo-only",
       repo,
+      metadata,
       fileChanges: repo.files.map((file) => ({ relativePath: file.relativePath, changeType: "repo-only" }))
     };
   }
@@ -48,6 +83,7 @@ function createSkillPlan(name: string, repo?: SkillSnapshot, local?: SkillSnapsh
       name,
       classification: "local-only",
       local,
+      metadata,
       fileChanges: local.files.map((file) => ({ relativePath: file.relativePath, changeType: "local-only" }))
     };
   }
@@ -63,6 +99,7 @@ function createSkillPlan(name: string, repo?: SkillSnapshot, local?: SkillSnapsh
     classification: fileChanges.length === 0 ? "same" : "changed-both",
     repo,
     local,
+    metadata,
     fileChanges
   };
 }

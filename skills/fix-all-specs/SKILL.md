@@ -5,7 +5,7 @@ description: Repair current-branch RSpec failures for prompts like fix all specs
 
 Fix branch-caused RSpec failures by selecting the affected spec set, repairing real failures, and committing each major repair round.
 
-**UTILITY SKILL. INVOKES:** `bundle exec rspec`, git status/diff, `write-commit-name`, optional `enable-remote-publication`.
+**UTILITY SKILL. INVOKES:** repo-specific RSpec runners such as Croft's `RAILS_ENV=test bin/rails run specs`, `bundle exec rspec`, git status/diff, `write-commit-name`, optional `enable-remote-publication`.
 
 Use for end-to-end RSpec repair on the current branch. Default base is `main`; do not run the full suite unless the branch blast radius requires it.
 
@@ -22,7 +22,7 @@ Read [spec repair workflow](references/spec-repair-workflow.md) before running s
 
 1. Inspect `git status -sb`, the branch diff against `main`, and changed files.
 2. Build a concrete affected spec list from changed files and nearby dependencies.
-3. Run `bundle exec rspec` with explicit spec paths or line numbers.
+3. In Croft, run affected specs with `RAILS_ENV=test bin/rails run specs` so they use the repo's parallel runner against test databases. In generic Rails repos, run `bundle exec rspec` with explicit spec paths or line numbers.
 4. Fix real branch-caused failures, iterating on the narrowest failing subset.
 5. Rerun the full affected spec set; widen only when failures prove broader impact.
 6. Commit each major repair round intentionally and push only when [publication safety](references/publication-safety.md) says the target is verified.

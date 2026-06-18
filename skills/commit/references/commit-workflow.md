@@ -12,13 +12,13 @@ Create one truthful commit for the intended change set, using the staged diff or
 - If files are already staged for the intended commit, treat the staged diff as the commit scope.
 - If nothing is staged, stage the exact in-scope local changes for this one commit.
 - Use `write-commit-name` to generate the subject line.
-- Keep the subject exactly as returned by `write-commit-name`, including the default `#CI`, unless the user explicitly asked to keep CI off.
+- Keep the subject exactly as returned by `write-commit-name`; do not add `#CI` unless the prompt explicitly asked to trigger CI, trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
 - Push after the commit by default whenever the remote target is already verified as safe for this branch.
 - Treat `commit` and `commit these changes` as commit-and-sync unless the user explicitly asks to keep it local.
 - If the user explicitly asks to keep the commit local, skip the push.
 - Do not amend existing commits unless the user explicitly asks.
 - Do not monitor CI, Codex review, or PR comments after a normal commit request.
-- When the user explicitly asks to monitor, watch, or keep an eye on the result after committing, finish the commit and push first, then delegate the post-push work to `monitor` with current-head Codex concern repair authorized unless the user explicitly asks to observe only.
+- When the user explicitly asks to monitor, watch, or keep an eye on the result after committing, finish the commit and push first, then delegate the post-push work to `monitor` with current-head Codex concern repair authorized unless the user explicitly asks to observe only. Expect `monitor` to create and push one final empty commit with the exact subject `Trigger #CI` after Codex is clean and local tests pass.
 
 ## Source Of Truth
 
@@ -48,7 +48,8 @@ If any condition is uncertain, commit locally, skip push, and report what needs 
 ## CI And Commit Subject
 
 - `write-commit-name` owns the subject line.
-- Keep the returned `#CI` suffix unless the user explicitly asks to keep CI off, skip CI, avoid CI, or preserve a no-CI subject.
+- Do not add `#CI` by default.
+- Include `#CI` only when the prompt explicitly asks to trigger CI, trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
 - If the user asks for a custom message, use it only when it remains truthful to the staged diff; otherwise explain the mismatch.
 - Do not add body text, trailers, sign-offs, or co-author lines unless the user or repo convention explicitly requires them.
 
@@ -77,7 +78,7 @@ If any condition is uncertain, commit locally, skip push, and report what needs 
 
 3. Generate the commit subject.
    - Use `write-commit-name` on the staged diff for this commit.
-   - Do not rewrite the subject unless the user explicitly asks for alternatives or CI-off behavior.
+   - Do not rewrite the subject unless the user explicitly asks for alternatives or CI-marker removal.
 
 4. Create the commit.
    - Use a normal `git commit -m "SUBJECT"` flow.
@@ -99,6 +100,7 @@ If any condition is uncertain, commit locally, skip push, and report what needs 
 6. If monitoring was explicitly requested, invoke `monitor`.
    - Pass the pushed branch or PR target and the pushed head SHA when known.
    - Tell `monitor` this is an immediate post-push commit-and-monitor handoff with Codex concern repair authorized unless the user explicitly asked to observe or report only.
+   - Tell `monitor` that final CI triggering should happen through the local-first empty `Trigger #CI` commit after Codex and local test gates, not by adding `#CI` to the original code commit from this skill.
    - Do not inline CI or Codex monitoring logic in this skill.
    - Do not authorize CI repair unless the user explicitly asked for CI repair, monitor-until-green repair behavior, or the caller already granted CI repair authority.
 
@@ -139,7 +141,7 @@ Example:
 ```text
 Committed 1 change.
 
-Commit: Add Mock Confirmation Code UI Hint #CI
+Commit: Add Mock Confirmation Code UI Hint
 Pushed: Yes
 Push target: origin/feature/mock-confirmation
 Checks run: none

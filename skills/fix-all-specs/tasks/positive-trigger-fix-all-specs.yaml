@@ -13,5 +13,5 @@ graders:
     config:
       contains:
         - "affected spec"
-        - "bundle exec rspec"
+        - "RAILS_ENV=test bin/rails run specs"
         - "write-commit-name"

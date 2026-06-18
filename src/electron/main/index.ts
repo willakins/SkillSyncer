@@ -1,4 +1,12 @@
-import { app, BrowserWindow, dialog, ipcMain } from "electron";
+import {
+  app,
+  BrowserWindow,
+  dialog,
+  ipcMain,
+  type IpcMainInvokeEvent,
+  type MessageBoxOptions,
+  type MessageBoxReturnValue
+} from "electron";
 import { join } from "node:path";
 import {
   createSyncPlan,
@@ -44,38 +52,15 @@ ipcMain.handle("sync:status", async () => {
 
 ipcMain.handle("sync:export-local-changes", async () => {
   const paths = resolveSkillPaths();
-  const plan = await createSyncPlan(paths);
-  const newCount = plan.totals["local-only"];
-  const changedCount = plan.totals["changed-both"];
-
-  if (changedCount > 0) {
-    const response = await dialog.showMessageBox({
-      type: "warning",
-      buttons: ["Cancel", "Update shared skills"],
-      defaultId: 0,
-      cancelId: 0,
-      title: "Share Device Skill Changes",
-      message: "Update shared skills from this device?",
-      detail: [
-        `This will copy ${newCount} new device ${newCount === 1 ? "skill" : "skills"} and replace ${changedCount} existing shared ${changedCount === 1 ? "skill" : "skills"} with the versions on this device.`,
-        "Review the repository git diff before committing and pushing these changes."
-      ].join("\n\n")
-    });
-
-    if (response.response !== 1) {
-      throw new Error("Export canceled.");
-    }
-  }
-
   return exportLocalSkills({ ...paths, includeChanged: true });
 });
 
-ipcMain.handle("sync:replace-local-from-repo", async () => {
+ipcMain.handle("sync:replace-local-from-repo", async (event) => {
   const paths = resolveSkillPaths();
   const plan = await createSyncPlan(paths);
   const localCount = plan.skills.filter((skill) => skill.local).length;
   const repoCount = plan.skills.filter((skill) => skill.repo?.valid).length;
-  const response = await dialog.showMessageBox({
+  const response = await showWindowMessageBox(event, {
     type: "warning",
     buttons: ["Cancel", "Back up and reset"],
     defaultId: 0,
@@ -100,7 +85,7 @@ ipcMain.handle("sync:list-backups", async () => {
   return listSkillBackups({ localRoot: paths.localRoot });
 });
 
-ipcMain.handle("sync:restore-backup", async (_event, payload: unknown) => {
+ipcMain.handle("sync:restore-backup", async (event, payload: unknown) => {
   const paths = resolveSkillPaths();
   const backupPath = parseRestorePayload(payload);
   const backups = await listSkillBackups({ localRoot: paths.localRoot });
@@ -108,7 +93,7 @@ ipcMain.handle("sync:restore-backup", async (_event, payload: unknown) => {
   const plan = await createSyncPlan(paths);
   const localCount = plan.skills.filter((skill) => skill.local).length;
   const restoreCount = backup?.skillCount ?? 0;
-  const response = await dialog.showMessageBox({
+  const response = await showWindowMessageBox(event, {
     type: "warning",
     buttons: ["Cancel", "Back up and restore"],
     defaultId: 0,
@@ -129,6 +114,21 @@ ipcMain.handle("sync:restore-backup", async (_event, payload: unknown) => {
     backupPath
   });
 });
+
+async function showWindowMessageBox(
+  event: IpcMainInvokeEvent,
+  options: MessageBoxOptions
+): Promise<MessageBoxReturnValue> {
+  const parentWindow = BrowserWindow.fromWebContents(event.sender);
+
+  if (!parentWindow) {
+    return dialog.showMessageBox(options);
+  }
+
+  parentWindow.show();
+  parentWindow.focus();
+  return dialog.showMessageBox(parentWindow, options);
+}
 
 function parseRestorePayload(payload: unknown): string {
   if (!payload || typeof payload !== "object") {

@@ -10,6 +10,7 @@
 
 ## Preconditions
 
+- Require explicit prompt or caller authorization to trigger CI or GitHub Actions.
 - Require a clean working tree before any checkout, amend, or push.
 - Require the branch to exist remotely; if nothing is pushed yet, stop and use the normal PR creation flow.
 - Move to the exact requested branch tip before comparing local `HEAD` with the pushed tip SHA.

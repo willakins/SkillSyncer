@@ -1,6 +1,6 @@
 ---
 name: draft-pr-until-green
-description: Create or refresh a draft PR, then repair actionable CI until green or blocked. Use for "open a draft PR and get CI green" or "publish this branch and fix failing checks". Not for draft-only, existing-PR CI-only, review, ready, merge, or rebase requests.
+description: Create or refresh a draft PR, then repair actionable CI until green or blocked. Use only when the prompt explicitly asks to run or repair CI/GitHub Actions, such as "open a draft PR and get CI green", "commit with actions", or "publish this branch and fix failing checks". Not for draft-only, existing-PR CI-only, review, ready, merge, or rebase requests.
 ---
 
 **UTILITY SKILL. INVOKES:** `draft-pr-for-branch`, `repair-pr-ci-trigger`, `fix-pr-until-green`. **FOR:** draft PR plus CI repair.
@@ -24,7 +24,7 @@ Read [Operation contract](references/operation-contract.md) before publishing, C
 1. Inspect status, diffs, PR state, push path, and `gh` auth.
 2. Run narrow local verification; fix local failures first.
 3. Use `draft-pr-for-branch`; capture PR number, URL, draft state, and head SHA.
-4. Use `repair-pr-ci-trigger` only if the pushed tip lacks a case-insensitive CI marker.
+4. Use `repair-pr-ci-trigger` only because this skill requires explicit CI/Actions authorization; if the original prompt was draft-only, stop and route to `draft-pr-for-branch`.
 5. Hand the PR to `fix-pr-until-green`; preserve draft state.
 6. Report PR link, final head SHA, fixed checks, verification, green/blocked status, and blockers.
 

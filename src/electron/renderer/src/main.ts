@@ -31,6 +31,11 @@ const replaceButton = getElement("replace-button") as HTMLButtonElement;
 const exportSummary = getElement("export-summary");
 const replaceSummary = getElement("replace-summary");
 const actionStatus = getElement("action-status");
+const confirmationModal = getElement("confirmation-modal");
+const confirmationTitle = getElement("confirmation-title");
+const confirmationDetail = getElement("confirmation-detail");
+const confirmationCancelButton = getElement("confirmation-cancel-button") as HTMLButtonElement;
+const confirmationConfirmButton = getElement("confirmation-confirm-button") as HTMLButtonElement;
 const sharedSkillList = getElement("shared-skill-list");
 const deviceSkillList = getElement("device-skill-list");
 const sharedListCount = getElement("shared-list-count");
@@ -46,6 +51,8 @@ const backupList = getElement("backup-list");
 let currentPlan: SyncPlan | undefined;
 let currentBackups: SkillBackupSummary[] = [];
 let busy = false;
+let pendingConfirmation: ((confirmed: boolean) => void) | undefined;
+let previouslyFocusedElement: HTMLElement | undefined;
 
 applyAppearance(readAppearance());
 showView("dashboard");
@@ -77,6 +84,20 @@ replaceButton.addEventListener("click", () => {
 
 refreshBackupsButton.addEventListener("click", () => {
   void loadBackups();
+});
+
+confirmationCancelButton.addEventListener("click", () => {
+  resolveConfirmation(false);
+});
+
+confirmationConfirmButton.addEventListener("click", () => {
+  resolveConfirmation(true);
+});
+
+document.addEventListener("keydown", (event) => {
+  if (!confirmationModal.hidden && event.key === "Escape") {
+    resolveConfirmation(false);
+  }
 });
 
 for (const button of appearanceButtons) {
@@ -153,6 +174,26 @@ function renderInventory(sharedSkills: SkillPlan[], deviceSkills: SkillPlan[]): 
 }
 
 async function exportLocalChanges(): Promise<void> {
+  if (!currentPlan) {
+    await loadStatus();
+  }
+
+  if (!currentPlan) {
+    return;
+  }
+
+  const newCount = currentPlan.totals["local-only"];
+  const changedCount = currentPlan.totals["changed-both"];
+
+  if (changedCount > 0) {
+    const confirmed = await confirmShareChanges(newCount, changedCount);
+
+    if (!confirmed) {
+      actionStatus.textContent = "Share canceled.";
+      return;
+    }
+  }
+
   setBusy(true);
   actionStatus.textContent = "Sharing device skill changes";
 
@@ -167,6 +208,39 @@ async function exportLocalChanges(): Promise<void> {
   } finally {
     setBusy(false);
     renderControls();
+  }
+}
+
+function confirmShareChanges(newCount: number, changedCount: number): Promise<boolean> {
+  closeOpenConfirmation();
+  previouslyFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
+  confirmationTitle.textContent = "Update shared skills?";
+  confirmationDetail.textContent = `This will copy ${newCount} new device ${newCount === 1 ? "skill" : "skills"} and replace ${changedCount} existing shared ${changedCount === 1 ? "skill" : "skills"} with the versions on this device.`;
+  confirmationModal.hidden = false;
+  confirmationCancelButton.focus();
+
+  return new Promise((resolve) => {
+    pendingConfirmation = resolve;
+  });
+}
+
+function resolveConfirmation(confirmed: boolean): void {
+  const resolve = pendingConfirmation;
+
+  if (!resolve) {
+    return;
+  }
+
+  pendingConfirmation = undefined;
+  confirmationModal.hidden = true;
+  previouslyFocusedElement?.focus();
+  previouslyFocusedElement = undefined;
+  resolve(confirmed);
+}
+
+function closeOpenConfirmation(): void {
+  if (pendingConfirmation) {
+    resolveConfirmation(false);
   }
 }
 

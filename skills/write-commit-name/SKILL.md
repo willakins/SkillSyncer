@@ -1,6 +1,6 @@
 ---
 name: write-commit-name
-description: Draft a short git commit subject from the staged diff when a commit slice is already staged, otherwise from the exact in-scope local diff. Append `#CI` by default unless the requester explicitly wants to keep CI off.
+description: Draft a short git commit subject from the staged diff when a commit slice is already staged, otherwise from the exact in-scope local diff. Append `#CI` only when the requester explicitly asks to trigger CI, trigger actions, GitHub Actions, commit with actions, or a CI marker.
 ---
 
 Use this skill when the user asks for a commit name, commit subject, or commit message subject line.
@@ -20,8 +20,8 @@ Do not use this skill to create commits, edit files, push branches, open PRs, or
 - Keep it specific to the main behavior change, not a file list.
 - Prefer imperative phrasing.
 - Do not add a body unless the user asks for one.
-- Append ` #CI` by default.
-- Omit ` #CI` only when the user explicitly asks to keep CI from running.
+- Do not append ` #CI` by default.
+- Append ` #CI` only when the prompt explicitly asks to trigger CI, trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
 
 ## Writing heuristics
 
@@ -36,4 +36,4 @@ Do not use this skill to create commits, edit files, push branches, open PRs, or
 
 ## Example
 
-`Fix member-employer worker ID fallback #CI`
+`Fix member-employer worker ID fallback`

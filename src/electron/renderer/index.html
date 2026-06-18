@@ -87,6 +87,19 @@
 
         <div id="action-status" class="action-status" role="status" aria-live="polite"></div>
 
+        <div id="confirmation-modal" class="modal-backdrop" hidden>
+          <section class="confirmation-dialog" role="dialog" aria-modal="true" aria-labelledby="confirmation-title" aria-describedby="confirmation-detail">
+            <div>
+              <h3 id="confirmation-title">Update shared skills?</h3>
+              <p id="confirmation-detail">Confirm this action before continuing.</p>
+            </div>
+            <div class="confirmation-actions">
+              <button id="confirmation-cancel-button" class="button secondary-button" type="button">Cancel</button>
+              <button id="confirmation-confirm-button" class="button primary-button" type="button">Update shared skills</button>
+            </div>
+          </section>
+        </div>
+
         <section class="inventory-grid" aria-label="Skill inventories">
           <article class="data-panel">
             <div class="panel-heading">

@@ -4,7 +4,7 @@
 
 - Default `source_branch` to the current branch.
 - Default `base_branch` to `main`.
-- Use `bundle exec rspec` for spec runs.
+- In Croft, use `RAILS_ENV=test bin/rails run specs` for spec runs so specs use the repo's parallel runner against test databases. In generic Rails repos, use `bundle exec rspec`.
 - Do not run the full suite by default.
 - The user should be able to trigger the workflow with a minimal prompt.
 
@@ -57,7 +57,9 @@ Only run a bare `bundle exec rspec` when the branch is truly global or targeted 
 
 ## Run Strategy
 
-- Use `bundle exec rspec` with explicit spec paths or line numbers.
+- In Croft, use `RAILS_ENV=test bin/rails run specs` with explicit spec paths or line numbers. This command delegates to `bin/run-specs`, sets up parallel test databases, and runs `parallel_rspec` with the repo runtime log.
+- If a Croft parallel run fails, rerun only the failed spec files before widening. Prefer `RAILS_ENV=test bin/rails run specs FAILED_SPEC_FILES` for the rerun.
+- In generic Rails repos, use `bundle exec rspec` with explicit spec paths or line numbers.
 - Prefer rerunning the narrowest failing subset while fixing.
 - After a fix is green locally, rerun the full affected spec set, not only the single failing example.
 - Focus on the summary at the bottom of spec output.
@@ -65,8 +67,8 @@ Only run a bare `bundle exec rspec` when the branch is truly global or targeted 
 Examples:
 
 ```bash
-bundle exec rspec spec/models/worker_spec.rb spec/requests/employer/job_orders/missing_worker_details_spec.rb
-bundle exec rspec spec/services/employer/rollup/missing_employee_identifier_service_spec.rb:42
+RAILS_ENV=test bin/rails run specs spec/models/worker_spec.rb spec/requests/employer/job_orders/missing_worker_details_spec.rb
+RAILS_ENV=test bin/rails run specs spec/services/employer/rollup/missing_employee_identifier_service_spec.rb:42
 ```
 
 ## Repair Rules

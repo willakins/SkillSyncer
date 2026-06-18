@@ -1,6 +1,6 @@
 ---
 name: fix-pr-until-green
-description: Repair an existing pull request's failing GitHub Actions checks until actionable CI passes or a blocker remains. Use when the user asks to get an existing PR green, fix CI on this PR, repair failing actions until green, or keep debugging checks. Do not use to create or publish a new PR.
+description: Repair an existing pull request's failing GitHub Actions checks until actionable CI passes or a blocker remains. Use when the user explicitly asks to get an existing PR green, fix CI on this PR, repair failing actions until green, run GitHub Actions repair, or keep debugging checks. Do not use to create or publish a new PR, or for ordinary commits that do not request Actions.
 ---
 
 # Fix PR Until Green
@@ -26,7 +26,7 @@ Read [CI repair loop](references/ci-repair-loop.md) before changing code.
 
 ## Examples:
 
-- "Get PR #42 green" means inspect that PR, repair actionable CI, and push `#CI` commits.
+- "Get PR #42 green" means inspect that PR, repair actionable CI, and push `#CI` commits because the prompt explicitly requested a green CI outcome.
 - "Open a draft PR, then monitor CI" belongs to `draft-pr-until-green`.
 
 ## Workflow
@@ -35,7 +35,7 @@ Read [CI repair loop](references/ci-repair-loop.md) before changing code.
 2. Inspect checks with `gh pr checks`; use bounded polling if pending.
 3. If CI did not trigger because the latest commit lacks `#CI`, use `repair-pr-ci-trigger`.
 4. Read failed Actions logs before editing and identify the exact command, file, assertion, or stack trace.
-5. Make the smallest branch-caused repair, verify locally, commit with `#CI`, push, and repeat.
+5. Make the smallest branch-caused repair, verify locally, commit with `#CI` because this skill requires explicit CI/Actions authorization, push, and repeat.
 6. Stop when checks are green or the remaining failure is non-actionable.
 
 ## Troubleshooting

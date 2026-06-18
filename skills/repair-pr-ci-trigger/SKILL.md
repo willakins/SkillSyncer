@@ -1,9 +1,9 @@
 ---
 name: repair-pr-ci-trigger
-description: Repair a pushed branch or PR whose latest tip is missing `#CI`; use when asked to amend the last commit message and force-push with lease so CI runs. Do not use for failing CI fixes, new PRs, check monitoring, merge conflicts, dirty or divergent branches, or ordinary commit naming.
+description: Repair a pushed branch or PR whose latest tip is missing `#CI`; use only when the prompt or caller explicitly asks to amend the last commit message so CI/GitHub Actions runs. Do not use for failing CI fixes, new PRs, check monitoring, merge conflicts, dirty or divergent branches, or ordinary commit naming.
 ---
 
-Repair one pushed branch or PR tip by appending ` #CI` to the commit subject, preserving the body, and publishing with `git push --force-with-lease <remote> HEAD:<ref>`. Use [Repair Flow](references/repair-flow.md) for exact target-resolution rules.
+Repair one pushed branch or PR tip by appending ` #CI` to the commit subject, preserving the body, and publishing with `git push --force-with-lease <remote> HEAD:<ref>`. Use this only after explicit prompt/caller authorization to trigger CI or GitHub Actions. Use [Repair Flow](references/repair-flow.md) for exact target-resolution rules.
 
 **UTILITY SKILL. INVOKES:** git, GitHub/PR metadata, `enable-remote-publication`. **FOR SINGLE OPERATIONS:** one pushed branch or PR tip missing a CI marker.
 

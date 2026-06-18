@@ -1,4 +1,4 @@
 interface:
   display_name: "Monitor CI"
-  short_description: "Watch GitHub Actions checks"
-  default_prompt: "Use $monitor-ci to watch GitHub Actions checks for an existing PR or pushed branch. Report passing, pending, not_ready, or blocked; when repair is authorized, delegate actionable branch-caused failures to fix-pr-until-green."
+  short_description: "Watch Actions without local-first repairs"
+  default_prompt: "Use $monitor-ci to watch GitHub Actions checks for an existing PR or pushed branch; in local-first mode, return failure evidence instead of committing repairs."

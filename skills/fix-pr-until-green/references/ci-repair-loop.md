@@ -6,7 +6,7 @@ Use this reference after the skill has routed to an existing PR.
 
 - Default `pr` to the current branch's PR when the user does not provide a PR number or URL.
 - Preserve the existing base branch, draft state, and review state.
-- Treat the user's request as approval for narrow, in-scope code changes and follow-up commits directly justified by failing CI.
+- Treat the user's request as approval for narrow, in-scope code changes and follow-up commits directly justified by failing CI only when the prompt explicitly requested a green CI/Actions outcome.
 - Prefer `gh` for check inspection and run logs. Use GitHub connector context when helpful, but do not depend on connector-only Actions features.
 
 ## Preconditions
@@ -40,7 +40,7 @@ Use this reference after the skill has routed to an existing PR.
    - Run the nearest matching local verification first, then widen only as needed.
    - Follow repo-specific validation rules.
 7. Commit and publish the repair.
-   - Write an intentional follow-up commit message that includes `#CI`.
+   - Write an intentional follow-up commit message that includes `#CI` because this workflow is entered only for explicit CI/Actions repair requests.
    - Push the new commit to the same PR branch.
 8. Repeat for the new head SHA until the PR is green or blocked.
 

@@ -44,6 +44,6 @@ Read [splitting playbook](references/splitting-playbook.md) for recommended comm
 4. Create a backup branch from the original source branch.
 5. Create the first slice from `base_branch`; create later linked branches from the prior slice when local stacking is requested.
 6. Move changes with cherry-pick when commits are separable, explicit file restore/copy when files map cleanly, or `apply_patch` for mixed hunks.
-7. Commit each coherent slice, preferably using `write-commit-name` so subjects include `#CI` unless disabled.
+7. Commit each coherent slice, preferably using `write-commit-name`; include `#CI` only when the prompt explicitly asks to trigger CI, trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
 8. Run targeted verification for each slice.
 9. Summarize branches, goals, key files, verification, review order, and follow-up.

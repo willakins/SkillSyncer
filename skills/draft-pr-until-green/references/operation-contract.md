@@ -7,7 +7,7 @@ Use this reference for the detailed behavior behind the compact `SKILL.md`.
 - Default `source_branch` to the current branch.
 - Default `base_branch` to `main`, unless an existing truthful PR base should be preserved because the PR already targets a different intentional base.
 - Keep the PR in draft. Do not mark it ready unless the user explicitly asks.
-- Treat the request as authorization for narrow, in-scope code changes and follow-up commits that are directly justified by failing CI.
+- Treat the request as authorization for narrow, in-scope code changes and follow-up commits that are directly justified by failing CI only because this skill requires an explicit CI/Actions/green prompt.
 - Use `draft-pr-for-branch` for publication and PR creation.
 - Use `repair-pr-ci-trigger` only when the pushed tip did not trigger CI because the commit message lacks a case-insensitive marker such as `#CI` or `#ci`.
 - Use `fix-pr-until-green` for the CI inspection and repair loop after the draft PR exists.

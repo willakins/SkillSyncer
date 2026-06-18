@@ -1,4 +1,4 @@
 interface:
   display_name: "Publish Draft and Monitor"
-  short_description: "Publish a draft PR and stabilize it"
-  default_prompt: "Use $publish-draft-and-monitor to publish this branch as a draft PR, clean it up, mark it ready, and monitor it until CI passes and Codex produces a clean outcome or a blocker remains."
+  short_description: "Publish then local-first monitor"
+  default_prompt: "Use $publish-draft-and-monitor to publish this branch as a draft PR, clean it up, mark it ready, then hand off to $monitor for Codex, local tests, and one final #CI trigger."

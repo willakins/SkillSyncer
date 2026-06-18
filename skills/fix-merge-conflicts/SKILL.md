@@ -36,7 +36,7 @@ Read [merge resolution workflow](references/merge-resolution-workflow.md) before
 3. Read each conflicted file in context before resolving it.
 4. Stage only intentional conflict resolutions.
 5. Stop if unrelated staged paths would be swept into the merge commit.
-6. Complete with `GIT_EDITOR=true git merge --continue` after updating `.git/MERGE_MSG` when the prepared subject needs `#CI`.
+6. Complete with `GIT_EDITOR=true git merge --continue`; update `.git/MERGE_MSG` for `#CI` only when the prompt explicitly asks to trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
 
 ## Troubleshooting
 

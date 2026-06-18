@@ -12,7 +12,7 @@ Turn one implementation task into the smallest set of meaningful commits that:
 ## Defaults
 
 - Default `source_branch` to the current branch.
-- Default each commit subject to end with `#CI`.
+- Default commit subjects to omit `#CI`; include it only when the user explicitly asks to trigger CI, run GitHub Actions, commit with actions, or include a CI marker.
 - Prefer one commit for small or tightly coupled work.
 - Prefer multiple commits only for real internal checkpoints: prep refactor, data model changes, UI changes, spec repair, or follow-up cleanup.
 - If the current branch backs an open PR whose exact head repo/ref has already been resolved, push after each successful commit to that exact repo/ref unless the user asked to keep work local.
@@ -58,7 +58,7 @@ For each slice:
 4. Run the smallest useful specs, lint, or checks.
 5. Stage only files belonging to that slice.
 6. Generate the subject with `write-commit-name`.
-7. Commit without amending prior history unless explicitly requested.
+7. Commit without `#CI` unless the prompt explicitly requested Actions triggering, and without amending prior history unless explicitly requested.
 8. Push only when the publication target is verified safe.
 
 If a later slice invalidates an earlier assumption, make a new follow-up commit instead of silently rewriting prior commits.

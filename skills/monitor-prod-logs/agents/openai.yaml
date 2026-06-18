@@ -1,0 +1,4 @@
+interface:
+  display_name: "Monitor Prod Logs"
+  short_description: "Inspect production logs in Better Stack"
+  default_prompt: "Use $monitor-prod-logs to inspect recent production errors in Better Stack."

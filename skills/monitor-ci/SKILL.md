@@ -1,11 +1,11 @@
 ---
 name: monitor-ci
-description: Monitor GitHub Actions for an existing PR or pushed branch until CI is passing, pending/not_ready, or blocked. Use for "watch CI", "monitor GitHub Actions", "watch checks", "monitor this PR's Actions", or CI handoff from monitor. Do not use to open PRs or independently repair CI; delegate authorized branch-caused repair to fix-pr-until-green.
+description: Monitor GitHub Actions for an existing PR or pushed branch until CI is passing, pending/not_ready, or blocked. Use for "watch CI", "monitor GitHub Actions", "watch checks", "monitor this PR's Actions", or CI handoff from monitor. Do not use to open PRs or independently repair CI; in monitor local-first mode, return actionable failure evidence so monitor can repair locally before another final #CI trigger.
 ---
 
 # Monitor CI
 
-**UTILITY SKILL. INVOKES:** `gh`; `fix-pr-until-green` when repair is authorized.
+**UTILITY SKILL. INVOKES:** `gh`; `fix-pr-until-green` only when repair is authorized and the caller did not require local-first/Codex-before-CI gating.
 
 Read [monitoring policy](references/monitoring-policy.md) before polling, cancelling, rerunning, or classifying failures.
 
@@ -27,7 +27,7 @@ Read [monitoring policy](references/monitoring-policy.md) before polling, cancel
 2. Capture remote head SHA and report unpushed commits.
 3. Inspect checks with `gh pr checks`, `gh pr view`, `gh run list`, and `gh run view`.
 4. Poll bounded sleeps. Pending stays pending; unchanged red required checks stay `not_ready` while watching can continue.
-5. With repair authorization, delegate actionable branch-caused failures to `fix-pr-until-green`.
+5. With repair authorization and no local-first gate, delegate actionable branch-caused failures to `fix-pr-until-green`. In monitor local-first mode, return the failing check, logs, URLs, and actionable files instead of committing repairs.
 6. If repair changes the head, capture the new SHA and restart.
 
 ## Troubleshooting

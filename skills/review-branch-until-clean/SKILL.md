@@ -31,7 +31,7 @@ Read [Review Loop](references/review-loop.md) before editing, committing, or pus
 3. Stop if no findings remain.
 4. Send findings to `address-codex-concerns`; fix only validated issues in one coherent batch.
 5. Run targeted verification.
-6. Stage only the batch, use `write-commit-name`, commit with `#CI` by default, and push only to a verified safe target.
+6. Stage only the batch, use `write-commit-name`, commit without `#CI` unless the prompt explicitly asks to trigger CI, trigger actions, run GitHub Actions, commit with actions, or include a CI marker, and push only to a verified safe target.
 7. Repeat until clean or blocked by an intentional/disputed finding.
 
 ## Troubleshooting

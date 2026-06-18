@@ -6,7 +6,7 @@ Finish an in-progress merge safely:
 
 - resolve obvious conflicts directly
 - ask concise questions only for genuinely ambiguous choices
-- preserve the prepared merge message unless a CI marker must be appended
+- preserve the prepared merge message unless the prompt explicitly authorizes a CI marker
 - avoid sweeping unrelated staged changes into the merge commit
 
 ## Inspect Merge State
@@ -53,7 +53,7 @@ Before continuing:
 
 If unrelated staged paths are present, stop and ask the user to preserve or isolate them before continuing.
 
-To add a CI marker, update the first line of `.git/MERGE_MSG` before continuing. Do not use `git commit --amend`; during an in-progress merge that would amend the previous commit rather than the pending merge commit. After the message is correct, run:
+Add a CI marker only when the prompt explicitly asks to trigger actions, run GitHub Actions, commit with actions, or include a CI marker. To add it, update the first line of `.git/MERGE_MSG` before continuing. Do not use `git commit --amend`; during an in-progress merge that would amend the previous commit rather than the pending merge commit. After the message is correct, run:
 
 ```bash
 GIT_EDITOR=true git merge --continue

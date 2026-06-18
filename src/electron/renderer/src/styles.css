@@ -403,6 +403,49 @@ button:focus-visible {
   padding: 10px 12px;
 }
 
+.modal-backdrop {
+  align-items: center;
+  background: rgb(0 0 0 / 38%);
+  display: grid;
+  inset: 0;
+  justify-items: center;
+  padding: 24px;
+  position: fixed;
+  z-index: 20;
+}
+
+.confirmation-dialog {
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  max-width: 460px;
+  padding: 18px;
+  width: min(100%, 460px);
+}
+
+.confirmation-dialog h3 {
+  font-size: 18px;
+  line-height: 1.2;
+  margin: 0 0 8px;
+}
+
+.confirmation-dialog p {
+  color: var(--muted);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.confirmation-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
 .inventory-grid {
   display: grid;
   gap: 12px;

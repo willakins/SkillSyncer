@@ -1,6 +1,6 @@
 ---
 name: publish-draft-and-monitor
-description: Publish current branch as draft PR, clean local review findings, mark ready, then monitor CI/Codex until merge-ready or blocked. Use for end-to-end publish-draft-and-monitor requests. Do not use for draft-only PRs, CI-only, Codex-only, branch splitting, or auto-merge.
+description: Publish current branch as draft PR, clean local review findings, mark ready, then hand off to monitor for Codex approval, local test-coded-tests verification, one final #CI trigger commit, and CI monitoring. Use for end-to-end publish-draft-and-monitor requests. Do not use for draft-only PRs, CI-only, Codex-only, branch splitting, or auto-merge.
 ---
 
 # Publish Draft And Monitor
@@ -13,7 +13,7 @@ Read [publish flow details](references/publish-flow.md) before executing.
 
 ## USE FOR:
 
-- End-to-end branch requests: draft PR, local review cleanup, ready transition, CI/Codex monitoring, and scoped repairs until merge-ready or blocked.
+- End-to-end branch requests: draft PR, local review cleanup, ready transition, Codex approval, local `test-coded-tests` verification, delayed final `#CI` triggering, and scoped repairs until merge-ready or blocked.
 
 ## DO NOT USE FOR:
 
@@ -25,10 +25,10 @@ Read [publish flow details](references/publish-flow.md) before executing.
 ## Workflow
 
 1. Inspect branch/base, dirty scope, diff, PR metadata, and auth.
-2. Use `draft-pr-for-branch` to publish or refresh the draft PR and report its link.
-3. Use `review-branch-until-clean`; commit/push only validated repairs with `write-commit-name`.
-4. Mark ready through `draft-pr-for-branch`, then run `monitor-codex` ready-transition mode to observe automatic PR `eyes`.
-5. Use `monitor` with repair authorized until latest-head CI, Codex outcome, concerns, and local state are clean.
+2. Use `draft-pr-for-branch` to publish or refresh the draft PR without CI-trigger authorization and report its link.
+3. Use `review-branch-until-clean`; commit/push only validated repairs with `write-commit-name`, without `#CI` unless the prompt explicitly requested an immediate Actions trigger.
+4. Mark ready through `draft-pr-for-branch` without CI-trigger authorization, then run `monitor-codex` ready-transition mode to observe automatic PR `eyes` and reach a clean Codex outcome for the current code-bearing head.
+5. Hand off to `monitor` in local-first mode. `monitor` owns Codex approval evidence, `test-coded-tests`, the final marker-only `Trigger CI #CI` commit in drive-to-merge-ready mode, and continued repair/monitoring if local or remote tests fail.
 
 ## Troubleshooting
 

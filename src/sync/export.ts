@@ -1,4 +1,5 @@
 import { copySkillDirectory, type CopySkillResult } from "./copy";
+import { getChangedSkillNames, publishSkillChanges, type PublishSkillChangesResult } from "./git";
 import { createSyncPlan } from "./plan";
 import type { ResolvedSkillPaths, SkillClassification } from "./types";
 
@@ -27,6 +28,14 @@ export interface ExportLocalSkillsResult {
   includeChanged: boolean;
   exported: ExportedSkill[];
   skipped: SkippedExportSkill[];
+}
+
+export interface ShareLocalSkillsOptions extends ExportLocalSkillsOptions {
+  commitMessage?: string;
+}
+
+export interface ShareLocalSkillsResult extends ExportLocalSkillsResult {
+  publish: PublishSkillChangesResult | null;
 }
 
 export type ExportLocalOnlySkillsOptions = ExportLocalSkillsOptions;
@@ -86,6 +95,38 @@ export async function exportLocalSkills(options: ExportLocalSkillsOptions): Prom
   };
 }
 
+export async function shareLocalSkills(options: ShareLocalSkillsOptions): Promise<ShareLocalSkillsResult> {
+  const exportResult = await exportLocalSkills(options);
+
+  if (exportResult.dryRun) {
+    return {
+      ...exportResult,
+      publish: null
+    };
+  }
+
+  const exportedSkillNames = exportResult.exported.map((skill) => skill.skillName);
+  const pendingSkillNames = await getChangedSkillNames(options.repoRoot);
+  const skillNames = [...new Set([...exportedSkillNames, ...pendingSkillNames])].sort();
+
+  if (skillNames.length === 0) {
+    return {
+      ...exportResult,
+      publish: null
+    };
+  }
+
+  const publish = await publishSkillChanges(options.repoRoot, {
+    skillNames,
+    message: options.commitMessage ?? defaultShareCommitMessage(skillNames)
+  });
+
+  return {
+    ...exportResult,
+    publish
+  };
+}
+
 export async function exportLocalOnlySkills(
   options: ExportLocalOnlySkillsOptions
 ): Promise<ExportLocalOnlySkillsResult> {
@@ -127,4 +168,12 @@ function exportEligibility(classification: SkillClassification, includeChanged: 
         reason: "Skill directory is invalid and was not exported."
       };
   }
+}
+
+function defaultShareCommitMessage(skillNames: string[]): string {
+  if (skillNames.length === 1) {
+    return `Share ${skillNames[0]} skill changes`;
+  }
+
+  return `Share ${skillNames.length} skill changes`;
 }

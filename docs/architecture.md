@@ -48,7 +48,7 @@ The CLI can call the sync engine directly because it is already running in a tru
 
 ## Git Integration
 
-Git is represented by a wrapper module. It currently supports status, fast-forward pull, and committing/pushing selected exported skill directories when the current branch has an upstream. It should grow to:
+Git is represented by a wrapper module. It currently supports status, fast-forward pull, and committing/pushing selected or pending skill directories when the current branch has an upstream. The wrapper runs git non-interactively with a timeout so UI callers receive errors instead of hanging on credential or remote prompts. It should grow to:
 
 - Detect repository status.
 - Pull from the configured remote.

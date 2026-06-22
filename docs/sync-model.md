@@ -38,7 +38,7 @@ The local path must be configurable because users may keep Codex data somewhere 
 
 These names should be used consistently in the CLI, GUI, and documentation.
 
-Current export support copies local-only skills into missing repository skill directories by default. It can also copy changed same-name local skills over repository skill directories when the caller explicitly opts into changed exports.
+Current export support copies local-only skills into missing repository skill directories by default. It can also copy changed same-name local skills over repository skill directories when the caller explicitly opts into changed exports. The desktop share flow exports eligible device changes, commits exported or already-pending skill directories, and pushes the current branch to its configured upstream.
 
 ## Comparison Rules
 
@@ -79,6 +79,8 @@ Repository sync uses normal git operations:
 - Pull to receive shared skill changes.
 - Commit to add or update skills in the repository.
 - Push to publish skills to the remote.
+
+Git commands run non-interactively from the app and fail with an error rather than waiting indefinitely for terminal prompts.
 
 The tool should detect and explain these states:
 

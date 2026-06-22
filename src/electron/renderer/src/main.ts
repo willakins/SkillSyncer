@@ -1,5 +1,5 @@
 import "./styles.css";
-import type { SkillBackupSummary, SkillPlan, SyncPlan } from "../../../sync";
+import type { ShareLocalSkillsResult, SkillBackupSummary, SkillPlan, SyncPlan } from "../../../sync";
 
 type AppView = "dashboard" | "settings" | "backups";
 type Appearance = "graphite" | "paper" | "midnight";
@@ -51,6 +51,7 @@ const backupList = getElement("backup-list");
 let currentPlan: SyncPlan | undefined;
 let currentBackups: SkillBackupSummary[] = [];
 let busy = false;
+let busyDepth = 0;
 let pendingConfirmation: ((confirmed: boolean) => void) | undefined;
 let previouslyFocusedElement: HTMLElement | undefined;
 
@@ -109,9 +110,13 @@ for (const button of appearanceButtons) {
 void loadStatus();
 void loadBackups();
 
-async function loadStatus(): Promise<void> {
-  setBusy(true);
-  skillList.replaceChildren(emptyState("Loading status"));
+async function loadStatus(options: { showBusy?: boolean } = {}): Promise<void> {
+  const showBusy = options.showBusy ?? true;
+
+  if (showBusy) {
+    setBusy(true);
+    skillList.replaceChildren(emptyState("Loading status"));
+  }
 
   try {
     const plan = await window.skillsync.getStatus();
@@ -123,13 +128,19 @@ async function loadStatus(): Promise<void> {
     const message = error instanceof Error ? error.message : String(error);
     skillList.replaceChildren(emptyState(message));
   } finally {
-    setBusy(false);
+    if (showBusy) {
+      setBusy(false);
+    }
   }
 }
 
-async function loadBackups(): Promise<void> {
-  setBusy(true);
-  backupList.replaceChildren(emptyState("Loading backups"));
+async function loadBackups(options: { showBusy?: boolean } = {}): Promise<void> {
+  const showBusy = options.showBusy ?? true;
+
+  if (showBusy) {
+    setBusy(true);
+    backupList.replaceChildren(emptyState("Loading backups"));
+  }
 
   try {
     currentBackups = await window.skillsync.listBackups();
@@ -138,7 +149,9 @@ async function loadBackups(): Promise<void> {
     const message = error instanceof Error ? error.message : String(error);
     backupList.replaceChildren(emptyState(message));
   } finally {
-    setBusy(false);
+    if (showBusy) {
+      setBusy(false);
+    }
   }
 }
 
@@ -185,7 +198,7 @@ async function exportLocalChanges(): Promise<void> {
   const newCount = currentPlan.totals["local-only"];
   const changedCount = currentPlan.totals["changed-both"];
 
-  if (changedCount > 0) {
+  if (newCount + changedCount > 0) {
     const confirmed = await confirmShareChanges(newCount, changedCount);
 
     if (!confirmed) {
@@ -195,17 +208,20 @@ async function exportLocalChanges(): Promise<void> {
   }
 
   setBusy(true);
-  actionStatus.textContent = "Sharing device skill changes";
+  actionStatus.textContent = "Sharing and publishing device skill changes";
 
   try {
     const result = await window.skillsync.exportLocalChanges();
     const created = result.exported.filter((skill) => skill.operation === "create").length;
     const updated = result.exported.filter((skill) => skill.operation === "update").length;
-    actionStatus.textContent = `Shared ${result.exported.length} ${result.exported.length === 1 ? "skill" : "skills"} from this device (${created} new, ${updated} changed).`;
-    await loadStatus();
+    const publishStatus = formatPublishStatus(result.publish);
+    actionStatus.textContent = result.exported.length > 0
+      ? `Shared ${result.exported.length} ${result.exported.length === 1 ? "skill" : "skills"} from this device (${created} new, ${updated} changed). ${publishStatus}`
+      : publishStatus;
   } catch (error) {
     actionStatus.textContent = error instanceof Error ? error.message : String(error);
   } finally {
+    await loadStatus({ showBusy: false });
     setBusy(false);
     renderControls();
   }
@@ -214,8 +230,9 @@ async function exportLocalChanges(): Promise<void> {
 function confirmShareChanges(newCount: number, changedCount: number): Promise<boolean> {
   closeOpenConfirmation();
   previouslyFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : undefined;
-  confirmationTitle.textContent = "Update shared skills?";
-  confirmationDetail.textContent = `This will copy ${newCount} new device ${newCount === 1 ? "skill" : "skills"} and replace ${changedCount} existing shared ${changedCount === 1 ? "skill" : "skills"} with the versions on this device.`;
+  confirmationTitle.textContent = "Share and publish device changes?";
+  confirmationDetail.textContent = `This will copy ${newCount} new device ${newCount === 1 ? "skill" : "skills"}, replace ${changedCount} existing shared ${changedCount === 1 ? "skill" : "skills"} with the versions on this device, then commit and push those shared skill changes.`;
+  confirmationConfirmButton.textContent = "Share and publish";
   confirmationModal.hidden = false;
   confirmationCancelButton.focus();
 
@@ -251,8 +268,8 @@ async function replaceLocalSkills(): Promise<void> {
   try {
     const result = await window.skillsync.replaceLocalFromRepo();
     actionStatus.textContent = `Loaded ${result.imported.length} shared ${result.imported.length === 1 ? "skill" : "skills"} after replacing ${result.removedLocalSkillNames.length} device ${result.removedLocalSkillNames.length === 1 ? "skill" : "skills"}.`;
-    await loadStatus();
-    await loadBackups();
+    await loadStatus({ showBusy: false });
+    await loadBackups({ showBusy: false });
   } catch (error) {
     actionStatus.textContent = error instanceof Error ? error.message : String(error);
   } finally {
@@ -268,8 +285,8 @@ async function restoreBackup(backupPath: string): Promise<void> {
   try {
     const result = await window.skillsync.restoreBackup(backupPath);
     actionStatus.textContent = `Restored ${result.restoredSkillNames.length} ${result.restoredSkillNames.length === 1 ? "skill" : "skills"} from backup after replacing ${result.removedLocalSkillNames.length} current device ${result.removedLocalSkillNames.length === 1 ? "skill" : "skills"}.`;
-    await loadStatus();
-    await loadBackups();
+    await loadStatus({ showBusy: false });
+    await loadBackups({ showBusy: false });
   } catch (error) {
     actionStatus.textContent = error instanceof Error ? error.message : String(error);
   } finally {
@@ -284,8 +301,10 @@ function renderControls(): void {
   const exportableCount = localOnlyCountValue + changedCountValue;
   const sharedSkillCount = currentPlan?.skills.filter((skill) => skill.repo?.valid).length ?? 0;
   exportSummary.textContent = `${localOnlyCountValue} new, ${changedCountValue} changed`;
-  exportButton.textContent = `Share ${exportableCount} device ${exportableCount === 1 ? "change" : "changes"}`;
-  exportButton.disabled = busy || exportableCount === 0;
+  exportButton.textContent = exportableCount > 0
+    ? `Share ${exportableCount} device ${exportableCount === 1 ? "change" : "changes"}`
+    : "Publish shared changes";
+  exportButton.disabled = busy || (exportableCount === 0 && sharedSkillCount === 0);
   replaceSummary.textContent = `${sharedSkillCount} shared ${sharedSkillCount === 1 ? "skill" : "skills"}`;
   replaceButton.disabled = busy || sharedSkillCount === 0;
   refreshBackupsButton.disabled = busy;
@@ -394,9 +413,25 @@ function formatDate(value: string): string {
 }
 
 function setBusy(value: boolean): void {
-  busy = value;
-  refreshButton.disabled = value;
+  busyDepth = value ? busyDepth + 1 : Math.max(0, busyDepth - 1);
+  busy = busyDepth > 0;
+  refreshButton.disabled = busy;
   renderControls();
+}
+
+function formatPublishStatus(publish: ShareLocalSkillsResult["publish"]): string {
+  if (!publish) {
+    return "No pending device or shared skill changes to publish.";
+  }
+
+  if (!publish.committed) {
+    return publish.commitOutput;
+  }
+
+  const skillCount = publish.skillNames.length;
+  return publish.pushed
+    ? `Committed and pushed ${skillCount} shared ${skillCount === 1 ? "skill" : "skills"} to the shared repository.`
+    : `Committed ${skillCount} shared ${skillCount === 1 ? "skill" : "skills"} locally, but push did not run.`;
 }
 
 function renderDifference(skill: SkillPlan): HTMLElement {

@@ -10,11 +10,11 @@ import {
 import { join } from "node:path";
 import {
   createSyncPlan,
-  exportLocalSkills,
   listSkillBackups,
   replaceLocalSkillsFromRepo,
   restoreLocalSkillsFromBackup,
-  resolveSkillPaths
+  resolveSkillPaths,
+  shareLocalSkills
 } from "../../sync";
 
 const currentDir = __dirname;
@@ -52,7 +52,7 @@ ipcMain.handle("sync:status", async () => {
 
 ipcMain.handle("sync:export-local-changes", async () => {
   const paths = resolveSkillPaths();
-  return exportLocalSkills({ ...paths, includeChanged: true });
+  return shareLocalSkills({ ...paths, includeChanged: true });
 });
 
 ipcMain.handle("sync:replace-local-from-repo", async (event) => {

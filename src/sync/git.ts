@@ -1,7 +1,9 @@
-import { execFile } from "node:child_process";
+import { execFile, type ExecFileOptions } from "node:child_process";
+import { readdir } from "node:fs/promises";
 import { promisify } from "node:util";
 
 const execFileAsync = promisify(execFile);
+const GIT_TIMEOUT_MS = 30_000;
 
 export interface GitStatus {
   branchLine: string;
@@ -33,6 +35,16 @@ export async function getGitStatus(repositoryPath: string, pathspecs: string[] =
     entries,
     clean: entries.length === 0
   };
+}
+
+export async function getChangedSkillNames(repositoryPath: string): Promise<string[]> {
+  const status = await getGitStatus(repositoryPath, ["."]);
+  const statusSkillNames = status.entries.flatMap((entry) => skillNameFromStatusEntry(entry) ?? []);
+  const untrackedRootSkillNames = status.entries.some(isCurrentDirectoryStatusEntry)
+    ? await readChildDirectoryNames(repositoryPath)
+    : [];
+
+  return normalizeSkillNames([...statusSkillNames, ...untrackedRootSkillNames]);
 }
 
 export async function pullRepository(repositoryPath: string): Promise<string> {
@@ -88,7 +100,7 @@ export async function pushRepository(repositoryPath: string): Promise<string> {
 async function ensurePushTarget(repositoryPath: string): Promise<void> {
   try {
     await execFileAsync("git", ["rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}"], {
-      cwd: repositoryPath
+      ...gitExecOptions(repositoryPath)
     });
   } catch (error) {
     throw new Error("No upstream branch is configured. Run `git push -u <remote> <branch>` once, then try again.");
@@ -98,7 +110,7 @@ async function ensurePushTarget(repositoryPath: string): Promise<void> {
 async function hasStagedChanges(repositoryPath: string, pathspecs: string[]): Promise<boolean> {
   try {
     await execFileAsync("git", ["diff", "--cached", "--quiet", ...pathspecArgs(pathspecs)], {
-      cwd: repositoryPath
+      ...gitExecOptions(repositoryPath)
     });
     return false;
   } catch (error) {
@@ -113,7 +125,7 @@ async function hasStagedChanges(repositoryPath: string, pathspecs: string[]): Pr
 async function runGit(repositoryPath: string, args: string[]): Promise<string> {
   try {
     const { stdout, stderr } = await execFileAsync("git", args, {
-      cwd: repositoryPath
+      ...gitExecOptions(repositoryPath)
     });
 
     return [stdout, stderr].filter(Boolean).join("\n").trim();
@@ -139,8 +151,45 @@ function normalizeSkillNames(skillNames: string[]): string[] {
   return normalized;
 }
 
+function skillNameFromStatusEntry(entry: string): string | undefined {
+  const changedPath = entry.slice(3).trim();
+  const currentPath = changedPath.includes(" -> ")
+    ? changedPath.split(" -> ").at(-1)?.trim() ?? ""
+    : changedPath;
+
+  if (!currentPath || currentPath === "." || currentPath === ".." || currentPath.startsWith("../")) {
+    return undefined;
+  }
+
+  const pathParts = currentPath.split(/[\\/]/).filter(Boolean);
+
+  if (pathParts[0] === "." || pathParts[0] === "..") {
+    return undefined;
+  }
+
+  if (pathParts.length < 2 && !currentPath.endsWith("/")) {
+    return undefined;
+  }
+
+  return pathParts[0];
+}
+
+function isCurrentDirectoryStatusEntry(entry: string): boolean {
+  const changedPath = entry.slice(3).trim();
+  return changedPath === "." || changedPath === "./";
+}
+
+async function readChildDirectoryNames(repositoryPath: string): Promise<string[]> {
+  const entries = await readdir(repositoryPath, { withFileTypes: true });
+  return entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name);
+}
+
 function createGitError(args: string[], error: unknown): Error {
   if (error instanceof Error) {
+    if (isTimedOut(error)) {
+      return new Error(`git ${args.join(" ")} timed out after ${GIT_TIMEOUT_MS / 1000} seconds. Check the repository remote, network connection, or git credentials, then try again.`);
+    }
+
     const details = [
       getErrorOutput(error, "stderr"),
       getErrorOutput(error, "stdout"),
@@ -151,6 +200,18 @@ function createGitError(args: string[], error: unknown): Error {
   }
 
   return new Error(`git ${args.join(" ")} failed: ${String(error)}`);
+}
+
+function gitExecOptions(repositoryPath: string): ExecFileOptions {
+  return {
+    cwd: repositoryPath,
+    env: {
+      ...process.env,
+      GCM_INTERACTIVE: "never",
+      GIT_TERMINAL_PROMPT: "0"
+    },
+    timeout: GIT_TIMEOUT_MS
+  };
 }
 
 function getErrorOutput(error: Error, key: "stdout" | "stderr"): string | undefined {
@@ -169,4 +230,8 @@ function getErrorOutput(error: Error, key: "stdout" | "stderr"): string | undefi
 
 function isExitCode(error: unknown, exitCode: number): boolean {
   return error instanceof Error && "code" in error && error.code === exitCode;
+}
+
+function isTimedOut(error: Error): boolean {
+  return "killed" in error && error.killed === true;
 }

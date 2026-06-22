@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Manual UI Test"
+  short_description: "Find or seed a Croft UI test scene"
+  default_prompt: "Use $setup-manual-ui-test to find or seed a manual UI test scene and give me the authorized entry link."

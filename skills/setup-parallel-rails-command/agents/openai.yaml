@@ -1,0 +1,4 @@
+interface:
+  display_name: "Setup Parallel Rails"
+  short_description: "Install the parallel Rails terminal command"
+  default_prompt: "Use $setup-parallel-rails-command to install the global parallel rails s command on this machine."

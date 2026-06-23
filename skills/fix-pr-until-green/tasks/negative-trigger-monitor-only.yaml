@@ -12,6 +12,6 @@ graders:
     name: omits-repair-loop
     config:
       not_contains:
-        - "commit with #CI"
+        - "empty #CI commit"
         - "repair actionable failures"
         - "push follow-up commits"

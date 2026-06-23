@@ -12,13 +12,13 @@ Create one truthful commit for the intended change set, using the staged diff or
 - If files are already staged for the intended commit, treat the staged diff as the commit scope.
 - If nothing is staged, stage the exact in-scope local changes for this one commit.
 - Use `write-commit-name` to generate the subject line.
-- Keep the subject exactly as returned by `write-commit-name`; do not add `#CI` unless the prompt explicitly asked to trigger CI, trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
+- Keep the subject exactly as returned by `write-commit-name`; do not add `#CI` unless the prompt explicitly asked to include a CI marker.
 - Push after the commit by default whenever the remote target is already verified as safe for this branch.
 - Treat `commit` and `commit these changes` as commit-and-sync unless the user explicitly asks to keep it local.
 - If the user explicitly asks to keep the commit local, skip the push.
 - Do not amend existing commits unless the user explicitly asks.
 - Do not monitor CI, Codex review, or PR comments after a normal commit request.
-- When the user explicitly asks to monitor, watch, or keep an eye on the result after committing, finish the commit and push first, then delegate the post-push work to `monitor` with current-head Codex concern repair authorized unless the user explicitly asks to observe only. Expect `monitor` to create and push one final empty commit with the exact subject `Trigger #CI` after Codex is clean and local tests pass.
+- When the user explicitly asks to monitor, watch, or keep an eye on the result after committing, finish the commit and push first, then delegate the post-push work to `monitor` with current-head Codex concern repair authorized unless the user explicitly asks to observe only. Expect `monitor` to push an empty `#CI` trigger commit after Codex is clean and actionable feedback is handled.
 
 ## Source Of Truth
 
@@ -49,7 +49,8 @@ If any condition is uncertain, commit locally, skip push, and report what needs 
 
 - `write-commit-name` owns the subject line.
 - Do not add `#CI` by default.
-- Include `#CI` only when the prompt explicitly asks to trigger CI, trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
+- Include `#CI` only when the prompt explicitly asks to include a CI marker.
+- When the prompt asks to trigger CI, trigger actions, run GitHub Actions, or commit with actions without asking for a marker, create and push an empty `#CI` trigger commit after a successful push instead of changing the code-bearing commit subject.
 - If the user asks for a custom message, use it only when it remains truthful to the staged diff; otherwise explain the mismatch.
 - Do not add body text, trailers, sign-offs, or co-author lines unless the user or repo convention explicitly requires them.
 
@@ -97,14 +98,22 @@ If any condition is uncertain, commit locally, skip push, and report what needs 
    - If the push target is safe and authenticated, do not stop after the local commit; complete the push in the same workflow.
    - If a push partially fails or reports rejected/non-fast-forward, do not retry with force. Report the remote output and ask whether to fetch/rebase/merge.
 
-6. If monitoring was explicitly requested, invoke `monitor`.
+6. If CI was explicitly requested and monitoring was not, create an empty `#CI` trigger commit after the push.
+   - Resolve the pushed branch name.
+   - Confirm there are no staged changes and do not stage unrelated local changes.
+   - Run `git commit --allow-empty -m "Trigger CI #CI"`.
+   - Push to the same verified target.
+   - Capture the push-triggered run with `gh run list --workflow CI --branch BRANCH --event push --limit 1 --json databaseId,headSha,status,conclusion,url,createdAt`.
+   - Report the trigger commit SHA and run URL or ID.
+
+7. If monitoring was explicitly requested, invoke `monitor`.
    - Pass the pushed branch or PR target and the pushed head SHA when known.
    - Tell `monitor` this is an immediate post-push commit-and-monitor handoff with Codex concern repair authorized unless the user explicitly asked to observe or report only.
-   - Tell `monitor` that final CI triggering should happen through the local-first empty `Trigger #CI` commit after Codex and local test gates, not by adding `#CI` to the original code commit from this skill.
+   - Tell `monitor` that final CI triggering should happen through a gated empty `#CI` trigger commit after Codex and feedback gates, not by adding `#CI` to the original code commit from this skill.
    - Do not inline CI or Codex monitoring logic in this skill.
    - Do not authorize CI repair unless the user explicitly asked for CI repair, monitor-until-green repair behavior, or the caller already granted CI repair authority.
 
-7. Report the result.
+8. Report the result.
 
 ## Push Safety Rules
 

@@ -13,7 +13,7 @@ If the branch does not back an open PR and later repair commits are expected to 
 - Commit each major repair round, not every tiny edit.
 - Stage only files that belong in that repair round.
 - Use `write-commit-name` based on the staged repair diff when staged, otherwise on the exact repair batch only.
-- Follow `write-commit-name` defaults: omit `#CI` unless the prompt explicitly asks to trigger CI, trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
+- Follow `write-commit-name` defaults: omit `#CI` unless the prompt explicitly asks to include a CI marker on that content commit. Use a separate empty `#CI` trigger commit for ordinary requests to trigger CI, trigger actions, or run GitHub Actions after the content commit is published.
 - If unrelated local WIP is present and the intended repair batch is not clearly isolated, stop and clarify before committing or pushing.
 
 ## Push Rules

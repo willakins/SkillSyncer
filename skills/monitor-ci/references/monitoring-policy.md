@@ -11,13 +11,15 @@ Use this reference after `SKILL.md` routes to `monitor-ci`.
 
 A completed failed required check is not a terminal success. If repair is not authorized, keep bounded polling as `not_ready` after confirming no newer run or head change exists.
 
+A failed required check that appears unrelated to the watched branch is also not a terminal result. After collecting enough evidence to classify it, keep returning `not_ready` with the failure evidence and continue bounded polling for reruns, replacement runs, head changes, or user interruption. Do not return `blocked` solely because the failure is outside the branch scope or reproduces locally outside the changed files.
+
 ## Repair And Write Actions
 
-This skill is observational by default. Code edits, commits, pushes, CI-trigger commits, GitHub Actions reruns, and workflow cancellation require explicit user/caller authorization. The top-level `monitor` skill may create and push one final empty commit with the exact subject `Trigger #CI` after its local-first gates in drive-to-merge-ready mode. It may pass CI repair, rerun, and cancellation authorization only when the prompt explicitly requests trigger actions, run GitHub Actions, commit with actions, checks/green behavior, or a caller explicitly granted CI authorization.
+This skill is observational by default. Code edits, commits, pushes, GitHub Actions triggers, reruns, and workflow cancellation require explicit user/caller authorization. The top-level `monitor` skill may create and push an empty `#CI` trigger commit after its Codex/feedback gates in drive-to-merge-ready mode. It may pass CI repair, rerun, and cancellation authorization only when the prompt explicitly requests trigger actions, run GitHub Actions, commit with actions, checks/green behavior, or a caller explicitly granted CI authorization.
 
-When a failure is actionable from the branch and repair is authorized, invoke `fix-pr-until-green` only for callers that did not request local-first/Codex-before-CI gating. Do not duplicate its repair loop.
+When a failure is actionable from the branch and repair is authorized, invoke `fix-pr-until-green` only for callers that did not request gated-trigger/Codex-before-CI behavior. Do not duplicate its repair loop.
 
-When the caller passes local-first or Codex-before-CI mode, do not invoke `fix-pr-until-green` for code-bearing repairs. Return actionable failure evidence to the caller so it can repair without `#CI`, run `test-coded-tests`, restart Codex review, and create a fresh empty `Trigger #CI` commit only after the new code-bearing head is locally passing and Codex clean.
+When the caller passes gated-trigger or Codex-before-CI mode, do not invoke `fix-pr-until-green` for code-bearing repairs. Return actionable failure evidence to the caller so it can repair without `#CI`, run only quick targeted local verification when directly relevant, restart Codex review, and create a fresh empty `#CI` trigger commit only after the new code-bearing head is Codex clean.
 
 Rerun failed jobs only when authorization covers reruns and the failure is classified as flaky, runner, infrastructure, external, or otherwise not branch-caused.
 
@@ -37,10 +39,10 @@ If repair is authorized, cancel the workflow with `gh run cancel <run_id> --repo
 
 Investigate cancelled stale shards as real failures. Use logs, changed files, and targeted local reproduction to distinguish branch-caused hangs, deadlocks, infinite waits, resource exhaustion, spec-order issues, flaky jobs, runner problems, and infrastructure issues.
 
-For actionable branch-caused hangs outside local-first mode, invoke `fix-pr-until-green`, push the repair through that workflow, capture the new head SHA, and restart monitoring. In local-first mode, return the hang evidence to the caller instead of committing a `#CI` repair.
+For actionable branch-caused hangs outside gated-trigger mode, invoke `fix-pr-until-green`, push the repair through that workflow, capture the new head SHA, and restart monitoring. In gated-trigger mode, return the hang evidence to the caller instead of committing a `#CI` repair.
 
 If cancellation, logs, rerun, or repair is unavailable, return `blocked` and name the exact missing capability or decision.
 
 ## Failure Classification
 
-Inspect logs promptly when repair is authorized. Report external services, secrets, quota, runner, and unrelated flaky failures as `not_ready` when monitoring can continue. Use `blocked` only when the agent cannot keep watching or needs user input before observation remains useful.
+Inspect logs promptly when repair is authorized. Report external services, secrets, quota, runner, and unrelated failures as `not_ready` when monitoring can continue, including deterministic failures in files outside the watched branch. Use `blocked` only when the agent cannot keep watching or needs user input before observation remains useful.

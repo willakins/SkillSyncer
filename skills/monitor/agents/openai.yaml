@@ -1,4 +1,4 @@
 interface:
   display_name: "Monitor"
-  short_description: "Feedback-aware local-first PR monitor"
-  default_prompt: "Use $monitor to watch the current PR, refresh comments and reviews, get Codex clean, run local test-coded-tests, create one empty Trigger #CI commit when authorized, and continue monitoring until stable or blocked."
+  short_description: "Feedback-aware gated PR monitor"
+  default_prompt: "Use $monitor to watch the current PR, refresh comments and reviews, get Codex clean, trigger the CI workflow with an empty #CI commit when authorized, and continue monitoring GitHub Actions until stable or blocked."

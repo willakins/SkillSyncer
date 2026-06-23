@@ -4,7 +4,7 @@ description: A direct request to create a draft PR should route to this skill.
 tags:
   - positive-trigger
 inputs:
-  prompt: "Use $draft-pr-for-branch to commit the intended changes and open a draft PR for the current branch. This is an eval: do not run git, gh, or remote mutations; return the skill-specific ordered checks, named helper skills for commit/title/body, CI-marker policy, and stop conditions."
+  prompt: "Use $draft-pr-for-branch to commit the intended changes and open a draft PR for the current branch. This is an eval: do not run git, gh, or remote mutations; return the skill-specific ordered checks, named helper skills for commit/title/body, empty #CI trigger commit policy, and stop conditions."
 expected:
   should_trigger: true
 graders:
@@ -13,5 +13,5 @@ graders:
     config:
       contains:
         - "Named helper skills"
-        - "CI-marker policy"
+        - "empty #CI"
         - "draft"

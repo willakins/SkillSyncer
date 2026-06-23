@@ -26,7 +26,7 @@ Read [Detailed workflow](references/workflow.md) before editing.
 
 1. Inspect the task, repo instructions, status, branch/upstream, and code.
 2. Pick the smallest real commit count; prefer one commit for tightly coupled work.
-3. Per slice: define scope/check, edit, validate, stage only that slice, use `write-commit-name`, then commit without `#CI` unless the prompt explicitly asks to trigger CI, run GitHub Actions, commit with actions, or include a CI marker.
+3. Per slice: define scope/check, edit, validate, stage only that slice, use `write-commit-name`, then commit without `#CI` unless the prompt explicitly asks to include a CI marker on that content commit. Use a separate empty `#CI` trigger commit for ordinary requests to trigger CI or run GitHub Actions after the content commit is published.
 4. Push only when the PR head or upstream is verified safe; otherwise use `enable-remote-publication` or stop.
 5. Report commits, checks, pushes, and uncommitted work.
 

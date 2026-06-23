@@ -1,4 +1,4 @@
 interface:
   display_name: "Write Commit Name"
   short_description: "Draft a short commit subject from the intended diff"
-  default_prompt: "Use $write-commit-name to inspect the staged diff when present, otherwise the exact in-scope local diff, and return only one short commit subject line. Add #CI only when I explicitly ask to trigger CI or GitHub Actions."
+  default_prompt: "Use $write-commit-name to inspect the staged diff when present, otherwise the exact in-scope local diff, and return only one short commit subject line. Add #CI only when I explicitly ask to include a CI marker."

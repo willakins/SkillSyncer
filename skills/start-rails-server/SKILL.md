@@ -1,6 +1,6 @@
 ---
 name: start-rails-server
-description: Start, bootstrap, reuse, stop, or report the local Rails development stack for the current worktree through the global `parallel rails s` Zellij launcher, using a worktree-specific `.localhost` URL. Use when Codex needs to boot or stop the app locally, install the local launcher on a fresh machine, avoid port and browser-cookie collisions across multiple worktrees, or give the user the exact local URL for the running branch.
+description: Start, reuse, stop, or report the local Rails development stack for the current worktree with separate terminals for Rails server, Tailwind watch, and Sidekiq, using a worktree-specific `.localhost` URL. Use when Codex needs to boot or stop the app locally, avoid port and browser-cookie collisions across multiple worktrees, or give the user the exact local URL for the running branch.
 ---
 
 Use this skill when the user asks for the app to be started or stopped locally, for example:
@@ -19,26 +19,13 @@ Read [parallel Rails details](references/parallel-rails.md) for command variants
 
 ## Workflow
 
-1. Validate that the target directory is a Rails app root with `bin/rails`.
-2. Before starting, verify the launcher dependencies:
-   - `command -v zellij`
-   - `parallel rails s --help`
-3. If Zellij is missing, install it with the system package manager. On macOS, use `brew install zellij`.
-4. If `parallel rails s --help` fails or does not print the managed wrapper usage, use the `setup-parallel-rails-command` skill or run its installer:
-
-```bash
-ruby "${CODEX_HOME:-$HOME/.codex}/skills/setup-parallel-rails-command/scripts/install_parallel_rails_command.rb" --ensure-path
-```
-
-5. Run `parallel rails s` from the target Rails app root in a visible terminal/PTY so the user can attach to the Zellij workspace.
-6. Let it pick the next free port starting at `3000` when no port is specified.
-7. Return the URL printed on stdout. Use that URL instead of `localhost:<port>` so each worktree gets separate browser cookies.
-
-The bundled helper script performs steps 1-4 and then delegates to `parallel rails s`:
-
-```bash
-ruby "${CODEX_HOME:-$HOME/.codex}/skills/start-rails-server/scripts/start_server.rb"
-```
+1. Run `parallel rails s` from the target Rails app root.
+2. Let it attach a Zellij session when available, with a prominent working shell plus smaller selectable service panes for:
+   - `bin/rails server`
+   - `bin/rails tailwindcss:watch`
+   - `bundle exec sidekiq`
+3. Let it pick the next free port starting at `3000` when no port is specified.
+4. Return the URL printed on stdout. Use that URL instead of `localhost:<port>` so each worktree gets separate browser cookies.
 
 ## Command
 
@@ -79,9 +66,6 @@ parallel rails s --hostname backburner-3.localhost
 - Require `bin/rails` to exist in that directory.
 - Refuse to start a duplicate stack when tracked terminals are already running for the same worktree.
 - Start Rails in `development` and bind it to `127.0.0.1`.
-- Start Rails inside the focused left Zellij shell, with Rails output redirected to `tmp/codex/parallel-rails-server-PORT.log`.
-- Leave the left pane as an interactive shell that prints the server URL, `parallel rails s stop`, and the Rails log tail command.
-- Keep the right Zellij column stacked with Sidekiq and Tailwind collapsed and Rails console expanded.
 - Return `http://<worktree-name>.localhost:<port>` by default, sanitized as a DNS label.
 - Keep browser sessions isolated across worktrees by avoiding shared `localhost` cookies.
 - Print only the final URL on success so the caller can relay it directly.

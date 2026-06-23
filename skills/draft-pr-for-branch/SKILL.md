@@ -1,6 +1,6 @@
 ---
 name: draft-pr-for-branch
-description: "Create or update a GitHub PR from the current branch: verify scope, commit only intended work, push with git, generate title/body text, open a draft PR, refresh an existing PR, or mark a draft PR ready. Do not trigger CI with #CI unless the prompt explicitly asks to trigger actions, run GitHub Actions, commit with actions, or include a CI marker."
+description: "Create or update a GitHub PR from the current branch: verify scope, commit only intended work, push with git, generate title/body text, open a draft PR, refresh an existing PR, or mark a draft PR ready. Do not trigger CI by default; create an empty #CI trigger commit when CI is explicitly requested."
 ---
 
 # Draft PR For Branch
@@ -28,7 +28,7 @@ Read [Decision guide](references/decision-guide.md) and [Safety rules](reference
 1. Inspect status, local/base diff, pushed tip, open PR state/base/head ref, and required auth.
 2. Stop for mixed scope, wrong base, unreviewable stack history, missing auth, unsafe CI-trigger repair, or unverifiable branch state.
 3. For `create_pr`, stage intended files only, verify, use linked authoring skills, push with git, then create/reuse/update the PR. New PRs default to draft.
-4. For `mark_ready`, leave WIP alone unless explicitly included, refresh stale metadata when possible, then run `gh pr ready`. Trigger CI only when the prompt or caller explicitly asked to trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
+4. For `mark_ready`, leave WIP alone unless explicitly included, refresh stale metadata when possible, then run `gh pr ready`. Trigger CI only when the prompt or caller explicitly asked to trigger actions, run GitHub Actions, commit with actions, or include a CI marker; use an empty `#CI` trigger commit after the branch is published.
 5. Return branch, operation, commit, PR title/link/state, publication path, and checks.
 
 ## Examples

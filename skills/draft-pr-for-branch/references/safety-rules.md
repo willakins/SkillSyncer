@@ -10,8 +10,7 @@
 - Do not let unrelated local WIP influence metadata or verification for a remote-only PR rerun.
 - Do not run verification from a dirty worktree when the workflow is publishing a clean committed tip or a CI-trigger-only follow-up.
 - For `mark_ready`, do not silently fold local changes into the PR. Include local changes only when the user explicitly requests it.
-- Prefer a new empty `#CI` follow-up commit over amending when the prompt explicitly authorized CI or Actions triggering, unless the user explicitly asks to amend.
-- Do not repair `#CI` from stale local state; compare refreshed pushed tip SHA with local `HEAD` first.
+- Use an empty `#CI` trigger commit when the prompt explicitly authorized CI or Actions triggering, and never from stale local state; compare refreshed pushed tip SHA with local `HEAD` first.
 - Do not create a second PR for a branch that already has an open PR unless the user explicitly asks for a different branch or base.
 - Do not report success for a draft request while leaving a reused PR ready, or for a ready request while leaving a reused PR in draft.
 - Do not use the mark-ready transition itself as implicit permission to trigger CI.

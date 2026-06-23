@@ -7,7 +7,7 @@ description: Repair an existing pull request's failing GitHub Actions checks unt
 
 Repair existing PR CI failures until actionable checks pass or a blocker remains.
 
-**UTILITY SKILL. INVOKES:** `gh`, git, local tests, `github:gh-fix-ci`, `repair-pr-ci-trigger`. **FOR EXISTING PRS ONLY.**
+**UTILITY SKILL. INVOKES:** `gh`, git, targeted local verification, `github:gh-fix-ci`, `repair-pr-ci-trigger` for empty CI trigger commits. **FOR EXISTING PRS ONLY.**
 
 Read [CI repair loop](references/ci-repair-loop.md) before changing code.
 
@@ -26,16 +26,16 @@ Read [CI repair loop](references/ci-repair-loop.md) before changing code.
 
 ## Examples:
 
-- "Get PR #42 green" means inspect that PR, repair actionable CI, and push `#CI` commits because the prompt explicitly requested a green CI outcome.
+- "Get PR #42 green" means inspect that PR, repair actionable CI, and trigger GitHub Actions with an empty `#CI` commit when needed because the prompt explicitly requested a green CI outcome.
 - "Open a draft PR, then monitor CI" belongs to `draft-pr-until-green`.
 
 ## Workflow
 
 1. Resolve the existing PR and head SHA with `gh pr view`.
 2. Inspect checks with `gh pr checks`; use bounded polling if pending.
-3. If CI did not trigger because the latest commit lacks `#CI`, use `repair-pr-ci-trigger`.
+3. If CI has not run for the latest head, use `repair-pr-ci-trigger` to create an empty `#CI` trigger commit on the PR branch.
 4. Read failed Actions logs before editing and identify the exact command, file, assertion, or stack trace.
-5. Make the smallest branch-caused repair, verify locally, commit with `#CI` because this skill requires explicit CI/Actions authorization, push, and repeat.
+5. Make the smallest branch-caused repair batch, run only targeted local verification that directly matches the repair, commit and push code without `#CI`, then create an empty `#CI` trigger commit when Actions need to run again.
 6. Stop when checks are green or the remaining failure is non-actionable.
 
 ## Troubleshooting

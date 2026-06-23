@@ -27,7 +27,7 @@ Read [merge workflow details](references/merge-workflow.md) for source-of-truth 
 2. Run `git fetch origin main`.
 3. Start `git merge --no-ff --no-commit origin/main`; if already up to date, report that no merge commit was needed.
 4. If conflicts exist, prefer `fix-merge-conflicts`; otherwise inspect conflicted files, resolve clear conflicts, ask only for genuinely ambiguous decisions, and verify no unmerged paths or conflict markers remain.
-5. Finish with `GIT_EDITOR=true git commit`, updating `MERGE_MSG` first only when the prompt explicitly asks to trigger actions, run GitHub Actions, commit with actions, or include a CI marker such as `#CI`.
+5. Finish with `GIT_EDITOR=true git commit`, updating `MERGE_MSG` first only when the prompt explicitly asks to include a CI marker on the merge commit. For ordinary requests to trigger actions or run GitHub Actions, push the merge commit first and then create a separate empty `#CI` trigger commit.
 6. Push to the configured upstream when present. If push fails, report the failure and do not claim the remote conflict is fixed.
 7. Report branch, merge target, push target, conflict status, resolved files, final merge commit subject, and push status.
 

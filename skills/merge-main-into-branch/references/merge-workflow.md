@@ -7,7 +7,7 @@
 - Read the upstream branch from git.
 - Read conflicted files in context before resolving them.
 - Inspect `ours`, `theirs`, and nearby code when needed.
-- Treat git's prepared merge message as source of truth unless the user explicitly asks to change it. Do not add `#CI` unless the prompt explicitly asks to trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
+- Treat git's prepared merge message as source of truth unless the user explicitly asks to change it. Do not add `#CI` to the merge commit unless the prompt explicitly asks to include a CI marker there; use a separate empty `#CI` trigger commit for ordinary requests to trigger actions or run GitHub Actions.
 
 ## Obvious Vs Ambiguous Conflicts
 

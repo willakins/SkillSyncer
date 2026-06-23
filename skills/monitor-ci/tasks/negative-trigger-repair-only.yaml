@@ -4,7 +4,7 @@ description: Existing PR CI repair should route to fix-pr-until-green, not monit
 tags:
   - negative-trigger
 inputs:
-  prompt: "Routing eval only: do not run commands. The existing PR has failed CI and the user wants you to fix actionable failures, commit with #CI, push, and keep going until green. Identify the right workflow and avoid a monitor-only answer."
+  prompt: "Routing eval only: do not run commands. The existing PR has failed CI and the user wants you to fix actionable failures, trigger Actions with an empty #CI commit when needed, push, and keep going until green. Identify the right workflow and avoid a monitor-only answer."
 expected:
   should_trigger: false
 graders:

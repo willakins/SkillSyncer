@@ -4,7 +4,7 @@ description: Explicit PR repair requests should trigger this skill.
 tags:
   - positive-trigger
 inputs:
-  prompt: "Use $repair-pr-ci-trigger to repair PR #123 so the latest pushed commit triggers CI. This is an eval: do not run commands; explain the safe checks and final command shape."
+  prompt: "Use $repair-pr-ci-trigger to repair PR #123 by creating an empty #CI trigger commit. This is an eval: do not run commands; explain the safe checks and final command shape."
 expected:
   should_trigger: true
 graders:
@@ -14,5 +14,6 @@ graders:
       contains:
         - "PR head"
         - "#CI"
-        - "force-with-lease"
+        - "empty"
+        - "git push"
         - "clean"

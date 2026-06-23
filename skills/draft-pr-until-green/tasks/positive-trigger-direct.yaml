@@ -4,7 +4,7 @@ description: A direct request to publish a draft PR and repair CI should route t
 tags:
   - positive-trigger
 inputs:
-  prompt: "Use $draft-pr-until-green to open a draft PR for the current branch and keep repairing actionable CI failures until the PR is green or blocked. This is an eval: do not run git, gh, tests, or remote mutations; return the skill-specific ordered workflow, named helper skills, CI-marker policy, and stop conditions."
+  prompt: "Use $draft-pr-until-green to open a draft PR for the current branch and keep repairing actionable CI failures until the PR is green or blocked. This is an eval: do not run git, gh, tests, or remote mutations; return the skill-specific ordered workflow, named helper skills, empty #CI trigger commit policy, and stop conditions."
 expected:
   should_trigger: true
 graders:
@@ -14,5 +14,5 @@ graders:
       contains:
         - "draft-pr-for-branch"
         - "fix-pr-until-green"
-        - "CI-marker policy"
+        - "empty #CI"
         - "Stop conditions"

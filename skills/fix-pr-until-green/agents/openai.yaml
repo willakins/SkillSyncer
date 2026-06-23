@@ -1,4 +1,4 @@
 interface:
   display_name: "Fix PR Until Green"
   short_description: "Repair a PR until CI is green"
-  default_prompt: "Use $fix-pr-until-green to inspect failing CI actions for this PR, repair actionable failures, commit with #CI, and repeat until the checks pass or a blocker remains."
+  default_prompt: "Use $fix-pr-until-green to inspect failing CI actions for this PR, repair actionable failures, trigger Actions with an empty #CI commit when needed, and repeat until the checks pass or a blocker remains."

@@ -13,5 +13,5 @@ graders:
     config:
       not_contains:
         - "repair-pr-ci-trigger"
-        - "append #CI"
+        - "empty #CI"
         - "force-with-lease"

@@ -1,4 +1,4 @@
 interface:
   display_name: "Repair PR CI Trigger"
-  short_description: "Append #CI to a pushed branch or PR tip and force-push safely"
-  default_prompt: "Use $repair-pr-ci-trigger to repair the pushed branch or PR tip by resolving the exact remote target, verifying a clean matching checkout and push access, amending only the latest commit subject to append #CI when needed, and force-pushing with lease."
+  short_description: "Push an empty #CI trigger commit safely"
+  default_prompt: "Use $repair-pr-ci-trigger to repair the pushed branch or PR tip by resolving the exact remote target, verifying a clean matching checkout and push access, creating an empty Trigger CI #CI commit when needed, and pushing normally to the exact target."

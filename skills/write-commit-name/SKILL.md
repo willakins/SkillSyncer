@@ -1,6 +1,6 @@
 ---
 name: write-commit-name
-description: Draft a short git commit subject from the staged diff when a commit slice is already staged, otherwise from the exact in-scope local diff. Append `#CI` only when the requester explicitly asks to trigger CI, trigger actions, GitHub Actions, commit with actions, or a CI marker.
+description: Draft a short git commit subject from the staged diff when a commit slice is already staged, otherwise from the exact in-scope local diff. Append `#CI` only when the requester explicitly asks to include a CI marker.
 ---
 
 Use this skill when the user asks for a commit name, commit subject, or commit message subject line.
@@ -21,7 +21,7 @@ Do not use this skill to create commits, edit files, push branches, open PRs, or
 - Prefer imperative phrasing.
 - Do not add a body unless the user asks for one.
 - Do not append ` #CI` by default.
-- Append ` #CI` only when the prompt explicitly asks to trigger CI, trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
+- Append ` #CI` only when the prompt explicitly asks to include a CI marker on that content commit. Requests to trigger CI, trigger actions, run GitHub Actions, or commit with actions should create a separate empty `#CI` trigger commit after the content commit is published.
 
 ## Writing heuristics
 

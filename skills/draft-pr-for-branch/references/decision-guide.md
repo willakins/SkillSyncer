@@ -8,7 +8,7 @@ Use this guide after the top-level skill triggers. Keep the workflow scoped to t
 - `base_branch`: `main` for a new direct PR.
 - New PR state: `draft`, unless the user explicitly asks for ready-for-review.
 - Existing PR state: preserve current draft/ready state unless the user explicitly asks to change it.
-- CI marker: do not create or repair a case-insensitive `#CI` marker by default. Treat explicit requests to trigger CI, trigger actions, run GitHub Actions, get checks running, commit with actions, or include a CI marker as authorization to ensure the pushed tip carries a marker.
+- CI trigger: do not trigger CI by default. Treat explicit requests to trigger CI, trigger actions, run GitHub Actions, get checks running, or commit with actions as authorization to create an empty `#CI` trigger commit after publishing the branch.
 - Stacked PRs: only open against a parent slice branch when the user explicitly asks for that stacked review base. Name the stacked base in the PR body.
 
 ## Required Inspection
@@ -42,8 +42,8 @@ If the needed path is missing, stop and use `enable-remote-publication`. After t
 2. Stop if the requested base is only a temporary parent slice branch and the user did not explicitly ask for a stacked PR.
 3. Stop if a later stack slice still re-includes earlier unlanded slice content against the requested base.
 4. If an open PR exists, reuse it only when its base and requested final state match, or when a verified `gh pr edit`/state-change path can repair them.
-5. If uncommitted changes belong in scope, stage only those files and generate the commit subject with `write-commit-name`; pass through CI-trigger intent only when the prompt explicitly authorized Actions/CI triggering.
-6. If no content commit is needed and explicit CI-trigger authorization exists while the candidate published tip lacks `#CI`, require a clean worktree before creating a marker-only follow-up commit or using the configured CI-trigger repair path. If CI was not explicitly authorized, do not create marker-only commits.
+5. If uncommitted changes belong in scope, stage only those files and generate the commit subject with `write-commit-name`; do not put the CI marker on the content commit unless the user explicitly asked for that exact commit message.
+6. If explicit CI-trigger authorization exists, publish or reuse the clean branch tip first, then use `repair-pr-ci-trigger` to create the empty `#CI` trigger commit. If CI was not explicitly authorized, do not trigger CI.
 7. Run targeted verification against the exact branch state that will be published.
 8. Push with a command that targets the existing PR head repo/ref when reusing a PR. Use plain `git push` only when upstream already matches the intended same-name remote head.
 9. Generate title and body with `write-pr-title` and `write-pr-description`. Include repository template sections because GitHub does not apply templates when an explicit body is supplied.
@@ -56,11 +56,11 @@ If the needed path is missing, stop and use `enable-remote-publication`. After t
 2. If no PR exists, stop.
 3. If the PR is already ready, report a no-op.
 4. Leave local WIP untouched unless the user explicitly asks to include it; then commit, verify, and push that batch before changing PR state.
-5. Do not require a CI marker for readiness. If the user or caller explicitly requested ready plus CI trigger, inspect the pushed PR tip full commit message; if it lacks `#CI` and local `HEAD` matches the pushed tip with a clean worktree, use the configured CI-trigger repair path and resume. Otherwise stop with the clean-checkout requirement.
+5. Do not require a CI marker for readiness. If the user or caller explicitly requested ready plus CI trigger, publish the ready PR first, then use `repair-pr-ci-trigger` to create the empty `#CI` trigger commit. Otherwise do not trigger CI.
 6. Compare PR title/body freshness against the pushed PR diff, not local-only WIP.
 7. Refresh stale metadata when a verified metadata-edit path exists, unless the user explicitly asks to preserve it.
 8. Mark ready with `gh pr ready PR_NUMBER --repo OWNER/REPO`.
 
 ## Failure Messages
 
-Be explicit about the reason for stopping: unclear mixed scope, empty diff for new PR, mismatched base, unreviewable stack slice, missing push auth, missing PR mutation auth, dirty worktree blocking an explicitly requested CI-trigger repair, diverged local and remote tips, failed verification, or stale metadata without an edit path.
+Be explicit about the reason for stopping: unclear mixed scope, empty diff for new PR, mismatched base, unreviewable stack slice, missing push auth, missing PR mutation auth, dirty worktree blocking an explicitly requested CI trigger commit, diverged local and remote tips, failed verification, or stale metadata without an edit path.

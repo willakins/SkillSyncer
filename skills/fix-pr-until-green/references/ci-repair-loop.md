@@ -13,7 +13,7 @@ Use this reference after the skill has routed to an existing PR.
 
 - Require an existing PR or one that can be resolved from the current branch.
 - Require a working `git push` path and authenticated `gh` access before entering the CI loop.
-- Require targeted local verification after each repair round.
+- Use targeted local verification after each repair round only when it is quick, available, and directly exercises the repair.
 - If the remaining failing check is external, infrastructure-owned, secrets-related, flaky but unrelated to the branch, or otherwise not actionable from the PR diff, stop and document the blocker.
 
 ## Detailed Workflow
@@ -25,7 +25,8 @@ Use this reference after the skill has routed to an existing PR.
 2. Inspect the current check state.
    - Run `gh pr checks <pr>`.
    - If checks are pending, wait and poll again with a bounded loop.
-   - If the remote tip failed to trigger CI because the pushed commit text lacks a case-insensitive CI marker such as `#CI` or `#ci`, use `repair-pr-ci-trigger` and restart for the new head SHA.
+   - If Actions have not run for the current head, use `repair-pr-ci-trigger` to create and push an empty `Trigger CI #CI` commit on the exact PR head branch.
+   - Capture the push-triggered run with `gh run list --workflow CI --branch HEAD_BRANCH --event push --limit 1`.
 3. Exit immediately when actionable checks are green.
 4. Inspect failing checks before changing code.
    - For GitHub Actions runs, inspect the failing run with `gh run view <run_id> --log-failed`.
@@ -35,26 +36,27 @@ Use this reference after the skill has routed to an existing PR.
    - Fix failures directly caused by the current branch.
    - Fix flaky failures only when the branch clearly exposed the flake and the repair remains in scope.
    - Report external, infrastructure-only, quota, network, missing-secret, or unrelated failures instead of guessing.
-6. Implement the smallest justified repair.
+6. Implement the smallest justified repair batch.
    - Patch only the code needed for the observed failure.
-   - Run the nearest matching local verification first, then widen only as needed.
+   - Run the nearest matching local verification only when it is fast and directly relevant.
    - Follow repo-specific validation rules.
 7. Commit and publish the repair.
-   - Write an intentional follow-up commit message that includes `#CI` because this workflow is entered only for explicit CI/Actions repair requests.
+   - Write an intentional follow-up commit message without `#CI` for code-bearing repairs.
    - Push the new commit to the same PR branch.
+   - If Actions need to run for the new tree, create and push a marker-only follow-up commit with `repair-pr-ci-trigger` instead of putting `#CI` on the code repair commit.
 8. Repeat for the new head SHA until the PR is green or blocked.
 
 ## Verification
 
 - Match local verification to the failing area whenever possible.
-- After a focused fix passes locally, rerun the broader affected command if warranted.
+- Let GitHub Actions run the full spec suite. After a focused fix passes locally, do not broaden into slow local specs just to pre-validate the next Actions run.
 - For Rails repos, prefer targeted `bundle exec rspec` paths and `bundle exec rubocop FILE` for touched files under `app` or `spec`.
-- Do not run the full test suite unless the failure surface or repo conventions require it.
+- Do not run broad local specs just to duplicate GitHub Actions.
 
 ## Guardrails
 
 - Do not create a new PR, replace the existing PR, mark it ready for review, auto-merge, or rebase.
-- Do not rewrite history except through the narrow `repair-pr-ci-trigger` flow.
+- Do not rewrite history to trigger CI; use the empty-commit `repair-pr-ci-trigger` flow.
 - Do not make speculative fixes that are not grounded in CI logs or local reproduction.
 - Do not hide non-actionable failures; report them clearly.
 - Do not spin forever. If two consecutive repair rounds fail to make no meaningful progress, stop and summarize the blocker.

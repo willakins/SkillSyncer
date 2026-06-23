@@ -53,7 +53,7 @@ Before continuing:
 
 If unrelated staged paths are present, stop and ask the user to preserve or isolate them before continuing.
 
-Add a CI marker only when the prompt explicitly asks to trigger actions, run GitHub Actions, commit with actions, or include a CI marker. To add it, update the first line of `.git/MERGE_MSG` before continuing. Do not use `git commit --amend`; during an in-progress merge that would amend the previous commit rather than the pending merge commit. After the message is correct, run:
+Add a CI marker to the merge commit only when the prompt explicitly asks to include a CI marker there. To add it, update the first line of `.git/MERGE_MSG` before continuing. Use a separate empty `#CI` trigger commit for ordinary requests to trigger actions or run GitHub Actions after the merge commit is published. Do not use `git commit --amend`; during an in-progress merge that would amend the previous commit rather than the pending merge commit. After the message is correct, run:
 
 ```bash
 GIT_EDITOR=true git merge --continue

@@ -29,7 +29,8 @@ Read [commit workflow](references/commit-workflow.md) before staging, committing
 
 - Clear scope: staged slice or cohesive requested diff.
 - Safe target: exact remote/ref verified and authenticated.
-- CI trigger: the prompt explicitly asks to run CI, trigger actions, run GitHub Actions, commit with actions, or include a CI marker.
+- CI trigger: the prompt explicitly asks to run CI, trigger actions, run GitHub Actions, or commit with actions.
+- CI marker: the prompt explicitly asks to include a CI marker such as `#CI`.
 
 ## Workflow
 
@@ -37,10 +38,11 @@ Read [commit workflow](references/commit-workflow.md) before staging, committing
 2. Use staged changes as scope, or stage only the clear in-scope local diff.
 3. Do not edit in-scope files during commit prep to reconcile them with older conversation state; the current staged/local diff is the source of truth. If a current hunk appears surprising but is plausibly intentional, leave it unchanged and ask only if it makes the commit scope or behavior genuinely ambiguous.
 4. Stop and ask if scope, staged/unstaged overlap, merge state, or push target is ambiguous.
-5. Generate the subject with `write-commit-name`; do not add `#CI` unless the prompt explicitly requested Actions/CI triggering.
+5. Generate the subject with `write-commit-name`; do not add `#CI` unless the prompt explicitly requested a CI marker.
 6. Run `git commit -m "SUBJECT"`.
 7. Push by default only when the exact remote/ref is safe and authenticated; never force-push.
-8. If monitoring was explicitly requested, hand off to `monitor` after a successful push.
+8. If the user explicitly requested CI but not monitoring, create and push an empty `#CI` trigger commit after a successful push so CI appears in the PR checks surface.
+9. If monitoring was explicitly requested, hand off to `monitor` after a successful push.
 
 ## Troubleshooting
 

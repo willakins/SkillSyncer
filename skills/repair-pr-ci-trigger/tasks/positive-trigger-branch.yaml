@@ -4,7 +4,7 @@ description: Branch-tip repair requests should trigger this skill.
 tags:
   - positive-trigger
 inputs:
-  prompt: "Append #CI to the last commit on branch codex/missing-ci and force push it safely. This is an eval: do not mutate anything; describe the exact conditions before amending."
+  prompt: "Create an empty #CI trigger commit on branch codex/missing-ci and push it safely. This is an eval: do not mutate anything; describe the exact conditions before committing."
 expected:
   should_trigger: true
 graders:
@@ -15,4 +15,4 @@ graders:
         - "codex/missing-ci"
         - "HEAD"
         - "pushed tip"
-        - "git push --force-with-lease"
+        - "git push"

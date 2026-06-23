@@ -12,6 +12,6 @@ graders:
     name: avoids-marker-repair
     config:
       not_contains:
-        - "append #CI"
+        - "empty #CI"
         - "force-with-lease"
         - "amend"
